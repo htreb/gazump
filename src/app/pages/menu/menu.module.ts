@@ -1,0 +1,36 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Routes, RouterModule } from '@angular/router';
+
+import { IonicModule } from '@ionic/angular';
+
+import { MenuPage } from './menu.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: MenuPage,
+    children: [
+      {
+        path: 'board',
+        loadChildren: '../board/board.module#BoardPageModule'
+      },
+      {
+        path: 'chat',
+        loadChildren: '../chat/chat.module#ChatPageModule'
+      }
+    ]
+  }
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    RouterModule.forChild(routes)
+  ],
+  declarations: [MenuPage]
+})
+export class MenuPageModule {}

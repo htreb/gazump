@@ -1,0 +1,6 @@
+.menu-item {
+    border-left: 8px solid transparent;
+    &.active {
+        border-left: 8px solid var(--ion-color-primary);
+    }
+}
