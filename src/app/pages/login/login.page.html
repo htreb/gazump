@@ -1,9 +1,165 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div class="login-page theme-background">
+  <ion-card class="ion-padding login-container" [formGroup]="signInForm">
+    <ion-item lines="none" color="dark">
+      <ion-icon class="logo" name="md-analytics"></ion-icon>
+    </ion-item>
 
-<ion-content>
-  <ion-button expand="block" routerLink="/menu/board">Login</ion-button>
-</ion-content>
+    <ion-item lines="none" color="dark">
+      <ion-button
+        strong
+        fill="clear"
+        (click)="toSignUp(true)"
+        [disabled]="returningMember && !showResetPasswordEmailWarning"
+      >
+        Sign in
+      </ion-button>
+      <ion-button
+        strong
+        fill="clear"
+        (click)="toSignUp(false)"
+        [disabled]="!returningMember && !showResetPasswordEmailWarning"
+        slot="end"
+      >
+        Sign up
+      </ion-button>
+    </ion-item>
+
+    <div
+      class="login-arrow"
+      [ngClass]="{
+        'sign-up': !returningMember,
+        hide: showResetPasswordEmailWarning
+      }"
+    ></div>
+
+    <ion-item lines="none" color="medium">
+      <ion-input
+        formControlName="email"
+        placeholder="Email"
+        type="email"
+      ></ion-input>
+    </ion-item>
+    <div
+      class="input-warning"
+      [ngClass]="{
+        show:
+          !signInForm.controls['email'].pristine &&
+          signInForm.controls['email'].errors
+      }"
+      color="danger"
+    >
+      Invalid email address
+    </div>
+    <div formGroupName="passwords">
+      <ion-item
+        lines="none"
+        color="medium"
+        class="enter-password"
+        [ngClass]="{ show: !showResetPasswordEmailWarning }"
+      >
+        <ion-input
+          formControlName="password"
+          placeholder="Password"
+          type="password"
+        ></ion-input>
+      </ion-item>
+      <div
+        class="input-warning"
+        [ngClass]="{
+          show:
+            !returningMember &&
+            signInForm.controls['passwords'].dirty &&
+            signInForm.controls['passwords'].errors &&
+            signInForm.controls['passwords'].errors.passwordTooShort
+        }"
+        color="danger"
+      >
+        Password must be at least 6 characters
+      </div>
+      <ion-item
+        lines="none"
+        color="medium"
+        class="confirm-password"
+        [ngClass]="{ show: !returningMember }"
+      >
+        <ion-input
+          formControlName="confirmPassword"
+          placeholder="Confirm password"
+          type="password"
+        ></ion-input>
+      </ion-item>
+      <div
+        class="input-warning"
+        [ngClass]="{
+          show:
+            !signInForm.controls['passwords'].pristine &&
+            signInForm.controls['passwords'].errors &&
+            signInForm.controls['passwords'].errors.differentPasswords
+        }"
+        color="danger"
+      >
+        Passwords do not match
+      </div>
+    </div>
+
+    <ion-item
+      lines="none"
+      color="dark"
+      class="enter-email-for-reset ion-text-center"
+      [ngClass]="{ show: showResetPasswordEmailWarning }"
+    >
+      <ion-label color="warning" text-wrap>
+        Please enter the email address you used to sign up.
+      </ion-label>
+    </ion-item>
+
+    <ion-item
+      lines="none"
+      color="dark"
+      class="remember-me"
+      [ngClass]="{ show: !showResetPasswordEmailWarning }"
+    >
+      <ion-label color="medium">Remember me</ion-label>
+      <ion-checkbox slot="end" formControlName="rememberMe"></ion-checkbox>
+    </ion-item>
+
+    <ion-button
+      strong
+      no-margin
+      expand="full"
+      (click)="formSubmit()"
+      [disabled]="!signInForm.valid"
+    >
+      <div
+        class="submit-button-text"
+        [ngClass]="{ show: !showResetPasswordEmailWarning && returningMember }"
+      >
+        Login
+      </div>
+      <div
+        class="submit-button-text"
+        [ngClass]="{ show: !showResetPasswordEmailWarning && !returningMember }"
+      >
+        Sign up
+      </div>
+      <div
+        class="submit-button-text"
+        [ngClass]="{ show: showResetPasswordEmailWarning }"
+      >
+        Send reset email
+      </div>
+    </ion-button>
+
+    <ion-item
+      lines="none"
+      color="dark"
+      class="forgot-password"
+      [ngClass]="{ show: returningMember }"
+      [disabled]="showResetPasswordEmailWarning"
+    >
+      <ion-button strong slot="end" fill="clear" (click)="forgotPassword()"
+        >Forgot Password</ion-button
+      >
+    </ion-item>
+  </ion-card>
+</div>

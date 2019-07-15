@@ -1,0 +1,99 @@
+$duration: 0.2s;
+$height: 48px;
+$arrowWidth: 10px;
+$arrowMargin: 40px;
+$transitionFunction: ease-in-out;
+$warningMargin: 16px;
+
+.login-page {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .login-container {
+    width: 60%;
+    max-width: 400px;
+    min-width: 300px;
+    overflow: hidden;
+    background: var(--ion-color-dark);
+
+    .logo {
+      margin: auto;
+      font-size: 120px;
+    }
+
+    .login-arrow {
+      width: 0;
+      height: 0;
+      border-left: $arrowWidth solid transparent;
+      border-right: $arrowWidth solid transparent;
+      border-bottom: $arrowWidth solid var(--ion-color-medium);
+      margin-left: $arrowMargin;
+      margin-bottom: -1px;
+      transition: $duration;
+      transition-timing-function: $transitionFunction;
+      transform-origin: bottom;
+
+      &.sign-up {
+        margin-left: calc(100% - #{$arrowMargin} - (2 * #{$arrowWidth}));
+      }
+
+      &.hide {
+        transform: scaleY(0);
+      }
+    }
+
+    .input-warning {
+      color: var(--ion-color-danger);
+      max-height: 0;
+      margin-left: calc(#{$warningMargin} / 2);
+      overflow: hidden;
+      transition: $duration;
+      transition-timing-function: $transitionFunction;
+
+      &.show {
+        margin-bottom: $warningMargin;
+        margin-top: calc(#{$warningMargin} / 4);
+        max-height: 60px;
+      }
+    }
+
+    .enter-password,
+    .confirm-password,
+    .forgot-password,
+    .remember-me,
+    .enter-email-for-reset {
+      max-height: 0;
+      transition: $duration;
+      transition-timing-function: $transitionFunction;
+
+      &.show {
+        max-height: $height;
+      }
+    }
+    .enter-email-for-reset {
+      min-height: 0;
+
+      &.show {
+        min-height: calc(2 * #{$height});
+        max-height: calc(2 * #{$height});
+      }
+    }
+
+    .submit-button-text {
+      width: 0;
+      transition: $duration;
+      transition-timing-function: $transitionFunction;
+      overflow: hidden;
+      // the below are used to prevent the dangling letters ('g')
+      // being cut off on smaller screens now we have overflow hidden
+      height: 100%;
+      line-height: 2.5em;
+
+      &.show {
+        width: 100%;
+      }
+    }
+  }
+}
