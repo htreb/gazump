@@ -40,25 +40,14 @@
       ></ion-input>
       <ion-icon
         slot="end"
-        name="help"
-        class="shake delay-animation"
-        color="danger"
-        (click)="showErrors('email')"
-        *ngIf="
-          !returningMember &&
-          !signInForm.controls['email'].pristine &&
-          signInForm.controls['email'].errors
-        "
-      ></ion-icon>
-      <ion-icon
-        slot="end"
-        name="checkmark"
-        color="success"
-        *ngIf="
-          !returningMember &&
-          !signInForm.controls['email'].pristine &&
-          !signInForm.controls['email'].errors
-        "
+        class="form-validation-icon"
+        (click)="showErrors(emailErrors)"
+        [name]="emailErrors ? 'help' : 'checkmark'"
+        [ngClass]="{
+          error: emailErrors,
+          shake: emailErrors,
+          complete: signInForm.controls['email'].valid
+        }"
       ></ion-icon>
     </ion-item>
     <div formGroupName="passwords">
@@ -75,27 +64,17 @@
         ></ion-input>
         <ion-icon
           slot="end"
-          name="help"
-          class="shake delay-animation"
-          color="danger"
-          (click)="showErrors('password')"
-          *ngIf="
-            !returningMember &&
-            passwordControl['dirty'] &&
-            signInForm.controls['passwords'].errors &&
-            signInForm.controls['passwords'].errors.passwordTooShort
-          "
-        ></ion-icon>
-        <ion-icon
-          slot="end"
-          name="checkmark"
-          color="success"
-          *ngIf="
-            !returningMember &&
-            passwordControl['dirty'] &&
-            (!signInForm.controls['passwords'].errors ||
-              !signInForm.controls['passwords'].errors.passwordTooShort)
-          "
+          class="form-validation-icon"
+          (click)="showErrors(passwordErrors)"
+          [name]="passwordErrors ? 'help' : 'checkmark'"
+          [ngClass]="{
+            error: passwordErrors,
+            shake: passwordErrors,
+            complete:
+              passwordControl['dirty'] &&
+              (!signInForm.controls['passwords'].errors ||
+                !signInForm.controls['passwords'].errors.passwordTooShort)
+          }"
         ></ion-icon>
       </ion-item>
       <ion-item
@@ -111,25 +90,16 @@
         ></ion-input>
         <ion-icon
           slot="end"
-          name="help"
-          class="shake delay-animation"
-          color="danger"
-          (click)="showErrors('password')"
-          *ngIf="
-            confirmPasswordControl['dirty'] &&
-            signInForm.controls['passwords'].errors &&
-            !signInForm.controls['passwords'].errors.passwordTooShort
-          "
-        ></ion-icon>
-        <ion-icon
-          slot="end"
-          name="checkmark"
-          color="success"
-          *ngIf="
-            !returningMember &&
-            confirmPasswordControl['dirty'] &&
-            !signInForm.controls['passwords'].errors
-          "
+          class="form-validation-icon"
+          (click)="showErrors(confirmPasswordErrors)"
+          [name]="confirmPasswordErrors ? 'help' : 'checkmark'"
+          [ngClass]="{
+            error: confirmPasswordErrors,
+            shake: confirmPasswordErrors,
+            complete:
+              confirmPasswordControl['dirty'] &&
+              !signInForm.controls['passwords'].errors
+          }"
         ></ion-icon>
       </ion-item>
     </div>

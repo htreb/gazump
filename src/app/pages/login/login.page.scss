@@ -44,21 +44,18 @@ $warningMargin: 16px;
       }
     }
 
-    .input-warning {
-      color: var(--ion-color-danger);
-      max-height: 0;
-      margin-left: calc(#{$warningMargin} / 2);
-      overflow: hidden;
-      transition: $duration;
-      transition-timing-function: $transitionFunction;
+    .form-validation-icon {
+      visibility: hidden;
 
-      &.show {
-        margin-bottom: $warningMargin;
-        margin-top: calc(#{$warningMargin} / 4);
-        max-height: 60px;
+      &.error {
+        visibility: visible;
+        color: var(--ion-color-danger);
+      }
+      &.complete {
+        visibility: visible;
+        color: var(--ion-color-success);
       }
     }
-
     .enter-password,
     .confirm-password,
     .forgot-password,

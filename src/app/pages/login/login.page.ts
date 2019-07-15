@@ -6,7 +6,11 @@ import {
   FormGroup,
   FormBuilder
 } from '@angular/forms';
-import { AlertController, ToastController, LoadingController } from '@ionic/angular';
+import {
+  AlertController,
+  ToastController,
+  LoadingController
+} from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -38,18 +42,24 @@ export class LoginPage implements OnInit {
    */
   signInForm: FormGroup;
 
+  emailErrors = '';
+  passwordErrors = '';
+  confirmPasswordErrors = '';
+  warnErrorsTimeout: NodeJS.Timeout;
+
   constructor(
     private fb: FormBuilder,
     private alertCtrl: AlertController,
     private auth: AuthService,
     private toastCtrl: ToastController,
     private router: Router,
-    private loadingCtrl: LoadingController,
-    ) {}
+    private loadingCtrl: LoadingController
+  ) {}
 
   ngOnInit() {
     this.signInForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      // the below regex is used over the Validators.email as this prevents emails like '2@2' from being valid
+      email: ['', [Validators.required, Validators.pattern(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/)]],
       passwords: this.fb.group(
         {
           password: [''],
@@ -61,6 +71,39 @@ export class LoginPage implements OnInit {
       ),
       rememberMe: ['']
     });
+
+    this.signInForm.valueChanges.subscribe(val => {
+      this.clearFormErrorsAndTimeout();
+      this.warnErrorsTimeout = setTimeout(() => {
+        if (
+          this.signInForm.controls.email.dirty &&
+          this.signInForm.controls.email.errors
+        ) {
+          this.emailErrors = 'Please enter a valid email address';
+        }
+        if (
+          this.passwordControl.dirty &&
+          this.signInForm.controls.passwords.errors &&
+          this.signInForm.controls.passwords.errors.passwordTooShort
+        ) {
+          this.passwordErrors = 'Password must be a minimum of 6 characters';
+        }
+        if (
+          this.confirmPasswordControl.dirty &&
+          this.signInForm.controls.passwords.errors &&
+          this.signInForm.controls.passwords.errors.differentPasswords
+        ) {
+          this.confirmPasswordErrors = 'Passwords do not match';
+        }
+      }, 500);
+    });
+  }
+
+  clearFormErrorsAndTimeout() {
+    clearTimeout(this.warnErrorsTimeout);
+    this.emailErrors = '';
+    this.passwordErrors = '';
+    this.confirmPasswordErrors = '';
   }
 
   /**
@@ -99,7 +142,9 @@ export class LoginPage implements OnInit {
       : '';
   }
   get passwordControl() {
-    return this.signInForm ? this.signInForm.get('passwords').get('password') : {};
+    return this.signInForm
+      ? this.signInForm.get('passwords').get('password')
+      : {};
   }
   get confirmPassword() {
     return this.signInForm
@@ -107,7 +152,9 @@ export class LoginPage implements OnInit {
       : '';
   }
   get confirmPasswordControl() {
-    return this.signInForm ? this.signInForm.get('passwords').get('confirmPassword') : {};
+    return this.signInForm
+      ? this.signInForm.get('passwords').get('confirmPassword')
+      : {};
   }
   get rememberMe() {
     return this.signInForm ? this.signInForm.get('rememberMe').value : false;
@@ -151,7 +198,6 @@ export class LoginPage implements OnInit {
     this.auth.logIn(this.email, this.password).then(resp => {
       loading.dismiss();
     });
-
   }
 
   /**
@@ -215,19 +261,8 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  async showErrors(field: string) {
-    let errorMsg: string;
-    switch (field) {
-      case 'email':
-        errorMsg = 'Please enter a valid email address';
-        break;
-      case 'password':
-        errorMsg = 'The password must be at least 6 characters';
-        break;
-      case 'confirmPassword':
-        errorMsg = 'The passwords do not match';
-        break;
-    }
+  async showErrors(errorMsg: string) {
+    if (!errorMsg) { return; }
     if (this.toast) {
       this.toast.dismiss();
     }
