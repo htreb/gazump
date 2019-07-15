@@ -38,10 +38,10 @@ export class LoginPage implements OnInit {
   constructor(
     private fb: FormBuilder,
     private alertCtrl: AlertController,
-    // private auth: AuthService,
-    // private toastCtrl: ToastController,
-    // private router: Router,
-    // private loadingCtrl: LoadingController,
+    private auth: AuthService,
+    private toastCtrl: ToastController,
+    private router: Router,
+    private loadingCtrl: LoadingController,
     ) {}
 
   ngOnInit() {
@@ -133,14 +133,14 @@ export class LoginPage implements OnInit {
    * Logs returning user in
    */
   async logIn() {
-    // const loading = await this.loadingCtrl.create({
-    //   message: 'Logging you in...'
-    // });
-    // await loading.present();
+    const loading = await this.loadingCtrl.create({
+      message: 'Logging you in...'
+    });
+    await loading.present();
 
-    // this.auth.logIn(this.email, this.password).then(resp => {
-    //   loading.dismiss();
-    // });
+    this.auth.logIn(this.email, this.password).then(resp => {
+      loading.dismiss();
+    });
 
   }
 
@@ -148,14 +148,14 @@ export class LoginPage implements OnInit {
    * Signs new user up
    */
   async signUp() {
-    // const loading = await this.loadingCtrl.create({
-    //   message: 'Signing you up...'
-    // });
-    // await loading.present();
+    const loading = await this.loadingCtrl.create({
+      message: 'Signing you up...'
+    });
+    await loading.present();
 
-    // this.auth.signUp(this.email, this.password).then(resp => {
-    //   loading.dismiss();
-    // });
+    this.auth.signUp(this.email, this.password).then(resp => {
+      loading.dismiss();
+    });
   }
 
   /**
@@ -197,7 +197,7 @@ export class LoginPage implements OnInit {
         {
           text: 'Ok',
           handler: () => {
-            // this.auth.sendResetEmail(this.email);
+            this.auth.sendResetEmail(this.email);
           }
         }
       ]
