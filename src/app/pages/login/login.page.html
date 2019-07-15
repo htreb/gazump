@@ -38,18 +38,29 @@
         placeholder="Email"
         type="email"
       ></ion-input>
-    </ion-item>
-    <div
-      class="input-warning"
-      [ngClass]="{
-        show:
+      <ion-icon
+        slot="end"
+        name="help"
+        class="shake delay-animation"
+        color="danger"
+        (click)="showErrors('email')"
+        *ngIf="
+          !returningMember &&
           !signInForm.controls['email'].pristine &&
           signInForm.controls['email'].errors
-      }"
-      color="danger"
-    >
-      Invalid email address
-    </div>
+        "
+      ></ion-icon>
+      <ion-icon
+        slot="end"
+        name="checkmark"
+        color="success"
+        *ngIf="
+          !returningMember &&
+          !signInForm.controls['email'].pristine &&
+          !signInForm.controls['email'].errors
+        "
+      ></ion-icon>
+    </ion-item>
     <div formGroupName="passwords">
       <ion-item
         lines="none"
@@ -62,20 +73,31 @@
           placeholder="Password"
           type="password"
         ></ion-input>
-      </ion-item>
-      <div
-        class="input-warning"
-        [ngClass]="{
-          show:
+        <ion-icon
+          slot="end"
+          name="help"
+          class="shake delay-animation"
+          color="danger"
+          (click)="showErrors('password')"
+          *ngIf="
             !returningMember &&
-            signInForm.controls['passwords'].dirty &&
+            passwordControl['dirty'] &&
             signInForm.controls['passwords'].errors &&
             signInForm.controls['passwords'].errors.passwordTooShort
-        }"
-        color="danger"
-      >
-        Password must be at least 6 characters
-      </div>
+          "
+        ></ion-icon>
+        <ion-icon
+          slot="end"
+          name="checkmark"
+          color="success"
+          *ngIf="
+            !returningMember &&
+            passwordControl['dirty'] &&
+            (!signInForm.controls['passwords'].errors ||
+              !signInForm.controls['passwords'].errors.passwordTooShort)
+          "
+        ></ion-icon>
+      </ion-item>
       <ion-item
         lines="none"
         color="medium"
@@ -87,19 +109,29 @@
           placeholder="Confirm password"
           type="password"
         ></ion-input>
-      </ion-item>
-      <div
-        class="input-warning"
-        [ngClass]="{
-          show:
-            !signInForm.controls['passwords'].pristine &&
+        <ion-icon
+          slot="end"
+          name="help"
+          class="shake delay-animation"
+          color="danger"
+          (click)="showErrors('password')"
+          *ngIf="
+            confirmPasswordControl['dirty'] &&
             signInForm.controls['passwords'].errors &&
-            signInForm.controls['passwords'].errors.differentPasswords
-        }"
-        color="danger"
-      >
-        Passwords do not match
-      </div>
+            !signInForm.controls['passwords'].errors.passwordTooShort
+          "
+        ></ion-icon>
+        <ion-icon
+          slot="end"
+          name="checkmark"
+          color="success"
+          *ngIf="
+            !returningMember &&
+            confirmPasswordControl['dirty'] &&
+            !signInForm.controls['passwords'].errors
+          "
+        ></ion-icon>
+      </ion-item>
     </div>
 
     <ion-item

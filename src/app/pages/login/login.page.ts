@@ -21,6 +21,9 @@ export class LoginPage implements OnInit {
    */
   returningMember = true;
 
+  /**
+   * variable to hold toast explaining errors with the input
+   */
   toast;
 
   /**
@@ -70,13 +73,13 @@ export class LoginPage implements OnInit {
    */
   passwordValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      if (this.showResetPasswordEmailWarning || this.returningMember) {
+      if (this.showResetPasswordEmailWarning) {
         return null;
       }
       if (this.password.length < 6) {
         return { passwordTooShort: true };
       }
-      if (this.password !== this.confirmPassword) {
+      if (!this.returningMember && (this.password !== this.confirmPassword)) {
         return { differentPasswords: true };
       }
       return null;
@@ -89,15 +92,22 @@ export class LoginPage implements OnInit {
   get email() {
     return this.signInForm ? this.signInForm.get('email').value : '';
   }
+
   get password() {
     return this.signInForm
       ? this.signInForm.get('passwords.password').value
       : '';
   }
+  get passwordControl() {
+    return this.signInForm ? this.signInForm.get('passwords').get('password') : {};
+  }
   get confirmPassword() {
     return this.signInForm
       ? this.signInForm.get('passwords.confirmPassword').value
       : '';
+  }
+  get confirmPasswordControl() {
+    return this.signInForm ? this.signInForm.get('passwords').get('confirmPassword') : {};
   }
   get rememberMe() {
     return this.signInForm ? this.signInForm.get('rememberMe').value : false;
@@ -203,5 +213,29 @@ export class LoginPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  async showErrors(field: string) {
+    let errorMsg: string;
+    switch (field) {
+      case 'email':
+        errorMsg = 'Please enter a valid email address';
+        break;
+      case 'password':
+        errorMsg = 'The password must be at least 6 characters';
+        break;
+      case 'confirmPassword':
+        errorMsg = 'The passwords do not match';
+        break;
+    }
+    if (this.toast) {
+      this.toast.dismiss();
+    }
+    this.toast = await this.toastCtrl.create({
+      message: errorMsg,
+      duration: 3000,
+      color: 'danger'
+    });
+    this.toast.present();
   }
 }
