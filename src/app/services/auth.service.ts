@@ -9,7 +9,23 @@ import { switchMap, take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private afAuth: AngularFireAuth, private db: AngularFirestore) {}
+
+  user: Observable<any>;
+
+  constructor(private afAuth: AngularFireAuth, private db: AngularFirestore) {
+    this.user = this.afAuth.authState.pipe(
+      switchMap(user => {
+          if (user) {
+            return this.db
+              .doc(`users/${user.uid}`)
+              .valueChanges()
+              .pipe(take(1));
+          } else {
+            return of(null);
+          }
+      })
+    );
+  }
 
   /**
    * logs in a current user with email and password and returns the corresponding user from the users database
@@ -51,7 +67,7 @@ export class AuthService {
         return from(
           this.db.doc(`users/${data.user.uid}`).set({
             email,
-            role: 'USER',
+            role: 'USER', // TODO some way of giving users another role
             permissions: [],
             created: firebase.firestore.FieldValue.serverTimestamp()
           })
