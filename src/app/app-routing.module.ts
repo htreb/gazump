@@ -5,7 +5,8 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
-  { path: 'menu',
+  {
+    path: 'menu',
     loadChildren: './pages/menu/menu.module#MenuPageModule',
     canActivate: [AuthGuard],
     data: {
@@ -20,4 +21,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

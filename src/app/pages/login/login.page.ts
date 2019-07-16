@@ -203,12 +203,11 @@ export class LoginPage implements OnInit {
 
     this.auth.logIn(this.email, this.password).subscribe(
       user => {
-        loading.dismiss();
         this.enterApp(user);
+        loading.dismiss();
       },
       async err => {
         loading.dismiss();
-
         const alert = await this.alertCtrl.create({
           header: 'Error',
           message: err.message, // TODO more human readable error messages?
