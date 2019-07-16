@@ -59,7 +59,13 @@ export class LoginPage implements OnInit {
   ngOnInit() {
     this.signInForm = this.fb.group({
       // the below regex is used over the Validators.email as this prevents emails like '2@2' from being valid
-      email: ['', [Validators.required, Validators.pattern(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/)]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/)
+        ]
+      ],
       passwords: this.fb.group(
         {
           password: [''],
@@ -122,7 +128,7 @@ export class LoginPage implements OnInit {
       if (this.password.length < 6) {
         return { passwordTooShort: true };
       }
-      if (!this.returningMember && (this.password !== this.confirmPassword)) {
+      if (!this.returningMember && this.password !== this.confirmPassword) {
         return { differentPasswords: true };
       }
       return null;
@@ -144,7 +150,7 @@ export class LoginPage implements OnInit {
   get passwordControl() {
     return this.signInForm
       ? this.signInForm.get('passwords').get('password')
-      : {};
+      : {dirty: false};
   }
   get confirmPassword() {
     return this.signInForm
@@ -154,7 +160,7 @@ export class LoginPage implements OnInit {
   get confirmPasswordControl() {
     return this.signInForm
       ? this.signInForm.get('passwords').get('confirmPassword')
-      : {};
+      : {dirty: false};
   }
   get rememberMe() {
     return this.signInForm ? this.signInForm.get('rememberMe').value : false;
@@ -195,9 +201,21 @@ export class LoginPage implements OnInit {
     });
     await loading.present();
 
-    this.auth.logIn(this.email, this.password).then(resp => {
-      loading.dismiss();
-    });
+    this.auth.logIn(this.email, this.password).then(
+      user => {
+        loading.dismiss();
+      },
+      async err => {
+        loading.dismiss();
+
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: err.message, // TODO more human readable error messages?
+          buttons: ['OK']
+        });
+        alert.present();
+      }
+    );
   }
 
   /**
@@ -211,6 +229,16 @@ export class LoginPage implements OnInit {
 
     this.auth.signUp(this.email, this.password).then(resp => {
       loading.dismiss();
+    },
+    async err => {
+      loading.dismiss();
+
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: err.message, // TODO more human readable error messages?
+        buttons: ['OK']
+      });
+      alert.present();
     });
   }
 
@@ -262,7 +290,9 @@ export class LoginPage implements OnInit {
   }
 
   async showErrors(errorMsg: string) {
-    if (!errorMsg) { return; }
+    if (!errorMsg) {
+      return;
+    }
     if (this.toast) {
       this.toast.dismiss();
     }

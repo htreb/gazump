@@ -9,18 +9,14 @@ export class AuthService {
   constructor(private afAuth: AngularFireAuth) { }
 
   logIn(email: string, password: string): Promise<void | firebase.auth.UserCredential> {
-    return this.afAuth.auth.signInWithEmailAndPassword(email, password).catch((e) => {
-      console.error(`an error logging in the user ${email}`, e.message);
-    });
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   signUp(email: string, password: string): Promise<void | firebase.auth.UserCredential> {
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password).catch((e) => {
-      console.error(`an error ocurred creating new the user ${email}`, e.message);
-    });
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
   }
 
   sendResetEmail(email: string) {
-    return this.afAuth.auth.sendPasswordResetEmail(email);
-  }
+      return this.afAuth.auth.sendPasswordResetEmail(email);
+    }
 }
