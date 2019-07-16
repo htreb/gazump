@@ -201,9 +201,10 @@ export class LoginPage implements OnInit {
     });
     await loading.present();
 
-    this.auth.logIn(this.email, this.password).then(
+    this.auth.logIn(this.email, this.password).subscribe(
       user => {
         loading.dismiss();
+        this.enterApp(user);
       },
       async err => {
         loading.dismiss();
@@ -227,9 +228,10 @@ export class LoginPage implements OnInit {
     });
     await loading.present();
 
-    this.auth.signUp(this.email, this.password).then(resp => {
-      loading.dismiss();
-      this.router.navigateByUrl('/menu');
+    this.auth.signUp(this.email, this.password).subscribe(
+      user => {
+        loading.dismiss();
+        this.enterApp(user);
     },
     async err => {
       loading.dismiss();
@@ -241,6 +243,18 @@ export class LoginPage implements OnInit {
       });
       alert.present();
     });
+  }
+
+  /**
+   * takes user to appropriate page based on their role after signing up or logging in
+   */
+  enterApp(user: any) {
+    const role = user.role;
+    if (role === 'USER') {
+      this.router.navigateByUrl('/menu');
+    } else if (role === 'ADMIN') {
+      this.router.navigateByUrl(''); // TODO SEND TO ADMIN PAGE?
+     }
   }
 
   /**

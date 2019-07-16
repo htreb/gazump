@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterEvent } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 export interface Page {
   title: string;
@@ -25,7 +26,7 @@ export class MenuPage implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: AuthService) {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event && event.url) {
         this.selectedPath = event.url;
@@ -35,6 +36,10 @@ export class MenuPage implements OnInit {
 
   ngOnInit() {
 
+  }
+
+  logOut() {
+    this.auth.logOut();
   }
 }
 
