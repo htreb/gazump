@@ -346,4 +346,18 @@ export class LoginPage implements OnInit {
       }
     );
   }
+
+
+
+
+  autoFillCredentials() {
+    this.signInForm.setValue({
+      email: 'dummy@email.com',
+      passwords: {
+        password: 'password',
+        confirmPassword: 'password',
+      },
+      rememberMe: true
+    });
+  }
 }

@@ -12,6 +12,7 @@ const routes: Routes = [
     path: '',
     component: MenuPage,
     children: [
+      { path: '', redirectTo: 'board', pathMatch: 'full' },
       {
         path: 'board',
         loadChildren: '../board/board.module#BoardPageModule'
