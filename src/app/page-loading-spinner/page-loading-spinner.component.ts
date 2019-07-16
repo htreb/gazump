@@ -20,10 +20,10 @@ import {
         // })),
         transition(':enter', [
           style({opacity: 0}),
-          animate('.2s')
+          animate('.3s')
         ]),
         transition('* => void', [
-          animate('.2s .3s ease-out', style({opacity: 0}))
+          animate('.3s .3s', style({opacity: 0}))
         ]),
       ]),
     ]
