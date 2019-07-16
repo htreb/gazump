@@ -296,7 +296,7 @@ export class LoginPage implements OnInit {
         {
           text: 'Ok',
           handler: () => {
-            this.auth.sendResetEmail(this.email);
+            this.sendResetPasswordEmail();
           }
         }
       ]
@@ -321,5 +321,29 @@ export class LoginPage implements OnInit {
       color: 'danger'
     });
     this.toast.present();
+  }
+
+  sendResetPasswordEmail() {
+    this.auth.sendResetEmail(this.email).then(
+      async res => {
+        if (this.toast) {
+          this.toast.dismiss();
+        }
+        this.toast = await this.toastCtrl.create({
+          duration: 3000,
+          message: 'Success! Check your Emails for more information.',
+          color: 'success'
+        });
+        this.toast.present();
+      },
+      async err => {
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: err.message,
+          buttons: ['OK'],
+        });
+        alert.present();
+      }
+    );
   }
 }
