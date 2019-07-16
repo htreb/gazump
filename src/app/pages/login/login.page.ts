@@ -229,6 +229,7 @@ export class LoginPage implements OnInit {
 
     this.auth.signUp(this.email, this.password).then(resp => {
       loading.dismiss();
+      this.router.navigateByUrl('/menu');
     },
     async err => {
       loading.dismiss();
@@ -264,7 +265,7 @@ export class LoginPage implements OnInit {
   /**
    * Displays alert asking user to confirm reset password email to entered email.
    *
-   * Confirm triggers sending the email !TODO!
+   * Confirm triggers sending the email TODO
    *
    * Dismiss does nothing
    */
@@ -289,6 +290,10 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
+  /**
+   * Displays an error toast to the user (used to show which form values are incorrect)
+   * @param errorMsg the error message to show to the user
+   */
   async showErrors(errorMsg: string) {
     if (!errorMsg) {
       return;
