@@ -20,6 +20,10 @@ const routes: Routes = [
       {
         path: 'chat',
         loadChildren: '../chat/chat.module#ChatPageModule'
+      },
+      {
+        path: 'ticket',
+        loadChildren: './pages/ticket/ticket.module#TicketPageModule'
       }
     ]
   }

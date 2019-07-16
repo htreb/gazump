@@ -23,7 +23,11 @@ export class MenuPage implements OnInit {
     {
       title: 'Chat',
       url: '/menu/chat'
-    }
+    },
+    {
+      title: 'New ticket',
+      url: '/menu/ticket'
+    },
   ];
 
   constructor(private router: Router, private auth: AuthService) {
