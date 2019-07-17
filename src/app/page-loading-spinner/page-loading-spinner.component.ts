@@ -14,26 +14,18 @@ import {
   styleUrls: ['./page-loading-spinner.component.scss'],
 
   animations: [
-      trigger('fadeIn', [
-        // state('in', style({
-        //   opacity: 1,
-        // })),
-        transition(':enter', [
-          style({opacity: 0}),
-          animate('.3s')
-        ]),
-        transition('* => void', [
-          animate('.3s .3s', style({opacity: 0}))
-        ]),
-      ]),
-    ]
-
+    trigger('fadeIn', [
+      state('*', style({ opacity: 1 })),
+      state('void', style({ opacity: 0 })),
+      transition('void => *', [animate('.2s 0s ease-out')]),
+      // when removing component fade out over duration of 0.2 seconds,
+      // but start after a 0.3 delay (give page time to load behind)
+      transition('* => void', [animate('0.2s 0.3s ease-in')])
+    ])
+  ]
 })
 export class PageLoadingSpinnerComponent implements OnInit {
-
-  constructor(public authGuard: AuthGuard) { }
+  constructor(public authGuard: AuthGuard) {}
 
   ngOnInit() {}
-
-
 }
