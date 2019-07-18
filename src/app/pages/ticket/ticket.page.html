@@ -1,56 +1,14 @@
 <ion-header>
-  <ion-toolbar color='primary'>
-    <ion-menu-button slot="start"></ion-menu-button>
-    <ion-title>ticket</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Ticket</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
   <ion-card>
     <ion-card-content [formGroup]="ticketForm">
-      
-      
-      
-      
-      <ion-item>
-        <ion-label>Completed by:</ion-label>
-        <ion-select multiple="true" formControlName="completedBy">
-          <ion-select-option value="council">Council</ion-select-option>
-          <ion-select-option value="Sellers Solicitor">Sellers Solicitor</ion-select-option>
-          <ion-select-option value="Buyers Solicitor">Buyers Solicitor</ion-select-option>
-          <ion-select-option value="Estate Agent">Estate Agent</ion-select-option>
-          <ion-select-option value="Sellers">Sellers</ion-select-option>
-          <ion-select-option value="Buyers">Buyers</ion-select-option>
-          <ion-select-option value="Other">Other</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-      
-      
-      
-      
-      
-      <ion-item (click)="pickDuration()">
-        Estimated time until completion
-      </ion-item>
-      
-      <ion-segment mode="ios" formControlName="status">
-        <ion-segment-button mode="ios" value="0">
-          <ion-label>To do</ion-label>
-        </ion-segment-button>
-        <ion-segment-button mode="ios" value="1">
-          <ion-label>In progress</ion-label>
-        </ion-segment-button>
-        <ion-segment-button mode="ios" value="2">
-          <ion-label>Completed</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-      
-      
-      
-      
-      
-      
       <ion-item>
         <ion-label position="floating">Title</ion-label>
         <ion-input formControlName="title"></ion-input>
@@ -59,13 +17,51 @@
         <ion-label position="floating">Description</ion-label>
         <ion-textarea formControlName="description" rows="6"></ion-textarea>
       </ion-item>
-      
-      
-      
-      
-      <ion-button type="submit" expand="block" (click)="logTicket()" class='ion-margin-vertical'
-      >Submit</ion-button
+      <ion-item>
+        <ion-label position="floating">Completed by</ion-label>
+        <ion-select multiple="true" formControlName="completedBy">
+          <ion-select-option value="Sellers Solicitor">
+            Sellers Solicitor
+          </ion-select-option>
+          <ion-select-option value="Buyers Solicitor">
+            Buyers Solicitor
+          </ion-select-option>
+          <ion-select-option value="Estate Agent">
+            Estate Agent
+          </ion-select-option>
+          <ion-select-option value="Sellers">Sellers</ion-select-option>
+          <ion-select-option value="Buyers">Buyers</ion-select-option>
+          <ion-select-option value="council">Council</ion-select-option>
+          <ion-select-option value="Other">Other</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Current state</ion-label>
+        <ion-select formControlName="status">
+          <ion-select-option value="0">To do</ion-select-option>
+          <ion-select-option value="1">In progress</ion-select-option>
+          <ion-select-option value="2">Done</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Estimated completion time</ion-label>
+        <ion-datetime
+          formControlName="eta"
+          displayFormat="DD MMM YYYY"
+          placeholder="Select Date"
+          min="2019"
+          max="2025"
+        ></ion-datetime>
+      </ion-item>
+      <ion-button
+        type="submit"
+        expand="block"
+        class="ion-margin-vertical"
+        (click)="saveTicket()"
+        [disabled]="!ticketForm.valid"
       >
+        Submit
+      </ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>

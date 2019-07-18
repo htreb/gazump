@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PickerController } from '@ionic/angular';
-import { PickerOptions } from '@ionic/core';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-ticket',
@@ -10,62 +10,49 @@ import { PickerOptions } from '@ionic/core';
 })
 export class TicketPage implements OnInit {
   ticketForm: FormGroup;
+  loading: HTMLIonLoadingElement;
 
   constructor(
     private fb: FormBuilder,
-    private pickerCtrl: PickerController) {}
+    private ticketService: TicketService,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController,
+    private navCtrl: NavController,
+    ) {}
 
   ngOnInit() {
     this.ticketForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       completedBy: [''],
-      duration: [{time: '', unit: ''}],
+      eta: [''],
       status: ['0'],
     });
   }
 
-  async pickDuration() {
-    const options = [];
-    for (let i = 1; i <= 30; i++) {
-      options.push({text: i, value: i});
-    }
-    const opts: PickerOptions = {
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Done',
-          handler: (resp: any): void => {
-            this.ticketForm.patchValue({
-              duration: { time: resp.amount.value, unit: resp.unit.value},
-            });
-          }
-        }
-      ],
-      columns: [
-        {
-          name: 'amount',
-          options,
-        },
-        {
-          name: 'unit',
-          options: [
-            {text: 'Hours', value: 1},
-            {text: 'Days', value: 24},
-            {text: 'Weeks', value: 168},
-            {text: 'Months', value: 720},
-          ],
-        },
-      ]
-    };
-    const picker = await this.pickerCtrl.create(opts);
-    picker.present();
-  }
+  /**
+   * Saves the ticket in future this will update a current ticket too
+   */
+  async saveTicket() {
+    this.loading = await this.loadingCtrl.create({
+      message: 'Saving...'
+    });
+    await this.loading.present();
 
-  logTicket() {
-    console.log(this.ticketForm.value);
+    this.ticketService.createOrUpdate(null, this.ticketForm.value).then(
+      () => {
+        this.loading.dismiss();
+        this.navCtrl.navigateBack('/menu/board');
+      },
+      async err => {
+        this.loading.dismiss();
+        const errorAlert = await this.alertCtrl.create({
+          header: 'Error',
+          message: err.message, // TODO more human readable error messages?
+          buttons: ['OK']
+        });
+        errorAlert.present();
+      }
+    );
   }
 }

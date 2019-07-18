@@ -2,28 +2,39 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { from, Observable, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { from, Observable, of, BehaviorSubject } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   user: Observable<any>;
+  currentUser = new BehaviorSubject(null);
 
-  constructor(private afAuth: AngularFireAuth, private db: AngularFirestore, private router: Router) {
+  constructor(
+    private afAuth: AngularFireAuth,
+    private db: AngularFirestore,
+    private router: Router
+  ) {
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
-          if (user) {
-            return this.db
-              .doc(`users/${user.uid}`)
-              .valueChanges()
-              .pipe(take(1));
-          } else {
-            return of(null);
-          }
+        if (user) {
+          return this.db
+            .doc(`users/${user.uid}`)
+            .valueChanges()
+            .pipe(
+              take(1),
+              tap((data: any) => {
+                data.id = user.uid;
+                this.currentUser.next(data);
+              })
+            );
+        } else {
+          this.currentUser.next(null);
+          return of(null);
+        }
       })
     );
   }
@@ -56,13 +67,15 @@ export class AuthService {
    * @param email string
    * @param password string
    */
-  signUp(email: string, password: string) {
+  signUp(email: string, password: string): Observable<any> {
     return from(
       this.afAuth.auth.createUserWithEmailAndPassword(email, password)
     ).pipe(
       switchMap(data => {
         if (!data || !data.user) {
-          console.log('something has gone wrong signing up the new user, we shouldn\'t get here');
+          console.log(
+            'something has gone wrong signing up the new user, we shouldn\'t get here'
+          );
           return of(null);
         }
         return from(
@@ -88,14 +101,14 @@ export class AuthService {
    * Sends a password reset email to the email address (if there is a user linked to it)
    * @param email string
    */
-  sendResetEmail(email: string) {
+  sendResetEmail(email: string): Promise<any> {
     return this.afAuth.auth.sendPasswordResetEmail(email);
   }
 
   /**
    * Signs out the currently logged in user
    */
-  logOut() {
+  logOut(): void {
     this.afAuth.auth.signOut();
     this.router.navigateByUrl('/login');
   }
