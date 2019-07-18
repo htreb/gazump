@@ -23,7 +23,7 @@ const routes: Routes = [
       },
       {
         path: 'ticket',
-        loadChildren: './pages/ticket/ticket.module#TicketPageModule'
+        loadChildren: '../ticket/ticket.module#TicketPageModule'
       }
     ]
   }

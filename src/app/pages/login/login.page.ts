@@ -287,7 +287,7 @@ export class LoginPage implements OnInit {
       header: 'Confirm',
       message: `Are you sure you want to send a reset password email to:
                 <br><br>
-                ${this.email}?`,
+                <b>${this.email}?</b>`,
       buttons: [
         {
           text: 'Cancel'
