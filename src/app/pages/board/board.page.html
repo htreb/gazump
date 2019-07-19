@@ -1,18 +1,33 @@
 <ion-header>
-    <ion-toolbar color='primary'>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Board</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Board</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content>
+  
+  <ion-list>
+    <ion-item *ngFor="let ticket of tickets | async">
+      <ion-label>
+        <h2>
+          {{ticket.title}}
+        </h2>
+        <p>
+          {{ticket.description}}
+        </p>
+      </ion-label>
+      <ion-note slot='end'>
+        {{ticket.created_at?.seconds * 1000 | date: 'd MMM y'}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
 
-  <ion-fab vertical='bottom' horizontal='end' slot='fixed'>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addTicket()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 </ion-content>
