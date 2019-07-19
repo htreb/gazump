@@ -8,19 +8,26 @@
 </ion-header>
 
 <ion-content>
-  
-  <ion-list>
-    <ion-item *ngFor="let ticket of tickets | async">
+  <ion-list
+    class="state-list"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropList
+  >
+    <ion-list-header>
+      To do
+    </ion-list-header>
+    <ion-item class="ticket" *ngFor="let ticket of tickets" cdkDrag>
+      <div class="drag-placeholder" *cdkDragPlaceholder></div>
       <ion-label>
         <h2>
-          {{ticket.title}}
+          {{ ticket.title }}
         </h2>
         <p>
-          {{ticket.description}}
+          {{ ticket.description }}
         </p>
       </ion-label>
-      <ion-note slot='end'>
-        {{ticket.created_at?.seconds * 1000 | date: 'd MMM y'}}
+      <ion-note slot="end">
+        {{ ticket.created_at?.seconds * 1000 | date: 'd MMM y' }}
       </ion-note>
     </ion-item>
   </ion-list>

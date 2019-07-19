@@ -1,0 +1,25 @@
+$minHeight: 67px;
+
+.state-list {
+  min-height: $minHeight;
+}
+
+.ticket {
+  cursor: move;
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-animating,
+.state-list.cdk-drop-list-dragging {
+  transition: transform 250ms ease-out;
+}
+
+.drag-placeholder {
+  background: rgba(var(--ion-color-medium-rgb), 0.7);
+  border: dotted 3px rgba(var(--ion-color-medium-rgb), 1);
+  min-height: $minHeight;
+}

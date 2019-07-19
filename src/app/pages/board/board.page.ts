@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { TicketService } from 'src/app/services/ticket.service';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-board',
@@ -10,15 +10,23 @@ import { TicketService } from 'src/app/services/ticket.service';
 })
 export class BoardPage implements OnInit {
 
-  tickets: Observable<any>;
+  tickets;
 
   constructor(private router: Router, private ticketService: TicketService) { }
 
   ngOnInit() {
-    this.tickets = this.ticketService.getUserTickets();
+    this.ticketService.getUserTickets().subscribe(tickets => {
+      this.tickets = tickets;
+    });
   }
 
   addTicket() {
     this.router.navigateByUrl('menu/ticket');
   }
+
+
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.tickets, event.previousIndex, event.currentIndex);
+  }
+
 }
