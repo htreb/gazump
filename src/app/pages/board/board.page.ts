@@ -94,6 +94,9 @@ export class BoardPage implements OnInit {
     }
   }
 
+  seeMore(event) {
+    console.log('wanna see more eh?', event);
+  }
   /**
    * Create a bunch of dummy tickets with random states
    * TODO remove this

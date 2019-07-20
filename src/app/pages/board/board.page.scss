@@ -1,37 +1,47 @@
-$minHeight: 67px;
-
 .board {
   display: flex;
-  justify-content: space-around;
-  height: 90%;
-  margin: 20px;
-}
-
-.state-list {
-  min-height: $minHeight;
-  width: 30%;
+  justify-content: space-between;
   height: 100%;
-  background-color: rgba(var(--ion-color-medium-rgb), 0.7);
-  overflow: scroll;
   padding: 20px;
 }
 
+.state-list {
+  border: solid 1px var(--ion-color-medium);
+  border-radius: 4px;
+  width: 32%;
+  height: 100%;
+  background-color: rgba(var(--ion-color-medium-rgb), 0.1);
+  overflow: scroll;
+  padding: 10px;
+}
+
 .ticket {
-  cursor: move;
+  box-sizing: border-box; // needed to make the transitions work
+  overflow: hidden;
+  height: 200px;
+}
+.ticket-icon-container {
+  display: flex;
+  justify-content: space-between;
+
+  .ticket-icon {
+    width: 20px;
+    height: 20px;
+    padding: 10px;
+  }
 }
 
 .cdk-drag-preview {
+  box-sizing: border-box;
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
     0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
-.cdk-drag-animating,
-.state-list.cdk-drop-list-dragging {
-  transition: transform 250ms ease-out;
+.cdk-drag-placeholder {
+  opacity: 0.3;
 }
 
-.drag-placeholder {
-  background: rgba(var(--ion-color-medium-rgb), 0.7);
-  border: dotted 3px rgba(var(--ion-color-medium-rgb), 1);
-  min-height: $minHeight;
+.cdk-drag-animating,
+.state-list.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+  transition: transform 250ms ease-out;
 }

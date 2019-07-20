@@ -8,9 +8,7 @@
 </ion-header>
 
 <ion-content>
-
-  <div class='board' cdkDropListGroup>
-
+  <div class="board" cdkDropListGroup>
     <ion-list
       class="state-list"
       *ngFor="let state of states"
@@ -19,27 +17,39 @@
       cdkDropList
     >
       <ion-list-header>
-        {{state.title}}
+        {{ state.title }}
       </ion-list-header>
-      <ion-item
-        class="ticket"
+
+      <ion-card
         *ngFor="let ticket of state.tickets"
         [cdkDragData]="ticket"
+        class="ticket"
+        color="light"
         cdkDrag
       >
-        <div class="drag-placeholder" *cdkDragPlaceholder></div>
-        <ion-label text-wrap>
-          <h2>
-            {{ ticket.title }}
-          </h2>
-          <p text-wrap>
-            {{ ticket.description }}
-          </p>
-        </ion-label>
-      </ion-item>
+        <div class="ticket-icon-container">
+          <ion-icon
+            name="more"
+            class="ticket-icon"
+            color="medium"
+            (click)="seeMore($event)"
+          ></ion-icon>
+          <ion-icon
+            name="move"
+            class="ticket-icon"
+            color="medium"
+            cdkDragHandle
+          ></ion-icon>
+        </div>
+        <ion-card-header>
+          <ion-card-title text-wrap>{{ ticket.title }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content text-wrap>
+          {{ ticket.description }}
+        </ion-card-content>
+      </ion-card>
     </ion-list>
-
-</div>
+  </div>
 
   <!-- // TODO remove this! -->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
@@ -47,7 +57,7 @@
       <ion-icon name="document"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
+  <!-- // TODO remove this! -->
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="addTicket()">
