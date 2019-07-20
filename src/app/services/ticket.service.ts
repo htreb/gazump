@@ -11,9 +11,12 @@ export class TicketService {
   loading;
   constructor(private db: AngularFirestore, private auth: AuthService) {}
 
-  createOrUpdate(id: string = null, info): Promise<any> {
-    if (id) {
-      // TODO
+  createOrUpdate(info): Promise<any> {
+    if (info.id) {
+      // Remove id from info object before saving, we don't need duplicate data in database
+      const id = info.id;
+      delete info.id;
+      return this.db.doc(`tickets/${id}`).update(info);
     } else {
       info.creator = this.auth.currentUser.value.id;
       info.created_at = firebase.firestore.FieldValue.serverTimestamp();

@@ -26,7 +26,7 @@ export class TicketPage implements OnInit {
       description: ['', Validators.required],
       completedBy: [''],
       eta: [''],
-      status: ['0'],
+      state: ['0'],
     });
   }
 
@@ -39,7 +39,7 @@ export class TicketPage implements OnInit {
     });
     await this.loading.present();
 
-    this.ticketService.createOrUpdate(null, this.ticketForm.value).then(
+    this.ticketService.createOrUpdate(this.ticketForm.value).then(
       () => {
         this.loading.dismiss();
         this.navCtrl.navigateBack('/menu/board');
