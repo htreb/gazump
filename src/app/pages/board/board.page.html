@@ -16,6 +16,9 @@
       [cdkDropListData]="state"
       cdkDropList
     >
+      <div class="state-title">
+        {{ state.title }}
+      </div>
       <div class="card-list">
         <ion-card
           *ngFor="let ticket of state.tickets"
@@ -50,9 +53,6 @@
             </ion-note>
           </div>
         </ion-card>
-      </div>
-      <div class="state-title">
-        {{ state.title }}
       </div>
       <div class="state-fade-footer"></div>
     </div>
