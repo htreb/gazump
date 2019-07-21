@@ -9,46 +9,53 @@
 
 <ion-content>
   <div class="board" cdkDropListGroup>
-    <ion-list
-      class="state-list"
+    <div
+      class="state-container"
       *ngFor="let state of states"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListData]="state"
       cdkDropList
     >
-      <ion-list-header>
+      <div class="card-list">
+        <ion-card
+          *ngFor="let ticket of state.tickets"
+          [cdkDragData]="ticket"
+          class="ticket"
+          color="light"
+          cdkDrag
+        >
+          <div class="ticket-icon-container">
+            <ion-icon
+              name="more"
+              class="ticket-icon"
+              color="medium"
+              (click)="seeMore($event)"
+            ></ion-icon>
+            <ion-icon
+              name="move"
+              class="ticket-icon"
+              color="medium"
+              cdkDragHandle
+            ></ion-icon>
+          </div>
+          <ion-card-header class="ticket-title">
+            <ion-card-title text-wrap>{{ ticket.title }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content class="ticket-description">
+            {{ ticket.description }}
+          </ion-card-content>
+          <div class="ticket-time-container">
+            <ion-note>
+              {{ ticket.created_at?.seconds * 1000 | date: 'd MMM yy' }}
+            </ion-note>
+          </div>
+        </ion-card>
+      </div>
+      <div class="state-title">
         {{ state.title }}
-      </ion-list-header>
-
-      <ion-card
-        *ngFor="let ticket of state.tickets"
-        [cdkDragData]="ticket"
-        class="ticket"
-        color="light"
-        cdkDrag
-      >
-        <div class="ticket-icon-container">
-          <ion-icon
-            name="more"
-            class="ticket-icon"
-            color="medium"
-            (click)="seeMore($event)"
-          ></ion-icon>
-          <ion-icon
-            name="move"
-            class="ticket-icon"
-            color="medium"
-            cdkDragHandle
-          ></ion-icon>
-        </div>
-        <ion-card-header>
-          <ion-card-title text-wrap>{{ ticket.title }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content text-wrap>
-          {{ ticket.description }}
-        </ion-card-content>
-      </ion-card>
-    </ion-list>
+      </div>
+      <div class="state-fade-footer"></div>
+    </div>
   </div>
 
   <!-- // TODO remove this! -->
