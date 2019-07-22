@@ -50,16 +50,6 @@ export class TicketService {
   }
 
   /**
-   * gets one instance of a user
-   * @param id userId
-   */
-  getUser(id: string) {
-    return this.db.doc(`users/${id}`).valueChanges().pipe(
-      take(1),
-    );
-  }
-
-  /**
    * Deletes a ticket from the db by id
    * @param id ticketId
    */
