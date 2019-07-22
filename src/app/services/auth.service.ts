@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { from, Observable, of, BehaviorSubject } from 'rxjs';
+import { from, Observable, of, BehaviorSubject, Subject } from 'rxjs';
 import { switchMap, take, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -12,13 +12,14 @@ import { Router } from '@angular/router';
 export class AuthService {
   user: Observable<any>;
   currentUser = new BehaviorSubject(null);
+  loggedOutSubject: Subject<any> = new Subject();
 
   constructor(
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
     private router: Router
   ) {
-    // subscribe to current logged in user, find them in the users table and and return
+    // subscribe to current logged in user, find them in the users table and return
     // an observable containing the id in the database.
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
@@ -39,6 +40,13 @@ export class AuthService {
         }
       })
     );
+
+    this.afAuth.authState.subscribe(user => {
+      if (!user) {
+        this.loggedOutSubject.next();
+        // this.loggedOutSubject.complete();
+      }
+    });
   }
 
   /**
@@ -123,7 +131,8 @@ export class AuthService {
     if (!this.currentUser || !this.currentUser.value.permissions) {
       return false;
     }
-    // filters the permissions to an array of all the user does not have. If that array is not 0 then deny permission.
+    // filters the permissions to an array of all that the user does not have.
+    // If that array is not 0 long then deny permission.
     return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
   }
 }

@@ -2,20 +2,17 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import * as firebase from 'firebase/app';
-import { map, take } from 'rxjs/operators';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketService {
-  loading;
   constructor(private db: AngularFirestore, private auth: AuthService) {}
 
-  createOrUpdate(info): Promise<any> {
-    if (info.id) {
-      // Remove id from info object before saving, we don't need duplicate data in database
-      const id = info.id;
-      delete info.id;
+  createOrUpdate(info, id?): Promise<any> {
+    if (id) {
       return this.db.doc(`tickets/${id}`).update(info);
     } else {
       info.creator = this.auth.currentUser.value.id;
@@ -24,7 +21,7 @@ export class TicketService {
     }
   }
 
-  getUserTickets() {
+  getUserTickets(): Observable<any> {
     const creatorId = this.auth.currentUser.value.id;
     return this.db
       .collection('/tickets', ref => ref.where('creator', '==', creatorId))
@@ -37,8 +34,8 @@ export class TicketService {
             const data = ticketData.payload.doc.data();
             const ticketId = ticketData.payload.doc.id;
             return { id: ticketId, ...data };
-          })
-        )
+          })),
+        takeUntil(this.auth.loggedOutSubject)
       );
   }
 
@@ -46,7 +43,7 @@ export class TicketService {
    * gets one instance of a ticket
    * @param id ticketId
    */
-  getTicket(id: string) {
+  getTicket(id: string): Observable<any> {
     return this.db.doc(`tickets/${id}`).valueChanges().pipe(
       take(1),
     );

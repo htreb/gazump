@@ -51,7 +51,7 @@ export class TicketPage implements OnInit {
       message: 'Saving...'
     });
     await this.loading.present();
-    this.ticketService.createOrUpdate(this.ticketForm.value).then(
+    this.ticketService.createOrUpdate(this.ticketForm.value, this.id).then(
       () => {
         this.backToBoard();
       },

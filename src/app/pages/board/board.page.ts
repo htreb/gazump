@@ -7,11 +7,13 @@ import {
   transferArrayItem
 } from '@angular/cdk/drag-drop';
 import { AlertController } from '@ionic/angular';
+import { takeUntil } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.page.html',
-  styleUrls: ['./board.page.scss'],
+  styleUrls: ['./board.page.scss']
 })
 export class BoardPage implements OnInit {
   public states = [
@@ -35,15 +37,19 @@ export class BoardPage implements OnInit {
   constructor(
     private router: Router,
     private ticketService: TicketService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private auth: AuthService
   ) {}
 
   ngOnInit() {
-    this.ticketService.getUserTickets().subscribe((tickets: any) => {
-      this.states.forEach(column => {
-        column.tickets = tickets.filter(t => t.state === column.state);
+    this.ticketService
+      .getUserTickets()
+      .pipe(takeUntil(this.auth.loggedOutSubject))
+      .subscribe((tickets: any) => {
+        this.states.forEach(column => {
+          column.tickets = tickets.filter(t => t.state === column.state);
+        });
       });
-    });
   }
 
   /**
@@ -78,11 +84,10 @@ export class BoardPage implements OnInit {
         event.currentIndex
       );
       try {
-        // make copy of item data so we can update the state
-        // if it fails to send to firebase then we're not out of sync
-        const ticketDetails = {...event.item.data};
-        ticketDetails.state = event.container.data.state;
-        await this.ticketService.createOrUpdate(ticketDetails);
+        await this.ticketService.createOrUpdate(
+          { state: event.container.data.state },
+          event.item.data.id
+        );
       } catch (err) {
         const alert = await this.alertCtrl.create({
           header: 'Error',
@@ -96,10 +101,9 @@ export class BoardPage implements OnInit {
 
   seeMore(id) {
     const navigationExtras: NavigationExtras = {
-      queryParams: {id}
+      queryParams: { id }
     };
     return this.router.navigate(['menu/ticket'], navigationExtras);
-
   }
   /**
    * Create a bunch of dummy tickets with random states
