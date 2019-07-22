@@ -18,6 +18,8 @@ export class AuthService {
     private db: AngularFirestore,
     private router: Router
   ) {
+    // subscribe to current logged in user, find them in the users table and and return
+    // an observable containing the id in the database.
     this.user = this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
@@ -111,5 +113,17 @@ export class AuthService {
   logOut(): void {
     this.afAuth.auth.signOut();
     this.router.navigateByUrl('/login');
+  }
+
+  /**
+   * Checks if a user matches the given permissions.
+   * @param permissions array of required permissions
+   */
+  hasPermissions(permissions: string[]): boolean {
+    if (!this.currentUser || !this.currentUser.value.permissions) {
+      return false;
+    }
+    // filters the permissions to an array of all the user does not have. If that array is not 0 then deny permission.
+    return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
   }
 }

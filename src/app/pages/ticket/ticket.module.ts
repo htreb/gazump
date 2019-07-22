@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { TicketPage } from './ticket.page';
+import { SharedDirectivesModule } from 'src/app/directives/shared-directives.module';
 
 const routes: Routes = [
   {
@@ -21,6 +22,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     ReactiveFormsModule,
+    SharedDirectivesModule
   ],
   declarations: [TicketPage]
 })
