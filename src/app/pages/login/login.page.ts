@@ -348,13 +348,13 @@ export class LoginPage implements OnInit {
 
 
 
-
-  autoFillCredentials() {
+// TODO REMOVE THIS FUNCTION AND FROM TEMPLATE BEFORE RELEASE
+  autoFillCredentials(admin = false) {
     this.signInForm.setValue({
-      email: 'dummy@email.com',
+      email: admin ? 'Admin@Admin.com' : 'dummy@email.com',
       passwords: {
-        password: 'password',
-        confirmPassword: 'password',
+        password: admin ? 'adminadmin' : 'password',
+        confirmPassword: admin ? 'adminadmin' : 'password',
       },
       rememberMe: true
     });

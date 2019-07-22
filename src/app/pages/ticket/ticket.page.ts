@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class TicketPage implements OnInit {
   ticketForm: FormGroup;
   loading: HTMLIonLoadingElement;
-  id: string;
+  id: string; // only set by queryParams if we are editing a ticket
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +35,8 @@ export class TicketPage implements OnInit {
     // if we have an id in the url then load that tickets data
     this.route.queryParams.subscribe(params => {
       if (params.id) {
-        this.ticketService.getTicket(params.id).subscribe(t => {
+        this.id = params.id;
+        this.ticketService.getTicket(this.id).subscribe(t => {
           this.ticketForm.patchValue(t);
         });
       }
@@ -50,11 +51,9 @@ export class TicketPage implements OnInit {
       message: 'Saving...'
     });
     await this.loading.present();
-
     this.ticketService.createOrUpdate(this.ticketForm.value).then(
       () => {
-        this.loading.dismiss();
-        this.navCtrl.navigateBack('/menu/board');
+        this.backToBoard();
       },
       async err => {
         this.loading.dismiss();
@@ -66,5 +65,31 @@ export class TicketPage implements OnInit {
         errorAlert.present();
       }
     );
+  }
+
+  backToBoard() {
+    if (this.loading) {
+      this.loading.dismiss();
+    }
+    this.navCtrl.navigateBack('/menu/board');
+  }
+  async deleteTicket() {
+    this.loading = await this.loadingCtrl.create({
+      message: 'Deleting...'
+    });
+    await this.loading.present();
+    if (this.id) {
+      this.ticketService.deleteTicket(this.id).then(() => {
+        this.backToBoard();
+      }, async err => {
+        this.loading.dismiss();
+        const errorAlert = await this.alertCtrl.create({
+          header: 'Error',
+          message: err.message, // TODO more human readable error messages?
+          buttons: ['OK']
+        });
+        errorAlert.present();
+      });
+    }
   }
 }
