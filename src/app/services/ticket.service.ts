@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import * as firebase from 'firebase/app';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +40,33 @@ export class TicketService {
           })
         )
       );
+  }
+
+  /**
+   * gets one instance of a ticket
+   * @param id ticketId
+   */
+  getTicket(id: string) {
+    return this.db.doc(`tickets/${id}`).valueChanges().pipe(
+      take(1),
+    );
+  }
+
+  /**
+   * gets one instance of a user
+   * @param id userId
+   */
+  getUser(id: string) {
+    return this.db.doc(`users/${id}`).valueChanges().pipe(
+      take(1),
+    );
+  }
+
+  /**
+   * Deletes a ticket from the db by id
+   * @param id ticketId
+   */
+  deleteTicket(id: string) {
+    return this.db.doc(`tickets/${id}`).delete();
   }
 }

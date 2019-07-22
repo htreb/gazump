@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import {
   CdkDragDrop,
@@ -94,8 +94,12 @@ export class BoardPage implements OnInit {
     }
   }
 
-  seeMore(event) {
-    console.log('wanna see more eh?', event);
+  seeMore(id) {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {id}
+    };
+    return this.router.navigate(['menu/ticket'], navigationExtras);
+
   }
   /**
    * Create a bunch of dummy tickets with random states

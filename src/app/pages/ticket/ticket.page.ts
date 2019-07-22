@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { TicketService } from 'src/app/services/ticket.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ticket',
@@ -11,6 +12,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 export class TicketPage implements OnInit {
   ticketForm: FormGroup;
   loading: HTMLIonLoadingElement;
+  id: string;
 
   constructor(
     private fb: FormBuilder,
@@ -18,6 +20,7 @@ export class TicketPage implements OnInit {
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
     private navCtrl: NavController,
+    private route: ActivatedRoute,
     ) {}
 
   ngOnInit() {
@@ -27,6 +30,15 @@ export class TicketPage implements OnInit {
       completedBy: [''],
       eta: [''],
       state: ['0'],
+    });
+
+    // if we have an id in the url then load that tickets data
+    this.route.queryParams.subscribe(params => {
+      if (params.id) {
+        this.ticketService.getTicket(params.id).subscribe(t => {
+          this.ticketForm.patchValue(t);
+        });
+      }
     });
   }
 
