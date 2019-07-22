@@ -10,7 +10,7 @@ const routes: Routes = [
     loadChildren: './pages/menu/menu.module#MenuPageModule',
     canActivate: [AuthGuard],
     data: {
-      roles: ['USER']
+      roles: ['USER', 'ADMIN']
     }
   }
 ];
