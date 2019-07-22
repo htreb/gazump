@@ -150,7 +150,7 @@ export class LoginPage implements OnInit {
   get passwordControl() {
     return this.signInForm
       ? this.signInForm.get('passwords').get('password')
-      : {dirty: false};
+      : { dirty: false };
   }
   get confirmPassword() {
     return this.signInForm
@@ -160,7 +160,7 @@ export class LoginPage implements OnInit {
   get confirmPasswordControl() {
     return this.signInForm
       ? this.signInForm.get('passwords').get('confirmPassword')
-      : {dirty: false};
+      : { dirty: false };
   }
   get rememberMe() {
     return this.signInForm ? this.signInForm.get('rememberMe').value : false;
@@ -231,17 +231,18 @@ export class LoginPage implements OnInit {
       user => {
         loading.dismiss();
         this.enterApp(user);
-    },
-    async err => {
-      loading.dismiss();
+      },
+      async err => {
+        loading.dismiss();
 
-      const alert = await this.alertCtrl.create({
-        header: 'Error',
-        message: err.message, // TODO more human readable error messages?
-        buttons: ['OK']
-      });
-      alert.present();
-    });
+        const alert = await this.alertCtrl.create({
+          header: 'Error',
+          message: err.message, // TODO more human readable error messages?
+          buttons: ['OK']
+        });
+        alert.present();
+      }
+    );
   }
 
   /**
@@ -252,8 +253,8 @@ export class LoginPage implements OnInit {
     if (role === 'USER') {
       this.router.navigateByUrl('/menu');
     } else if (role === 'ADMIN') {
-      this.router.navigateByUrl(''); // TODO SEND TO ADMIN PAGE?
-     }
+      this.router.navigateByUrl('/menu'); // TODO SEND TO ADMIN PAGE?
+    }
   }
 
   /**
@@ -339,22 +340,20 @@ export class LoginPage implements OnInit {
         const alert = await this.alertCtrl.create({
           header: 'Error',
           message: err.message,
-          buttons: ['OK'],
+          buttons: ['OK']
         });
         alert.present();
       }
     );
   }
 
-
-
-// TODO REMOVE THIS FUNCTION AND FROM TEMPLATE BEFORE RELEASE
+  // TODO REMOVE THIS FUNCTION AND FROM TEMPLATE BEFORE RELEASE
   autoFillCredentials(admin = false) {
     this.signInForm.setValue({
       email: admin ? 'Admin@Admin.com' : 'dummy@email.com',
       passwords: {
         password: admin ? 'adminadmin' : 'password',
-        confirmPassword: admin ? 'adminadmin' : 'password',
+        confirmPassword: admin ? 'adminadmin' : 'password'
       },
       rememberMe: true
     });
