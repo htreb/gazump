@@ -22,6 +22,7 @@
   z-index: 1;
   background: linear-gradient(to bottom, var(--ion-color-light-tint) 40px, transparent);
   height: 50px;
+  text-transform: uppercase;
 }
 .column-fade-footer {
   position: absolute;
@@ -61,6 +62,7 @@
   .ticket-title {
     margin: 10px;
     margin-top: 0;
+    font-size: 1.3em
   }
 
   .ticket-description {
