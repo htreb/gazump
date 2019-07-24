@@ -9,22 +9,20 @@
 
 <ion-content>
   <div class="board" cdkDropListGroup>
-    <div
-      class="state-container"
-      *ngFor="let state of states"
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListData]="state"
-      cdkDropList
-    >
-      <div class="state-title">
-        {{ state.title }}
-      </div>
-      <div class="card-list">
+    <div class="column-header-footer-container" *ngFor="let column of columns">
+      <div class="column-title">{{ column.title }}</div>
+      <div class="column-fade-footer"></div>
+      <div
+        class="column"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListData]="column"
+        cdkDropList
+      >
         <ion-card
-          *ngFor="let ticket of state.tickets"
-          [cdkDragData]="ticket"
+          *ngFor="let ticket of column.tickets"
+          color='light'
           class="ticket"
-          color="light"
+          [cdkDragData]="ticket"
           cdkDrag
         >
           <div class="ticket-icon-container">
@@ -41,22 +39,20 @@
               cdkDragHandle
             ></ion-icon>
           </div>
-          <ion-card-header class="ticket-title">
-            <ion-card-title text-wrap>{{ ticket.title }}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content class="ticket-description">
-            {{ ticket.description }}
-          </ion-card-content>
-          <div class="ticket-time-container">
-            <ion-note>
+          <div class="ticket-title">{{ ticket.title }}</div>
+          <div class="ticket-description">{{ ticket.description }}</div>
+          <div class="date-time-container">
+            <ion-note class="date-time">
               {{ ticket.created_at?.seconds * 1000 | date: 'd MMM yy' }}
             </ion-note>
           </div>
         </ion-card>
       </div>
-      <div class="state-fade-footer"></div>
+      <!-- close column -->
     </div>
+    <!-- close column container (contains header and footer) -->
   </div>
+  <!-- close board-->
 
   <!-- // TODO remove this! -->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">

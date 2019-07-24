@@ -16,7 +16,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./board.page.scss']
 })
 export class BoardPage implements OnInit {
-  public states = [
+  public columns = [
     {
       title: 'To do',
       state: '0',
@@ -46,7 +46,7 @@ export class BoardPage implements OnInit {
       .getUserTickets()
       .pipe(takeUntil(this.auth.loggedOutSubject))
       .subscribe((tickets: any) => {
-        this.states.forEach(column => {
+        this.columns.forEach(column => {
           column.tickets = tickets.filter(t => t.state === column.state);
         });
       });
