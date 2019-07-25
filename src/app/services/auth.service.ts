@@ -3,7 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { from, Observable, of, BehaviorSubject, Subject } from 'rxjs';
-import { switchMap, take, tap } from 'rxjs/operators';
+import { switchMap, take, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -44,7 +44,7 @@ export class AuthService {
     this.afAuth.authState.subscribe(user => {
       if (!user) {
         this.loggedOutSubject.next();
-        // this.loggedOutSubject.complete();
+        // this.loggedOutSubject.complete(); // TODO! ticket #23
       }
     });
   }
@@ -73,7 +73,6 @@ export class AuthService {
 
   /**
    * Signs up a new user with email and password, and creates a new entry in the users database
-   *
    * @param email string
    * @param password string
    */
@@ -93,7 +92,8 @@ export class AuthService {
             email,
             role: 'USER', // TODO some way of giving users another role
             permissions: [],
-            created: firebase.firestore.FieldValue.serverTimestamp()
+            created: firebase.firestore.FieldValue.serverTimestamp(),
+            nickname: 'colin' // TODO some way of letting users change their nickname
           })
         ).pipe(
           switchMap(() => {
@@ -134,5 +134,28 @@ export class AuthService {
     // filters the permissions to an array of all that the user does not have.
     // If that array is not 0 long then deny permission.
     return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
+  }
+
+  /**
+   * checks firebase for a match on a given nickname
+   * @param name requested name
+   */
+  isNicknameAvailable(name: string) {
+    return this.db.collection('users', ref => ref.where('nickname', '==', name).limit(1)).valueChanges().pipe(
+      take(1),
+      map(user => {
+        return user;
+      })
+    );
+  }
+
+  /**
+   * changes the currently logged in users nickname
+   * @param nickname new nickname
+   */
+  updateNickname(nickname: string) {
+    return this.db.doc(`users/${this.currentUser.value.id}`).update({
+      nickname
+    });
   }
 }
