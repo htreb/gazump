@@ -27,15 +27,15 @@ const routes: Routes = [
       },
       {
         path: 'chats',
-        loadChildren: './pages/chats/chats.module#ChatsPageModule'
+        loadChildren: '../chats/chats.module#ChatsPageModule'
       },
       {
-        path: 'start-chat',
-        loadChildren: './pages/start-chat/start-chat.module#StartChatPageModule'
+        path: 'chats/start',
+        loadChildren: '../start-chat/start-chat.module#StartChatPageModule'
       },
       {
         path: 'profile',
-        loadChildren: './pages/profile/profile.module#ProfilePageModule'
+        loadChildren: '../profile/profile.module#ProfilePageModule'
       }
     ]
   }

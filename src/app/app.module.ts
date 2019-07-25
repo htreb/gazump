@@ -15,6 +15,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
 import { PageLoadingSpinnerComponent } from './page-loading-spinner/page-loading-spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 @NgModule({
   declarations: [AppComponent, PageLoadingSpinnerComponent],
@@ -26,6 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
     BrowserAnimationsModule,
   ],
   providers: [

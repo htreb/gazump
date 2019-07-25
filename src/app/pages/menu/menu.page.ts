@@ -29,14 +29,6 @@ export class MenuPage implements OnInit {
       url: '/menu/chats'
     },
     {
-      title: 'Chat',
-      url: '/menu/chat'
-    },
-    {
-      title: 'Start chat',
-      url: '/menu/start-chat'
-    },
-    {
       title: 'Profile',
       url: '/menu/profile'
     },
