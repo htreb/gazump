@@ -10,10 +10,13 @@ import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/s
   providedIn: 'root'
 })
 export class ChatService {
-
-  constructor(private db: AngularFirestore, private auth: AuthService, private storage: AngularFireStorage) { }
+  constructor(
+    private db: AngularFirestore,
+    private auth: AuthService,
+    private storage: AngularFireStorage) {}
 
   findUser(value) {
+    value = value.toLowerCase();
     const email = this.db.collection('users', ref => ref.where('email', '==', value)).snapshotChanges().pipe(
       take(1),
       map(actions => actions.map(a => {

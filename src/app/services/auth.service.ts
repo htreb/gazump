@@ -77,6 +77,7 @@ export class AuthService {
    * @param password string
    */
   signUp(email: string, password: string): Observable<any> {
+    email = email.toLowerCase();
     return from(
       this.afAuth.auth.createUserWithEmailAndPassword(email, password)
     ).pipe(

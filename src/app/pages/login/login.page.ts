@@ -350,7 +350,7 @@ export class LoginPage implements OnInit {
   // TODO REMOVE THIS FUNCTION AND FROM TEMPLATE BEFORE RELEASE
   autoFillCredentials(admin = false) {
     this.signInForm.setValue({
-      email: admin ? 'Admin@Admin.com' : 'dummy@email.com',
+      email: admin ? 'admin@admin.com' : 'dummy@email.com',
       passwords: {
         password: admin ? 'adminadmin' : 'password',
         confirmPassword: admin ? 'adminadmin' : 'password'
