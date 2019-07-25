@@ -9,4 +9,17 @@
 
 <ion-content>
 
+  <ion-item>
+    <ion-input placeholder='Chat name' [(ngModel)]='title'></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position='floating'>Participant</ion-label>
+    <ion-input placeholder='Name' [(ngModel)]='participant'></ion-input>
+  </ion-item>
+
+  <ion-button expand='block' (click)="addUser()">Add participant</ion-button>
+
+
+  <ion-button expand='block' (click)="startGroup()">Start chat group</ion-button>
 </ion-content>

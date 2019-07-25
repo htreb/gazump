@@ -15,7 +15,12 @@ export class ChatService {
     private auth: AuthService,
     private storage: AngularFireStorage) {}
 
-  findUser(value) {
+  /**
+   * Takes a string input and searches through the users emails and nicknames for a match.
+   * returns a forkJoined observable: email, nickname
+   * @param value string to search for
+   */
+  findUserByEmailOrNickName(value: string) {
     value = value.toLowerCase();
     const email = this.db.collection('users', ref => ref.where('email', '==', value)).snapshotChanges().pipe(
       take(1),
@@ -33,10 +38,15 @@ export class ChatService {
         return { id, ...data };
       }))
     );
-    return [email, nickname];
+    return forkJoin([email, nickname]);
   }
 
-  createGroup(title, users) {
+  /**
+   * creates a new chat group
+   * @param title group name
+   * @param users string[]
+   */
+  createGroup(title: string, users: string[]) {
     const current = {
       email: this.auth.currentUser.value.email,
       id: this.auth.currentUser.value.id,
