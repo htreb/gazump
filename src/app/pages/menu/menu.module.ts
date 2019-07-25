@@ -24,6 +24,18 @@ const routes: Routes = [
       {
         path: 'ticket',
         loadChildren: '../ticket/ticket.module#TicketPageModule'
+      },
+      {
+        path: 'chats',
+        loadChildren: './pages/chats/chats.module#ChatsPageModule'
+      },
+      {
+        path: 'start-chat',
+        loadChildren: './pages/start-chat/start-chat.module#StartChatPageModule'
+      },
+      {
+        path: 'profile',
+        loadChildren: './pages/profile/profile.module#ProfilePageModule'
       }
     ]
   }

@@ -21,12 +21,24 @@ export class MenuPage implements OnInit {
       url: '/menu/board'
     },
     {
+      title: 'New ticket',
+      url: '/menu/ticket'
+    },
+    {
+      title: 'Chats',
+      url: '/menu/chats'
+    },
+    {
       title: 'Chat',
       url: '/menu/chat'
     },
     {
-      title: 'New ticket',
-      url: '/menu/ticket'
+      title: 'Start chat',
+      url: '/menu/start-chat'
+    },
+    {
+      title: 'Profile',
+      url: '/menu/profile'
     },
   ];
 
