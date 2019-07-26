@@ -21,5 +21,12 @@
   <ion-button expand='block' (click)="addUser()">Add participant</ion-button>
 
 
-  <ion-button expand='block' (click)="startGroup()">Start chat group</ion-button>
+  <ion-list>
+    <ion-label>Current members</ion-label>
+    <ion-item *ngFor="let user of users">
+      {{user.email}}
+    </ion-item>
+  </ion-list>
+
+  <ion-button expand='block' (click)="startChat()">Start chat</ion-button>
 </ion-content>
