@@ -18,10 +18,6 @@ const routes: Routes = [
         loadChildren: '../board/board.module#BoardPageModule'
       },
       {
-        path: 'chat',
-        loadChildren: '../chat/chat.module#ChatPageModule'
-      },
-      {
         path: 'ticket',
         loadChildren: '../ticket/ticket.module#TicketPageModule'
       },
@@ -36,7 +32,11 @@ const routes: Routes = [
       {
         path: 'profile',
         loadChildren: '../profile/profile.module#ProfilePageModule'
-      }
+      },
+      {
+        path: 'chat/:id',
+        loadChildren: '../chat/chat.module#ChatPageModule'
+      },
     ]
   }
 ];
