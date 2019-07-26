@@ -1,12 +1,55 @@
 <ion-header>
-  <ion-toolbar color='primary'>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Chat</ion-title>
+    <ion-buttons slot="end" (click)="leaveChat()">
+      <ion-icon name='exit'></ion-icon>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-no-padding">
+
+
+
+
+
+
+  <ion-grid>
+    <ion-row *ngFor="let message of messages | async">
+      <ion-col size="9" size-md="6" *ngIf="message.from !== currentUserId" class="message other-message">
+        <b>{{ message.user }}</b><br>
+        <span>{{ message.msg }}
+          <img [src]="message.file" *ngIf="message.file">
+        </span>
+  
+        <div class="time" text-right><br>{{ message.createdAt?.toMillis() | date:'short' }}</div>
+      </ion-col>
+  
+      <ion-col offset="3" offset-md="6" size="9" size-md="6" *ngIf="message.from === currentUserId" class="message my-message">
+        <b>{{ message.user }}</b><br>
+        <span>{{ message.msg }}
+          <img [src]="message.file" *ngIf="message.file">
+        </span>
+        <div class="time" text-right><br>{{ message.createdAt?.toMillis() | date:'short' }}</div>
+      </ion-col>
+  
+    </ion-row>
+  </ion-grid>
+
+
+
+
 
 </ion-content>
+
+<ion-footer>
+  <ion-item #input lines="none" color="medium" class="type-message">
+    <ion-textarea [(ngModel)]="message" text-wrap></ion-textarea>
+    <ion-button slot="end" expand="full" (click)="sendMessage()"
+      >Send</ion-button
+    >
+  </ion-item>
+</ion-footer>
