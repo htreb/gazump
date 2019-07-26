@@ -8,12 +8,20 @@
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-item
+      button
+      *ngFor="let chat of chats | async"
+      [routerLink]="['/menu','chat', (chat | async)?.id || 0]"
+    >
+      <ion-text color='primary' text-wrap>{{ (chat | async)?.title }}</ion-text>
+      <ion-note slot='end'>{{ (chat | async)?.users.length }} members</ion-note>
+    </ion-item>
+  </ion-list>
 
-<ion-fab vertical='bottom' horizontal='end' slot='fixed'>
-  <ion-fab-button [routerLink]="['start']" >
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
-
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['start']">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
