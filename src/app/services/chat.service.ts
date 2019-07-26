@@ -6,6 +6,12 @@ import * as firebase from 'firebase/app';
 import { forkJoin, from } from 'rxjs';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 
+
+export interface ChatUser {
+    email: string;
+    id: string;
+    nickname: string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -42,26 +48,27 @@ export class ChatService {
   }
 
   /**
-   * creates a new chat group
-   * @param title group name
+   * creates a new chat with title and users provided
+   * then loops all users and adds the chat id to their chats
+   * @param title chat name
    * @param users string[]
    */
-  createGroup(title: string, users: string[]) {
+  createChat(title: string, users: ChatUser[]) {
     const current = {
       email: this.auth.currentUser.value.email,
       id: this.auth.currentUser.value.id,
-      nickname: this.auth.currentUser.value.nickname
+      nickname: this.auth.currentUser.value.nickname,
+      isAdmin: true
     };
 
     const allUsers = [current, ...users];
-    return this.db.collection('groups').add({
+    return this.db.collection('chats').add({
       title,
       users: allUsers
     }).then(res => {
       const promises = [];
-
       for (const usr of allUsers) {
-        const oneAdd = this.db.collection(`users/${usr.id}/groups`).add({
+        const oneAdd = this.db.collection(`users/${usr.id}/chats`).add({
           id: res.id
         });
         promises.push(oneAdd);
@@ -70,29 +77,37 @@ export class ChatService {
     });
   }
 
-  getGroups() {
-    return this.db.collection(`users/${this.auth.currentUser.value.id}/groups`).snapshotChanges().pipe(
+  /**
+   * gets all chat ids a user is in, then calls getOneChat on all those ids
+   */
+  getChats() {
+    return this.db.collection(`users/${this.auth.currentUser.value.id}/chats`).snapshotChanges().pipe(
       map(actions => actions.map((a: any) => {
         const data = a.payload.doc.data();
-        const userGroupKey = a.payload.doc.id;
-        return this.getOneGroup(data.id, userGroupKey);
+        const userChatKey = a.payload.doc.id;
+        return this.getOneChat(data.id, userChatKey);
       }))
     );
   }
 
-  getOneGroup(id, userGroupKey = null) {
-    return this.db.doc(`groups/${id}`).snapshotChanges().pipe(
+  /**
+   * returns an observable of the actual chat instance.
+   * @param id the chat id
+   * @param userChatKey the database id where the the chat id is stored under the user document
+   */
+  getOneChat(id, userChatKey = null) {
+    return this.db.doc(`chats/${id}`).snapshotChanges().pipe(
       take(1),
       map(changes => {
         const data = changes.payload.data();
-        const groupId = changes.payload.id;
-        return { userGroupKey, id: groupId, ...data };
+        const chatId = changes.payload.id;
+        return { userChatKey, id: chatId, ...data };
       })
     );
   }
 
-  getChatMessages(groupId) {
-    return this.db.collection(`groups/${groupId}/messages`, ref => ref.orderBy('createdAt')).snapshotChanges().pipe(
+  getChatMessages(chatId) {
+    return this.db.collection(`chats/${chatId}/messages`, ref => ref.orderBy('createdAt')).snapshotChanges().pipe(
       map(actions => actions.map(a => {
         const data = a.payload.doc.data();
         const id = a.payload.doc.id;
@@ -102,7 +117,7 @@ export class ChatService {
   }
 
   addChatMessage(msg, chatId) {
-    return this.db.collection('groups/' + chatId + '/messages').add({
+    return this.db.collection('chats/' + chatId + '/messages').add({
       msg,
       from: this.auth.currentUser.value.id,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -116,33 +131,33 @@ export class ChatService {
   }
 
   saveFileMessage(filePath, chatId) {
-    return this.db.collection('groups/' + chatId + '/messages').add({
+    return this.db.collection('chats/' + chatId + '/messages').add({
       file: filePath,
       from: this.auth.currentUser.value.id,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   }
 
-  leaveGroup(groupId, users) {
-    return this.getGroups().pipe(
-      switchMap(userGroups => {
-        return forkJoin(userGroups);
+  leaveChat(chatId, users) {
+    return this.getChats().pipe(
+      switchMap(userChats => {
+        return forkJoin(userChats);
       }),
       map((data: any) => {
         let toDelete = null;
 
-        for (const group of data) {
-          if (group.id === groupId) {
-            toDelete = group.userGroupKey;
+        for (const chat of data) {
+          if (chat.id === chatId) {
+            toDelete = chat.userChatKey;
           }
         }
         return toDelete;
       }),
       switchMap(deleteId => {
-        return from(this.db.doc(`users/${this.auth.currentUser.value.id}/groups/${deleteId}`).delete());
+        return from(this.db.doc(`users/${this.auth.currentUser.value.id}/chats/${deleteId}`).delete());
       }),
       switchMap(() => {
-        return from(this.db.doc(`groups/${groupId}`).update({
+        return from(this.db.doc(`chats/${chatId}`).update({
           users
         }));
       })
