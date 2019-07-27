@@ -5,49 +5,60 @@
     </ion-buttons>
     <ion-title>Chat</ion-title>
     <ion-buttons slot="end" (click)="leaveChat()">
-      <ion-icon name='exit'></ion-icon>
+      <ion-icon name="exit"></ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-no-padding">
-
-
-
-
-
+<ion-content>
+  <!-- This is the only page where bouncing might make sense, if any issues add this forceOverscroll='false' -->
 
   <ion-grid>
     <ion-row *ngFor="let message of messages | async">
-      <ion-col size="9" size-md="6" *ngIf="message.from !== currentUserId" class="message other-message">
-        <b>{{ message.user }}</b><br>
-        <span>{{ message.msg }}
-          <img [src]="message.file" *ngIf="message.file">
+      <ion-col
+        size="9"
+        size-md="6"
+        *ngIf="message.from !== currentUserId"
+        class="message other-message"
+      >
+        <b>{{ message.user }}</b
+        ><br />
+        <span
+          >{{ message.msg }}
+          <img [src]="message.file" *ngIf="message.file" />
         </span>
-  
-        <div class="time" text-right><br>{{ message.createdAt?.toMillis() | date:'short' }}</div>
+
+        <div class="time" text-right>
+          <br />{{ message.createdAt?.toMillis() | date: 'short' }}
+        </div>
       </ion-col>
-  
-      <ion-col offset="3" offset-md="6" size="9" size-md="6" *ngIf="message.from === currentUserId" class="message my-message">
-        <b>{{ message.user }}</b><br>
-        <span>{{ message.msg }}
-          <img [src]="message.file" *ngIf="message.file">
+
+      <ion-col
+        offset="3"
+        offset-md="6"
+        size="9"
+        size-md="6"
+        *ngIf="message.from === currentUserId"
+        class="message my-message"
+      >
+        <b>{{ message.user }}</b
+        ><br />
+        <span
+          >{{ message.msg }}
+          <img [src]="message.file" *ngIf="message.file" />
         </span>
-        <div class="time" text-right><br>{{ message.createdAt?.toMillis() | date:'short' }}</div>
+        <div class="time" text-right>
+          <br />{{ message.createdAt?.toMillis() | date: 'short' }}
+        </div>
       </ion-col>
-  
     </ion-row>
   </ion-grid>
-
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="sendFile()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
-
-
 </ion-content>
 
 <ion-footer>

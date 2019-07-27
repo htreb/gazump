@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content forceOverscroll='false'>
   <div class="board" cdkDropListGroup>
     <div class="column-header-footer-container" *ngFor="let column of columns">
       <div class="column-title">{{ column.title }}</div>
