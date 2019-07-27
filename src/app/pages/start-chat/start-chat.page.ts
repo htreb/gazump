@@ -30,7 +30,7 @@ export class StartChatPage implements OnInit {
   addUser() {
     if (this.participant === this.auth.currentUser.value.email ||
         this.participant === this.auth.currentUser.value.nickname) {
-          this.warnBadChatUser('You can\'t add yourself');
+          this.showWarnToast('You can\'t add yourself');
           this.participant = '';
           return;
         }
@@ -42,7 +42,7 @@ export class StartChatPage implements OnInit {
       ).length
     ) {
       // we already have them in the list don't add them again.
-      this.warnBadChatUser('That user is already added');
+      this.showWarnToast('That user is already added');
       this.participant = '';
       return;
     }
@@ -63,7 +63,7 @@ export class StartChatPage implements OnInit {
           }
         }
         if (!foundUser) {
-          this.warnBadChatUser('Couldn\'t find that user');
+          this.showWarnToast('Couldn\'t find that user');
         } else {
           this.participant = '';
         }
@@ -75,7 +75,7 @@ export class StartChatPage implements OnInit {
    * Show toast about error adding chat user
    * @param message string to show
    */
-  async warnBadChatUser(message: string) {
+  async showWarnToast(message: string) {
     if (this.toast) {
       this.toast.dismiss();
     }
@@ -89,9 +89,12 @@ export class StartChatPage implements OnInit {
 
   startChat() {
     if (!this.users.length) {
-      this.warnBadChatUser('You must add some users before starting a chat');
+      this.showWarnToast('You must add some users before starting a chat');
       return;
     }
-    this.chatService.createChat(this.title, this.users);
+    // TODO show some loading indicator while this is loading...
+    this.chatService.createChat(this.title, this.users).then(chat => {
+      this.router.navigate(['menu', 'chat', chat.id]);
+    });
   }
 }

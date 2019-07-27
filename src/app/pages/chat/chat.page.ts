@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { IonContent } from '@ionic/angular';
 import { map, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @Component({
   selector: 'app-chat',
@@ -26,11 +27,19 @@ export class ChatPage implements OnInit {
     private chatService: ChatService,
     private auth: AuthService,
     private router: Router,
+    private camera: Camera,
     ) { }
 
   ngOnInit() {
     this.route.params.subscribe(routeData => {
-      this.chatService.getOneChat(routeData.id).subscribe(chatData => {
+      this.chatService.getOneChat(routeData.id).subscribe((chatData) => {
+
+        if (!chatData) {
+          // Chat doesn't exit
+          this.router.navigateByUrl('/menu/chats');
+          return;
+        }
+
         this.chat = chatData;
         this.messages = this.chatService.getChatMessages(this.chat.id).pipe(
           map((messages: any) => {
@@ -81,6 +90,31 @@ export class ChatPage implements OnInit {
 
     this.chatService.leaveChat(this.chat.id, newUsers).subscribe(res => {
       this.router.navigateByUrl('/menu/chats');
+    });
+  }
+
+  sendFile() {
+    const options: CameraOptions = {
+      // quality: 70,
+      // destinationType: this.camera.DestinationType.DATA_URL,
+      // encodingType: this.camera.EncodingType.JPEG,
+      // mediaType: this.camera.MediaType.PICTURE,
+      // sourceType: this.camera.PictureSourceType.CAMERA,
+      // correctOrientation: true
+    };
+    this.camera.getPicture(options).then(pic => {
+      const obj = this.chatService.saveFileToStorage(pic, this.chat.id);
+      const task = obj.task;
+
+      task.then(res => {
+        obj.ref.getDownloadURL().subscribe(url => {
+          this.chatService.saveFileMessage(url, this.chat.id);
+        });
+      });
+
+      task.percentageChanges().subscribe(percent => {
+        console.log(`uploading ${percent}%...`);
+      });
     });
   }
 }
