@@ -1,5 +1,7 @@
 {
   "name": "gazump",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
