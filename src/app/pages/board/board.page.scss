@@ -1,13 +1,13 @@
 .board {
-  display: flex;
-  justify-content: space-between;
+  display: inline-flex;
   height: 100%;
-  padding: 10px;
 }
 
 .column-header-footer-container {
   position: relative;
-  width: 32%;
+  max-width: 85vw;
+  width: 350px;
+  margin: 5px;
   background: var(--ion-color-light-tint);
   border: 1px solid var(--ion-color-medium);
   border-radius: 4px;
