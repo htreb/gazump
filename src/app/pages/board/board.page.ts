@@ -150,7 +150,7 @@ export class BoardPage implements OnInit {
 
     // so left offset should be (column left - menu if open) - leftToCenterColumn
     const scrollHere = nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
-    this.content.scrollByPoint(scrollHere, 0, 300)
+    this.content.scrollByPoint(scrollHere, 0, 2000)
     .then(() => {
       this.snapScrolling = false;
     });
@@ -190,10 +190,10 @@ export class BoardPage implements OnInit {
    * @param event drag event
    */
   async onTicketDrag(event) {
-    if (event.pointerPosition.x < this.contentRect.left + 100) {
+    if (event.pointerPosition.x < this.contentRect.left + 50) {
       return this.snapScrollToColumn(false);
     }
-    if (event.pointerPosition.x > this.contentRect.right - 100) {
+    if (event.pointerPosition.x > this.contentRect.right - 50) {
       return this.snapScrollToColumn();
     }
   }
@@ -211,7 +211,7 @@ export class BoardPage implements OnInit {
           description: `This is a short description about how ${i} is just such a great ticket.`,
           completedBy: null,
           eta: null,
-          state: ['0', '1', '2'][Math.floor(Math.random() * 3)]
+          state: Math.floor(Math.random() * 3) + '',
         })
       );
     }
