@@ -37,7 +37,8 @@ export class BoardPage implements OnInit {
   @ViewChild(IonContent) content: IonContent;
 
   columnElements;
-  contentWidth;
+  contentRect;
+  snapScrolling = false; // flag when currently snap scrolling the page
 
   constructor(
     private router: Router,
@@ -126,7 +127,7 @@ export class BoardPage implements OnInit {
     );
     const scrollEl = await this.content.getScrollElement();
     const scrollRect = scrollEl.getClientRects();
-    this.contentWidth = scrollRect[0].width;
+    this.contentRect = scrollRect[0];
   }
 
   /**
@@ -134,16 +135,26 @@ export class BoardPage implements OnInit {
    * @param right direction (defaults to right)
    */
   async snapScrollToColumn(right = true) {
+    // if currently running don't retry
+    if (this.snapScrolling) { return; }
+    this.snapScrolling = true;
+
     // make sure we have columns and contentWidth at this point.
-    if (!this.contentWidth || !this.columnElements) { await this.resize(); }
+    if (!this.contentRect || !this.columnElements) { await this.resize(); }
+
+    // get the column to aim for
     const nextColumnRect = right ? await this.nextColumn() : await this.previousColumn();
 
     // (screenWidth - column width) = 'space' on each side of column
-    const leftToCenterColumn = (this.contentWidth - nextColumnRect.width) / 2;
-    // so left offset should be column left - above value
-    this.content.scrollByPoint(nextColumnRect.left - leftToCenterColumn, 0, 500);
-  }
+    const leftToCenterColumn = (this.contentRect.width - nextColumnRect.width) / 2;
 
+    // so left offset should be (column left - menu if open) - leftToCenterColumn
+    const scrollHere = nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
+    this.content.scrollByPoint(scrollHere, 0, 300)
+    .then(() => {
+      this.snapScrolling = false;
+    });
+  }
 
   /**
    * Loop forwards through columns to find first which starts after the middle of the screen
@@ -152,7 +163,7 @@ export class BoardPage implements OnInit {
     let nextColumnRect;
     for (const col of this.columnElements) {
       nextColumnRect = col.getBoundingClientRect();
-      if (nextColumnRect.left > (this.contentWidth / 2)) {
+      if ((nextColumnRect.left - this.contentRect.left) > (this.contentRect.width / 2)) {
         break;
       }
     }
@@ -166,13 +177,25 @@ export class BoardPage implements OnInit {
     let previousColumnRect;
     for (let i = this.columnElements.length - 1; i >= 0; i--) {
       previousColumnRect = this.columnElements[i].getBoundingClientRect();
-      if (previousColumnRect.right < (this.contentWidth / 2)) {
+      if ((previousColumnRect.right - this.contentRect.left)  < (this.contentRect.width / 2)) {
         break;
       }
     }
     return previousColumnRect;
   }
 
+
+  /**
+   * fired every time a drag item moves.
+   * @param event drag event
+   */
+  async onTicketDrag(event) {
+    if (event.pointerPosition.x < this.contentRect.left + 100) {
+      return this.snapScrollToColumn(false);
+    }
+    if (event.pointerPosition.x > this.contentRect.right - 100) {
+      return this.snapScrollToColumn();
+    }
   }
 
   /**

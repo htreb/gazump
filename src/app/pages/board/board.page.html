@@ -7,7 +7,6 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content forceOverscroll='false'>
 <ion-content
   forceOverscroll='false'
   scrollX = true
@@ -27,6 +26,7 @@
           color='light'
           class="ticket"
           [cdkDragData]="ticket"
+          (cdkDragMoved)="onTicketDrag($event)" 
           cdkDrag
         >
           <div class="ticket-icon-container">
