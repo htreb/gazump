@@ -130,25 +130,13 @@ export class BoardPage implements OnInit {
   }
 
   /**
-   * Snap scroll to the next column
-   * @param directionRight scroll direction right by default
+   * Finds the next column and snap scrolls it to the center of the screen
+   * @param right direction (defaults to right)
    */
-  async nextColumn(directionRight = true) {
-    if (!directionRight) {
-      return this.content.scrollToPoint(0, 0, 500);
-    }
+  async snapScrollToColumn(right = true) {
     // make sure we have columns and contentWidth at this point.
     if (!this.contentWidth || !this.columnElements) { await this.resize(); }
-
-    // loop all columns and find the next one which starts over halfway across the screen
-    let nextColumnRect;
-    for (const col of this.columnElements) {
-      nextColumnRect = col.getBoundingClientRect();
-      console.log('column left is', nextColumnRect.left);
-      if (nextColumnRect.left > (this.contentWidth / 2)) {
-        break;
-      }
-    }
+    const nextColumnRect = right ? await this.nextColumn() : await this.previousColumn();
 
     // (screenWidth - column width) = 'space' on each side of column
     const leftToCenterColumn = (this.contentWidth - nextColumnRect.width) / 2;
@@ -156,27 +144,35 @@ export class BoardPage implements OnInit {
     this.content.scrollByPoint(nextColumnRect.left - leftToCenterColumn, 0, 500);
   }
 
-  /**
-   * Snap scroll to the previous column (first on the left)
-   */
-  async previousColumn() {
-    // make sure we have columns and contentWidth at this point.
-    if (!this.contentWidth || !this.columnElements) { await this.resize(); }
 
-    // loop all columns and find the next one which ends before the middle of the screen
+  /**
+   * Loop forwards through columns to find first which starts after the middle of the screen
+   */
+  async nextColumn() {
     let nextColumnRect;
-    for (let i = this.columnElements.length - 1; i >= 0; i--) {
-      nextColumnRect = this.columnElements[i].getBoundingClientRect();
-      console.log('column right is', nextColumnRect.right);
-      if (nextColumnRect.right < (this.contentWidth / 2)) {
+    for (const col of this.columnElements) {
+      nextColumnRect = col.getBoundingClientRect();
+      if (nextColumnRect.left > (this.contentWidth / 2)) {
         break;
       }
     }
+    return nextColumnRect;
+  }
 
-    // (screenWidth - column width) = 'space' on each side of column
-    const leftToCenterColumn = (this.contentWidth - nextColumnRect.width) / 2;
-    // so right offset should be column right - above value
-    this.content.scrollByPoint(nextColumnRect.left - leftToCenterColumn, 0, 500);
+  /**
+   * Loop backwards through columns to find first which ends before the middle of the screen
+   */
+  async previousColumn() {
+    let previousColumnRect;
+    for (let i = this.columnElements.length - 1; i >= 0; i--) {
+      previousColumnRect = this.columnElements[i].getBoundingClientRect();
+      if (previousColumnRect.right < (this.contentWidth / 2)) {
+        break;
+      }
+    }
+    return previousColumnRect;
+  }
+
   }
 
   /**
