@@ -157,6 +157,29 @@ export class BoardPage implements OnInit {
   }
 
   /**
+   * Snap scroll to the previous column (first on the left)
+   */
+  async previousColumn() {
+    // make sure we have columns and contentWidth at this point.
+    if (!this.contentWidth || !this.columnElements) { await this.resize(); }
+
+    // loop all columns and find the next one which ends before the middle of the screen
+    let nextColumnRect;
+    for (let i = this.columnElements.length - 1; i >= 0; i--) {
+      nextColumnRect = this.columnElements[i].getBoundingClientRect();
+      console.log('column right is', nextColumnRect.right);
+      if (nextColumnRect.right < (this.contentWidth / 2)) {
+        break;
+      }
+    }
+
+    // (screenWidth - column width) = 'space' on each side of column
+    const leftToCenterColumn = (this.contentWidth - nextColumnRect.width) / 2;
+    // so right offset should be column right - above value
+    this.content.scrollByPoint(nextColumnRect.left - leftToCenterColumn, 0, 500);
+  }
+
+  /**
    * Create a bunch of dummy tickets with random states
    * TODO remove this
    */
