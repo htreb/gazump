@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import {
@@ -6,7 +6,7 @@ import {
   moveItemInArray,
   transferArrayItem
 } from '@angular/cdk/drag-drop';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonContent } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -34,6 +34,11 @@ export class BoardPage implements OnInit {
     }
   ];
 
+  @ViewChild(IonContent) content: IonContent;
+
+  columnElements;
+  contentWidth;
+
   constructor(
     private router: Router,
     private ticketService: TicketService,
@@ -49,6 +54,9 @@ export class BoardPage implements OnInit {
         this.columns.forEach(column => {
           column.tickets = tickets.filter(t => t.state === column.state);
         });
+        setTimeout(() => {
+          this.resize();
+        }, 500);
       });
   }
 
@@ -105,6 +113,49 @@ export class BoardPage implements OnInit {
     };
     return this.router.navigate(['menu/ticket'], navigationExtras);
   }
+
+  /**
+   * Get the full width of the board (used to calculate how far to snap scroll)
+   * and the columnElements
+   */
+  @HostListener('window:resize', ['$event'])
+  async resize(ev = null) {
+    // console.log('the screen has been resized', ev);
+    this.columnElements = document.getElementsByClassName(
+      'column-header-footer-container'
+    );
+    const scrollEl = await this.content.getScrollElement();
+    const scrollRect = scrollEl.getClientRects();
+    this.contentWidth = scrollRect[0].width;
+  }
+
+  /**
+   * Snap scroll to the next column
+   * @param directionRight scroll direction right by default
+   */
+  async nextColumn(directionRight = true) {
+    if (!directionRight) {
+      return this.content.scrollToPoint(0, 0, 500);
+    }
+    // make sure we have columns and contentWidth at this point.
+    if (!this.contentWidth || !this.columnElements) { await this.resize(); }
+
+    // loop all columns and find the next one which starts over halfway across the screen
+    let nextColumnRect;
+    for (const col of this.columnElements) {
+      nextColumnRect = col.getBoundingClientRect();
+      console.log('column left is', nextColumnRect.left);
+      if (nextColumnRect.left > (this.contentWidth / 2)) {
+        break;
+      }
+    }
+
+    // (screenWidth - column width) = 'space' on each side of column
+    const leftToCenterColumn = (this.contentWidth - nextColumnRect.width) / 2;
+    // so left offset should be column left - above value
+    this.content.scrollByPoint(nextColumnRect.left - leftToCenterColumn, 0, 500);
+  }
+
   /**
    * Create a bunch of dummy tickets with random states
    * TODO remove this
