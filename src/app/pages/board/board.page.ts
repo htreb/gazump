@@ -150,7 +150,7 @@ export class BoardPage implements OnInit {
 
     // so left offset should be (column left - menu if open) - leftToCenterColumn
     const scrollHere = nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
-    this.content.scrollByPoint(scrollHere, 0, 2000)
+    this.content.scrollByPoint(scrollHere, 0, 1000)
     .then(() => {
       this.snapScrolling = false;
     });
