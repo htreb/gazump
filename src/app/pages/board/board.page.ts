@@ -5,7 +5,8 @@ import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
-  CdkDragEnter
+  CdkDragEnter,
+  CdkDragMove
 } from '@angular/cdk/drag-drop';
 import { AlertController, IonContent } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
@@ -192,11 +193,11 @@ export class BoardPage implements OnInit {
    * fired every time a drag item moves.
    * @param event drag event
    */
-  async onTicketDrag(event) {
-    if (event.event.movementX > 3 && event.pointerPosition.x > this.contentRect.right - 50) {
+  onTicketDrag(event: CdkDragMove) {
+    if (event.delta.x > 0 && event.pointerPosition.x > this.contentRect.right - 50) {
       return this.snapScrollToColumn();
     }
-    if (event.event.movementX < -3 && event.pointerPosition.x < this.contentRect.left + 50) {
+    if (event.delta.x < 0 && event.pointerPosition.x < this.contentRect.left + 50) {
       return this.snapScrollToColumn(false);
     }
   }
