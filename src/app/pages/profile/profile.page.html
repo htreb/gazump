@@ -7,6 +7,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content forceOverscroll='false'>
+<ion-content forceOverscroll='false' class="ion-padding">
 
+  <ion-item>
+    <ion-input placeholder="Name" [(ngModel)]="userName"></ion-input>
+  </ion-item>
+  
+  <ion-button expand="block" (click)="updateName()">Update Name</ion-button>
 </ion-content>
+
+

@@ -94,7 +94,7 @@ export class AuthService {
             role: 'USER', // TODO some way of giving users another role
             permissions: [],
             created: firebase.firestore.FieldValue.serverTimestamp(),
-            nickname: 'colin' // TODO some way of letting users change their nickname
+            userName: 'colin' // TODO some way of letting users change their userName
           })
         ).pipe(
           switchMap(() => {
@@ -138,11 +138,11 @@ export class AuthService {
   }
 
   /**
-   * checks firebase for a match on a given nickname
+   * checks firebase for a match on a given userName
    * @param name requested name
    */
-  isNicknameAvailable(name: string) {
-    return this.db.collection('users', ref => ref.where('nickname', '==', name).limit(1)).valueChanges().pipe(
+  isUserNameAvailable(name: string) {
+    return this.db.collection('users', ref => ref.where('userName', '==', name).limit(1)).valueChanges().pipe(
       take(1),
       map(user => {
         return user;
@@ -151,12 +151,12 @@ export class AuthService {
   }
 
   /**
-   * changes the currently logged in users nickname
-   * @param nickname new nickname
+   * changes the currently logged in users userName
+   * @param userName new userName
    */
-  updateNickname(nickname: string) {
+  updateUserName(userName: string) {
     return this.db.doc(`users/${this.currentUser.value.id}`).update({
-      nickname
+      userName
     });
   }
 }

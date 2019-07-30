@@ -12,7 +12,7 @@ import {
 export interface ChatUser {
   email: string;
   id: string;
-  nickname: string;
+  userName: string;
 }
 @Injectable({
   providedIn: 'root'
@@ -25,11 +25,11 @@ export class ChatService {
   ) {}
 
   /**
-   * Takes a string input and searches through the users emails and nicknames for a match.
-   * returns a forkJoined observable: email, nickname
+   * Takes a string input and searches through the users emails and userNames for a match.
+   * returns a forkJoined observable: email, userName
    * @param value string to search for
    */
-  findUserByEmailOrNickName(value: string) {
+  findUserByEmailOrUserName(value: string) {
     value = value.toLowerCase();
     const email = this.db
       .collection('users', ref => ref.where('email', '==', value))
@@ -44,8 +44,8 @@ export class ChatService {
           })
         )
       );
-    const nickname = this.db
-      .collection('users', ref => ref.where('nickname', '==', value))
+    const userName = this.db
+      .collection('users', ref => ref.where('userName', '==', value))
       .snapshotChanges()
       .pipe(
         take(1),
@@ -57,7 +57,7 @@ export class ChatService {
           })
         )
       );
-    return forkJoin([email, nickname]);
+    return forkJoin([email, userName]);
   }
 
   /**
@@ -70,7 +70,7 @@ export class ChatService {
     const current = {
       email: this.auth.currentUser.value.email,
       id: this.auth.currentUser.value.id,
-      nickname: this.auth.currentUser.value.nickname,
+      userName: this.auth.currentUser.value.userName,
       isAdmin: true
     };
 

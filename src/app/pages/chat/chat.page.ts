@@ -59,7 +59,7 @@ export class ChatPage implements OnInit {
   getChatUser(userId) {
     for (const usr of this.chat.users) {
       if (usr.id === userId) {
-        return usr.nickname;
+        return usr.userName;
       }
     }
     return 'Deleted';

@@ -29,7 +29,7 @@ export class StartChatPage implements OnInit {
 
   addUser() {
     if (this.participant === this.auth.currentUser.value.email ||
-        this.participant === this.auth.currentUser.value.nickname) {
+        this.participant === this.auth.currentUser.value.userName) {
           this.showWarnToast('You can\'t add yourself');
           this.participant = '';
           return;
@@ -38,7 +38,7 @@ export class StartChatPage implements OnInit {
     if (
       this.users.filter(
         usr =>
-          usr.email === this.participant || usr.nickname === this.participant
+          usr.email === this.participant || usr.userName === this.participant
       ).length
     ) {
       // we already have them in the list don't add them again.
@@ -48,7 +48,7 @@ export class StartChatPage implements OnInit {
     }
 
     this.chatService
-      .findUserByEmailOrNickName(this.participant)
+      .findUserByEmailOrUserName(this.participant)
       .subscribe((res: any) => {
         let foundUser = false;
         for (const data of res) {
@@ -57,7 +57,7 @@ export class StartChatPage implements OnInit {
             this.users.push({
               email: data[0].email,
               id: data[0].id,
-              nickname: data[0].nickname
+              userName: data[0].userName
             });
             console.log('no problem, I can add:', data[0]);
           }
