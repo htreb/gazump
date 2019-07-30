@@ -35,7 +35,7 @@ export class BoardPage implements OnInit {
     }
   ];
 
-  @ViewChild(IonContent) content: IonContent;
+  @ViewChild(IonContent, { static: true }) content: IonContent;
 
   columnElements;
   contentRect;

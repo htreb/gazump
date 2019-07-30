@@ -18,8 +18,8 @@ export class ChatPage implements OnInit {
   messages: Observable<any>;
   currentUserId = this.auth.currentUser.value.id;
 
-  @ViewChild(IonContent) content: IonContent;
-  @ViewChild('input', { read: ElementRef }) inputContainer: ElementRef;
+  @ViewChild(IonContent, { static: true }) content: IonContent;
+  @ViewChild('input', { read: ElementRef, static: true }) inputContainer: ElementRef;
 
   constructor(
     private route: ActivatedRoute,

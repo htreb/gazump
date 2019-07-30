@@ -15,27 +15,27 @@ const routes: Routes = [
       { path: '', redirectTo: 'board', pathMatch: 'full' },
       {
         path: 'board',
-        loadChildren: '../board/board.module#BoardPageModule'
+        loadChildren: () => import('../board/board.module').then(m => m.BoardPageModule)
       },
       {
         path: 'ticket',
-        loadChildren: '../ticket/ticket.module#TicketPageModule'
+        loadChildren: () => import('../ticket/ticket.module').then(m => m.TicketPageModule)
       },
       {
         path: 'chats',
-        loadChildren: '../chats/chats.module#ChatsPageModule'
+        loadChildren: () => import('../chats/chats.module').then(m => m.ChatsPageModule)
       },
       {
         path: 'chats/start',
-        loadChildren: '../start-chat/start-chat.module#StartChatPageModule'
+        loadChildren: () => import('../start-chat/start-chat.module').then(m => m.StartChatPageModule)
       },
       {
         path: 'profile',
-        loadChildren: '../profile/profile.module#ProfilePageModule'
+        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
       },
       {
         path: 'chat/:id',
-        loadChildren: '../chat/chat.module#ChatPageModule'
+        loadChildren: () => import('../chat/chat.module').then(m => m.ChatPageModule)
       },
     ]
   }

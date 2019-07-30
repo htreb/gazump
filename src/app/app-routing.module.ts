@@ -4,10 +4,10 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: 'login', loadChildren: './pages/login/login.module#LoginPageModule' },
+  { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule) },
   {
     path: 'menu',
-    loadChildren: './pages/menu/menu.module#MenuPageModule',
+    loadChildren: () => import('./pages/menu/menu.module').then(m => m.MenuPageModule),
     canActivate: [AuthGuard],
     data: {
       roles: ['USER', 'ADMIN']
