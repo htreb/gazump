@@ -4,7 +4,8 @@ import { TicketService } from 'src/app/services/ticket.service';
 import {
   CdkDragDrop,
   moveItemInArray,
-  transferArrayItem
+  transferArrayItem,
+  CdkDragEnter
 } from '@angular/cdk/drag-drop';
 import { AlertController, IonContent } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
@@ -134,7 +135,7 @@ export class BoardPage implements OnInit {
    * Finds the next column and snap scrolls it to the center of the screen
    * @param right direction (defaults to right)
    */
-  async snapScrollToColumn(right = true) {
+  async snapScrollToColumn(right = true, nextColumnRect = null) {
     // if currently running don't retry
     if (this.snapScrolling) { return; }
     this.snapScrolling = true;
@@ -142,8 +143,10 @@ export class BoardPage implements OnInit {
     // make sure we have columns and contentWidth at this point.
     if (!this.contentRect || !this.columnElements) { await this.resize(); }
 
-    // get the column to aim for
-    const nextColumnRect = right ? await this.nextColumn() : await this.previousColumn();
+    if (!nextColumnRect) {
+      // get the column to aim for
+      nextColumnRect = right ? await this.nextColumn() : await this.previousColumn();
+    }
 
     // (screenWidth - column width) = 'space' on each side of column
     const leftToCenterColumn = (this.contentRect.width - nextColumnRect.width) / 2;
@@ -196,6 +199,10 @@ export class BoardPage implements OnInit {
     if (event.pointerPosition.x > this.contentRect.right - 50) {
       return this.snapScrollToColumn();
     }
+  }
+
+  dropListHovered(ev: CdkDragEnter<any>) {
+    this.snapScrollToColumn(null, ev.container.element.nativeElement.getBoundingClientRect());
   }
 
   /**

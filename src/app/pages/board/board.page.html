@@ -18,6 +18,7 @@
       <div
         class="column"
         (cdkDropListDropped)="drop($event)"
+        (cdkDropListEntered)="dropListHovered($event)"
         [cdkDropListData]="column"
         cdkDropList
       >
