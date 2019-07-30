@@ -153,7 +153,7 @@ export class BoardPage implements OnInit {
 
     // so left offset should be (column left - menu if open) - leftToCenterColumn
     const scrollHere = nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
-    this.content.scrollByPoint(scrollHere, 0, 1000)
+    this.content.scrollByPoint(scrollHere, 0, 800)
     .then(() => {
       this.snapScrolling = false;
     });
@@ -193,11 +193,11 @@ export class BoardPage implements OnInit {
    * @param event drag event
    */
   async onTicketDrag(event) {
-    if (event.pointerPosition.x < this.contentRect.left + 50) {
-      return this.snapScrollToColumn(false);
-    }
-    if (event.pointerPosition.x > this.contentRect.right - 50) {
+    if (event.event.movementX > 3 && event.pointerPosition.x > this.contentRect.right - 50) {
       return this.snapScrollToColumn();
+    }
+    if (event.event.movementX < -3 && event.pointerPosition.x < this.contentRect.left + 50) {
+      return this.snapScrollToColumn(false);
     }
   }
 
