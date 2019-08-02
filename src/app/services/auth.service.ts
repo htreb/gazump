@@ -93,7 +93,7 @@ export class AuthService {
             email,
             role: 'USER', // TODO some way of giving users another role
             permissions: [],
-            created: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             userName: 'colin' // TODO some way of letting users change their userName
           })
         ).pipe(
