@@ -16,7 +16,7 @@ export class TicketService {
       return this.db.doc(`tickets/${id}`).update(info);
     } else {
       info.creator = this.auth.currentUser.value.id;
-      info.created_at = firebase.firestore.FieldValue.serverTimestamp();
+      info.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       return this.db.collection('tickets').add(info);
     }
   }

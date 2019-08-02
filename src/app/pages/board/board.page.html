@@ -48,7 +48,7 @@
           <div class="ticket-description">{{ ticket.description }}</div>
           <div class="date-time-container">
             <ion-note class="date-time">
-              {{ ticket.created_at?.seconds * 1000 | date: 'd MMM yy' }}
+              {{ ticket.createdAt?.seconds * 1000 | date: 'd MMM yy' }}
             </ion-note>
           </div>
         </ion-card>
