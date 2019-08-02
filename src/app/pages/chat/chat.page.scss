@@ -9,3 +9,16 @@
         border-radius: 20px 20px 20px 4px;
     }
 }
+
+.message-input {
+    max-height: 50vh;
+    min-height: 100%;
+    width: 100%;
+    resize: none;
+}
+
+.send-button {
+    max-height: 50px;
+    height: 100%;
+    width: 100px;
+}

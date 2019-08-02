@@ -19,7 +19,6 @@ export class ChatPage implements OnInit {
   currentUserId = this.auth.currentUser.value.id;
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
-  @ViewChild('input', { read: ElementRef, static: true }) inputContainer: ElementRef;
 
   constructor(
     private route: ActivatedRoute,

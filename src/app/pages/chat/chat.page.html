@@ -61,11 +61,22 @@
   </ion-fab>
 </ion-content>
 
-<ion-footer>
-  <ion-item #input lines="none" color="medium" class="type-message">
-    <ion-textarea [(ngModel)]="message" text-wrap></ion-textarea>
-    <ion-button slot="end" expand="full" (click)="sendMessage()" [disabled]='!message'
-      >Send</ion-button
+<ion-footer class="ion-padding">
+  <ion-item lines="none">
+    <textarea
+      class='message-input'
+      cdkTextareaAutosize
+      [(ngModel)]="message"
+      text-wrap>
+    </textarea>
+    <ion-button
+      slot="end"
+      class='send-button'
+      (click)="sendMessage()"
+      [disabled]='!message'
+    >
+      Send
+    </ion-button
     >
   </ion-item>
 </ion-footer>
