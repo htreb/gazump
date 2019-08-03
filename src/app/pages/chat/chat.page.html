@@ -13,7 +13,7 @@
 <ion-content>
   <!-- This is the only page where bouncing might make sense, if any issues add this forceOverscroll='false' -->
 
-  <ion-grid>
+  <ion-grid class="ion-padding">
     <ion-row *ngFor="let message of messages | async">
       <ion-col
         size="9"
@@ -21,16 +21,13 @@
         *ngIf="message.from !== currentUserId"
         class="message other-message"
       >
-        <b>{{ message.user }}</b
-        ><br />
-        <span
-          >{{ message.msg }}
+        <div class='name'>{{ message.user }}</div>
+        <div class='message-text'>{{ message.msg }}
           <img [src]="message.file" *ngIf="message.file" />
-        </span>
-
-        <div class="time" text-right>
-          <br />{{ message.createdAt?.toMillis() | date: 'short' }}
         </div>
+        <ion-note class="time" text-right>
+          {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
+        </ion-note>
       </ion-col>
 
       <ion-col
@@ -41,15 +38,13 @@
         *ngIf="message.from === currentUserId"
         class="message my-message"
       >
-        <b>{{ message.user }}</b
-        ><br />
-        <span
-          >{{ message.msg }}
+        <div class='name'>{{ message.user }}</div>
+        <div class='message-text'>{{ message.msg }}
           <img [src]="message.file" *ngIf="message.file" />
-        </span>
-        <div class="time" text-right>
-          <br />{{ message.createdAt?.toMillis() | date: 'short' }}
         </div>
+        <ion-note class="time" text-right>
+          {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
+        </ion-note>
       </ion-col>
     </ion-row>
   </ion-grid>

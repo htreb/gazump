@@ -1,12 +1,43 @@
+$chatBubbleArrow: 10px;
+
 .message {
     margin: 5px;
-    padding: 20px;
+    padding: 12px;
     background: var(--ion-color-primary);
-    border-radius: 20px 20px 4px 20px;
+    border-radius: 20px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+
+    &:after {
+        content:'';
+        position: absolute;
+        right: -$chatBubbleArrow;
+        bottom: 0;
+        border-top: $chatBubbleArrow solid transparent;
+        border-right: $chatBubbleArrow solid transparent;
+        border-bottom: $chatBubbleArrow solid var(--ion-color-primary);
+        border-left: $chatBubbleArrow solid var(--ion-color-primary);
+    }
 
     &.other-message {
         background: var(--ion-color-medium);
-        border-radius: 20px 20px 20px 4px;
+        border-radius: 20px 20px 20px 0px;
+
+        &:after {
+            content:'';
+            position: absolute;
+            bottom: 0;
+            left: -$chatBubbleArrow;
+            right: auto;
+            border-top: $chatBubbleArrow solid transparent;
+            border-right: $chatBubbleArrow solid var(--ion-color-medium);
+            border-bottom: $chatBubbleArrow solid var(--ion-color-medium);
+            border-left: $chatBubbleArrow solid transparent;
+        }
+    }
+
+    .name {
+        font-weight: bold;
     }
 }
 

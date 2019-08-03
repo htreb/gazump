@@ -30,6 +30,8 @@ export class AuthService {
             .pipe(
               take(1),
               tap((data: any) => {
+                console.log('Data is:•••••••••••••', data);
+                console.log('User is:•••••••••••••', user);
                 data.id = user.uid;
                 this.currentUser.next(data);
               })
