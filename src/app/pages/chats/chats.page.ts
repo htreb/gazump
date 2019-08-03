@@ -8,12 +8,12 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class ChatsPage implements OnInit {
 
-  chats;
+  chats$;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    this.chats = this.chatService.getChats();
+    this.chats$ = this.chatService.getChats();
   }
 
 }
