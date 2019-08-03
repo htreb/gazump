@@ -13,6 +13,7 @@ export interface ChatUser {
   email: string;
   id: string;
   userName: string;
+  isAdmin?: boolean;
 }
 @Injectable({
   providedIn: 'root'
@@ -64,14 +65,14 @@ export class ChatService {
    * creates a new chat with title and users provided
    * then loops all users and adds the chat id to their chats
    * @param title chat name
-   * @param users string[]
+   * @param users ChatUser[]
    */
   createChat(title: string, users: ChatUser[]) {
-    const current = {
+    const current: ChatUser = {
       email: this.auth.currentUser.value.email,
       id: this.auth.currentUser.value.id,
       userName: this.auth.currentUser.value.userName,
-      isAdmin: true
+      isAdmin: true,
     };
 
     const allUsers = [current, ...users];
@@ -84,10 +85,10 @@ export class ChatService {
       .then(res => {
         const promises = [];
         for (const usr of allUsers) {
-          const oneAdd = this.db.collection(`users/${usr.id}/chats`).add({
+          const addChatIdToUser = this.db.collection(`users/${usr.id}/chats`).add({
             id: res.id
           });
-          promises.push(oneAdd);
+          promises.push(addChatIdToUser);
         }
         return Promise.all(promises).then(() => {
           return res;
