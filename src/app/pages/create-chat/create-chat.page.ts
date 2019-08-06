@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { TicketService } from 'src/app/services/ticket.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-start-chat',
-  templateUrl: './start-chat.page.html',
-  styleUrls: ['./start-chat.page.scss']
+  selector: 'app-create-chat',
+  templateUrl: './create-chat.page.html',
+  styleUrls: ['./create-chat.page.scss']
 })
-export class StartChatPage implements OnInit {
+export class CreateChatPage implements OnInit {
   public title = '';
   public participant = '';
   public users = [];
@@ -21,7 +20,6 @@ export class StartChatPage implements OnInit {
     private auth: AuthService,
     private chatService: ChatService,
     private router: Router,
-    private ticketService: TicketService,
     private toastCtrl: ToastController,
   ) {}
 

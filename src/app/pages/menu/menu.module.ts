@@ -27,7 +27,7 @@ const routes: Routes = [
       },
       {
         path: 'chats/start',
-        loadChildren: () => import('../start-chat/start-chat.module').then(m => m.StartChatPageModule)
+        loadChildren: () => import('../create-chat/create-chat.module').then(m => m.CreateChatPageModule)
       },
       {
         path: 'profile',
