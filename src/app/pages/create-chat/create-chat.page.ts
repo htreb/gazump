@@ -85,7 +85,7 @@ export class CreateChatPage implements OnInit {
     this.toast.present();
   }
 
-  startChat() {
+  createChat() {
     if (!this.users.length) {
       this.showWarnToast('You must add some users before starting a chat');
       return;

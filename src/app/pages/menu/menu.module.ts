@@ -23,10 +23,10 @@ const routes: Routes = [
       },
       {
         path: 'chats',
-        loadChildren: () => import('../chats/chats.module').then(m => m.ChatsPageModule)
+        loadChildren: () => import('../list-chats/list-chats.module').then(m => m.ListChatsPageModule)
       },
       {
-        path: 'chats/start',
+        path: 'chats/create',
         loadChildren: () => import('../create-chat/create-chat.module').then(m => m.CreateChatPageModule)
       },
       {
