@@ -1,17 +1,17 @@
-$chatBubbleArrow: 10px;
+$chatBubbleArrow: 5px;
 
 .message {
     margin-top: 10px;
-    padding: 12px;
+    padding: 7px;
     background: var(--ion-color-primary);
-    border-radius: 20px 20px 0px 20px;
+    border-radius: 10px 10px 0px 10px;
     display: flex;
     flex-direction: column;
 
     &:after {
         content:'';
         position: absolute;
-        right: -$chatBubbleArrow;
+        right: calc(-2 * #{$chatBubbleArrow});
         bottom: 0;
         border-top: $chatBubbleArrow solid transparent;
         border-right: $chatBubbleArrow solid transparent;
@@ -21,13 +21,13 @@ $chatBubbleArrow: 10px;
 
     &.other-message {
         background: var(--ion-color-medium);
-        border-radius: 20px 20px 20px 0px;
+        border-radius: 10px 10px 10px 0px;
 
         &:after {
             content:'';
             position: absolute;
             bottom: 0;
-            left: -$chatBubbleArrow;
+            left: calc(-2 * #{$chatBubbleArrow});
             right: auto;
             border-top: $chatBubbleArrow solid transparent;
             border-right: $chatBubbleArrow solid var(--ion-color-medium);
