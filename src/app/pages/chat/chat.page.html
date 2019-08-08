@@ -86,6 +86,7 @@
 <ion-footer class="ion-padding">
   <ion-item lines="none">
     <textarea
+      (keyup.enter)="sendMessage()"
       class='message-input'
       cdkTextareaAutosize
       [(ngModel)]="message"
