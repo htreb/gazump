@@ -1,7 +1,7 @@
 import { AuthService } from './auth.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { take, map, switchMap } from 'rxjs/operators';
+import { take, map, switchMap, catchError } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import { forkJoin, from } from 'rxjs';
 import {
@@ -100,16 +100,23 @@ export class ChatService {
    * gets all chat ids a user is in, then calls getOneChat on all those ids
    */
   getChats() {
+    console.log(`fetching chats...`);
     return this.db
       .collection(`users/${this.auth.currentUser.value.id}/chats`)
       .snapshotChanges()
       .pipe(
-        map(actions =>
-          actions.map((a: any) => {
-            const data = a.payload.doc.data();
-            const userChatKey = a.payload.doc.id;
-            return this.getOneChat(data.id, userChatKey);
-          })
+        catchError(err => {
+          console.log('### getChats error!', err);
+          throw err;
+        }),
+        map(actions => {
+            console.log(`fetched ${actions.length} chat(s)`);
+            return actions.map((a: any) => {
+              const data = a.payload.doc.data();
+              const userChatKey = a.payload.doc.id;
+              return this.getOneChat(data.id, userChatKey);
+            });
+          }
         )
       );
   }
@@ -120,12 +127,18 @@ export class ChatService {
    * @param userChatKey the database id where the the chat id is stored under the user document
    */
   getOneChat(id, userChatKey = null) {
+    console.log(`getting one chat ${id}...`);
     return this.db
       .doc(`chats/${id}`) // TODO check if the doc exists first?
       .snapshotChanges()
       .pipe(
+        catchError(err => {
+          console.log('### getOneChat error!', err);
+          throw err;
+        }),
         take(1),
         map(changes => {
+          console.log(`got one chat ${id}`);
           const data = changes.payload.data();
           if (!data) {
             return null;
@@ -137,17 +150,23 @@ export class ChatService {
   }
 
   getChatMessages(chatId) {
+    console.log(`fetching chat messages for ${chatId}...`);
     return this.db
       .collection(`chats/${chatId}/messages`, ref => ref.orderBy('createdAt'))
       .snapshotChanges()
       .pipe(
-        map(actions =>
-          actions.map(a => {
+        catchError(err => {
+          console.log('getChats error!###', err);
+          throw err;
+        }),
+        map(actions => {
+          console.log(`fetched ${actions.length} chat messages...`);
+          return actions.map(a => {
             const data = a.payload.doc.data();
             const id = a.payload.doc.id;
             return { id, ...data };
-          })
-        )
+          });
+        })
       );
   }
 
