@@ -1,44 +1,58 @@
 $chatBubbleArrow: 5px;
 
-.message {
-    margin-top: 10px;
-    padding: 7px;
-    background: var(--ion-color-primary);
-    border-radius: 10px 10px 0px 10px;
-    display: flex;
-    flex-direction: column;
+.message-area {
+    height: 100%;
 
-    &:after {
-        content:'';
-        position: absolute;
-        right: calc(-2 * #{$chatBubbleArrow});
-        bottom: 0;
-        border-top: $chatBubbleArrow solid transparent;
-        border-right: $chatBubbleArrow solid transparent;
-        border-bottom: $chatBubbleArrow solid var(--ion-color-primary);
-        border-left: $chatBubbleArrow solid var(--ion-color-primary);
+    .loading, .no-messages {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: var(--ion-color-medium);
     }
 
-    &.other-message {
-        background: var(--ion-color-medium);
-        border-radius: 10px 10px 10px 0px;
+    .message {
+        margin-top: 10px;
+        padding: 7px;
+        background: var(--ion-color-primary);
+        border-radius: 10px 10px 0px 10px;
+        display: flex;
+        flex-direction: column;
 
         &:after {
             content:'';
             position: absolute;
+            right: calc(-2 * #{$chatBubbleArrow});
             bottom: 0;
-            left: calc(-2 * #{$chatBubbleArrow});
-            right: auto;
             border-top: $chatBubbleArrow solid transparent;
-            border-right: $chatBubbleArrow solid var(--ion-color-medium);
-            border-bottom: $chatBubbleArrow solid var(--ion-color-medium);
-            border-left: $chatBubbleArrow solid transparent;
+            border-right: $chatBubbleArrow solid transparent;
+            border-bottom: $chatBubbleArrow solid var(--ion-color-primary);
+            border-left: $chatBubbleArrow solid var(--ion-color-primary);
+        }
+
+        &.other-message {
+            background: var(--ion-color-medium);
+            border-radius: 10px 10px 10px 0px;
+
+            &:after {
+                content:'';
+                position: absolute;
+                bottom: 0;
+                left: calc(-2 * #{$chatBubbleArrow});
+                right: auto;
+                border-top: $chatBubbleArrow solid transparent;
+                border-right: $chatBubbleArrow solid var(--ion-color-medium);
+                border-bottom: $chatBubbleArrow solid var(--ion-color-medium);
+                border-left: $chatBubbleArrow solid transparent;
+            }
+        }
+
+        .name {
+            font-weight: bold;
         }
     }
 
-    .name {
-        font-weight: bold;
-    }
 }
 
 .message-input {

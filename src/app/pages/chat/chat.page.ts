@@ -15,7 +15,7 @@ export class ChatPage implements OnInit {
 
   chat;
   message: string;
-  messages: Observable<any>;
+  messages$: Observable<any>;
   currentUserId = this.auth.currentUser.value.id;
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
@@ -38,7 +38,7 @@ export class ChatPage implements OnInit {
         }
 
         this.chat = chatData;
-        this.messages = this.chatService.getChatMessages(this.chat.id).pipe(
+        this.messages$ = this.chatService.getChatMessages(this.chat.id).pipe(
           map((messages: any) => {
             for (const msg of messages) {
               msg.user = this.getChatUser(msg.from);

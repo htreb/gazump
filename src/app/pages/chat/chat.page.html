@@ -13,40 +13,67 @@
 <ion-content>
   <!-- This is the only page where bouncing might make sense, if any issues add this forceOverscroll='false' -->
 
-  <ion-grid class="ion-padding">
-    <ion-row *ngFor="let message of messages | async">
-      <ion-col
-        size="9"
-        size-md="6"
-        *ngIf="message.from !== currentUserId"
-        class="message other-message"
-      >
-        <div class='name'>{{ message.user }}</div>
-        <div class='message-text'>{{ message.msg }}
-          <img [src]="message.file" *ngIf="message.file" />
-        </div>
-        <ion-note class="time" text-right>
-          {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
-        </ion-note>
-      </ion-col>
+  <ion-grid class="message-area ion-padding">
+    <ng-container *ngIf="(messages$ | async) as messages; else loading">
 
-      <ion-col
-        offset="3"
-        offset-md="6"
-        size="9"
-        size-md="6"
-        *ngIf="message.from === currentUserId"
-        class="message my-message"
-      >
-        <div class='name'>{{ message.user }}</div>
-        <div class='message-text'>{{ message.msg }}
-          <img [src]="message.file" *ngIf="message.file" />
-        </div>
-        <ion-note class="time" text-right>
-          {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
-        </ion-note>
-      </ion-col>
-    </ion-row>
+
+      <ng-container *ngIf="messages.length; else noMessages">
+
+        <ion-row *ngFor="let message of messages">
+          <ion-col
+            size="9"
+            size-md="6"
+            *ngIf="message.from !== currentUserId"
+            class="message other-message"
+          >
+            <div class='name'>{{ message.user }}</div>
+            <div class='message-text'>{{ message.msg }}
+              <img [src]="message.file" *ngIf="message.file" />
+            </div>
+            <ion-note class="time" text-right>
+              {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
+            </ion-note>
+          </ion-col>
+
+          <ion-col
+            offset="3"
+            offset-md="6"
+            size="9"
+            size-md="6"
+            *ngIf="message.from === currentUserId"
+            class="message my-message"
+          >
+            <div class='name'>{{ message.user }}</div>
+            <div class='message-text'>{{ message.msg }}
+              <img [src]="message.file" *ngIf="message.file" />
+            </div>
+            <ion-note class="time" text-right>
+              {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
+            </ion-note>
+          </ion-col>
+        </ion-row>
+
+      </ng-container>
+
+
+
+    </ng-container>
+
+
+    <ng-template #loading>
+      <ion-row class='loading'>
+        <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
+      </ion-row>
+    </ng-template>
+
+    <ng-template #noMessages>
+      <ion-row class='no-messages'>
+        No messages here yet,<br>
+        send one below!
+      </ion-row>
+    </ng-template>
+
+
   </ion-grid>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
