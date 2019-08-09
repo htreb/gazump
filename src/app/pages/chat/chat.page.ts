@@ -47,7 +47,7 @@ export class ChatPage implements OnInit {
           }),
           tap(() => {
             setTimeout(() => {
-              this.scrollToBottom(0);
+              this.scrollToBottom();
             }, 500);
           })
           );

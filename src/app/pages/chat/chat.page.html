@@ -30,9 +30,6 @@
             <div class='message-text'>{{ message.msg }}
               <img [src]="message.file" *ngIf="message.file" />
             </div>
-            <ion-note class="time" text-right>
-              {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
-            </ion-note>
           </ion-col>
 
           <ion-col
@@ -47,9 +44,6 @@
             <div class='message-text'>{{ message.msg }}
               <img [src]="message.file" *ngIf="message.file" />
             </div>
-            <ion-note class="time" text-right>
-              {{ message.createdAt?.toMillis() | date: 'h:mm a' }}
-            </ion-note>
           </ion-col>
         </ion-row>
 
