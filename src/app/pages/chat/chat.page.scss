@@ -51,6 +51,10 @@ $chatBubbleArrow: 5px;
         .name {
             font-weight: bold;
         }
+
+        .message-text {
+            min-height: 1em;
+        }
     }
 
 }
