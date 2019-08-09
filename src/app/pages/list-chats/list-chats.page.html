@@ -8,13 +8,13 @@
 </ion-header>
 
 <ion-content forceOverscroll='false'>
-  <ng-container *ngIf="(chats$ | async) as chats; else loading">
+  <ng-container *ngIf="chats$ | async as chats; else loading">
     <ng-container *ngIf="chats.length; else noChats">
       <ion-list>
         <ng-container *ngFor="let chat$ of chats">
           <ion-item
             button
-            *ngIf="(chat$ | async) as chat; else loadingChat"
+            *ngIf="chat$ | async as chat; else loadingChat"
             [routerLink]="['/menu','chat', chat.id || 0]"
           >
             <ion-text text-wrap>{{ chat.title }}</ion-text>

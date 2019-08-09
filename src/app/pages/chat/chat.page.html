@@ -14,7 +14,7 @@
   <!-- This is the only page where bouncing might make sense, if any issues add this forceOverscroll='false' -->
 
   <ion-grid class="message-area ion-padding">
-    <ng-container *ngIf="(messages$ | async) as messages; else loading">
+    <ng-container *ngIf="messages$ | async as messages; else loading">
 
 
       <ng-container *ngIf="messages.length; else noMessages">

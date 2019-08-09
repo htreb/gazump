@@ -39,17 +39,17 @@ export class ChatPage implements OnInit {
 
         this.chat = chatData;
         this.messages$ = this.chatService.getChatMessages(this.chat.id).pipe(
-          map((messages: any) => {
-            for (const msg of messages) {
-              msg.user = this.getChatUser(msg.from);
-            }
-            return messages;
-          }),
-          tap(() => {
-            setTimeout(() => {
-              this.scrollToBottom();
-            }, 500);
-          })
+            map((messages: any) => {
+              for (const msg of messages) {
+                msg.user = this.getChatUser(msg.from);
+              }
+              return messages;
+            }),
+            tap(() => {
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 0);
+            })
           );
         });
     });
