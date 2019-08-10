@@ -1,12 +1,49 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Groups</ion-title>
-  </ion-toolbar>
-</ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Groups</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
+  <ion-content forceOverscroll='false'>
+    <ng-container *ngIf="groups$ | async as groups; else loading">
+      <ng-container *ngIf="groups.length; else noGroups">
+        <ion-list>
+          <ng-container *ngFor="let chat$ of groups">
+            <ion-item
+              *ngIf="chat$ | async as chat; else loadingChat"
+            >
+              <ion-text text-wrap>{{ chat.title }}</ion-text>
+              <ion-note slot='end'>{{ chat.users.length }} members</ion-note>
+            </ion-item>
+            <ng-template #loadingChat><!-- display skeleton text while we fetch chat details -->
+              <ion-item>
+                <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+                <ion-skeleton-text animated slot='end' style="width: 10%"></ion-skeleton-text>
+              </ion-item>
+            </ng-template>
+          </ng-container>
+        </ion-list>
+      </ng-container><!-- check that we have some groups -->
+      <ng-template #noGroups>
+        <div class='no-groups'>
+          You are not in any groups yet,<br>
+          start one below!
+        </div>
+      </ng-template>
+    </ng-container><!-- fetching all groups -->
+    <ng-template #loading>
+      <div class='loading'>
+        <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
+      </div>
+    </ng-template>
 
-</ion-content>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button [routerLink]="['create']">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>

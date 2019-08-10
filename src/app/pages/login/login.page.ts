@@ -251,9 +251,9 @@ export class LoginPage implements OnInit {
   enterApp(user: any) {
     const role = user.role;
     if (role === 'USER') {
-      this.router.navigateByUrl('/menu');
+      this.router.navigateByUrl('/groups');
     } else if (role === 'ADMIN') {
-      this.router.navigateByUrl('/menu'); // TODO SEND TO ADMIN PAGE?
+      this.router.navigateByUrl('/groups'); // TODO SEND TO ADMIN PAGE?
     }
   }
 
