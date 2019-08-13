@@ -3,7 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'groups', pathMatch: 'full' },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule) },
   { path: 'groups',
     loadChildren: () => import('./pages/list-groups/list-groups.module').then(m => m.ListGroupsPageModule),
@@ -12,6 +12,7 @@ const routes: Routes = [
       roles: ['USER', 'ADMIN']
     }
   },
+  { path: '**', redirectTo: 'groups' }
 ];
 
 @NgModule({
