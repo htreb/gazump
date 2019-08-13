@@ -13,7 +13,7 @@ export class ListGroupsPage implements OnInit {
   constructor(private groupService: GroupService) { }
 
   ngOnInit() {
-    this.groups$ = this.groupService.getGroups();
+    this.groups$ = this.groupService.getUsersGroups();
   }
 
 }
