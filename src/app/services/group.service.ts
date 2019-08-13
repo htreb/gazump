@@ -18,7 +18,7 @@ export class GroupService {
   constructor(private db: AngularFirestore, private auth: AuthService) {}
 
   /**
-   * gets all groups a user is in
+   * gets all groups the logged in user is a member of
    */
   getUsersGroups() {
     return this.db
