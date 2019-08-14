@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent } from '@angular/router';
+import { Router, RouterEvent, ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 export interface Page {
@@ -15,35 +15,46 @@ export interface Page {
 export class MenuPage implements OnInit {
 
   selectedPath = '';
-  pages: Page[] = [
-    {
-      title: 'Board',
-      url: '/menu/board'
-    },
-    {
-      title: 'New ticket',
-      url: '/menu/ticket'
-    },
-    {
-      title: 'Chats',
-      url: '/menu/chats'
-    },
-    {
-      title: 'Profile',
-      url: '/menu/profile'
-    },
-  ];
+  pages: Page[];
 
-  constructor(private router: Router, private auth: AuthService) {
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private route: ActivatedRoute,
+    ) {}
+
+
+  ngOnInit() {
     this.router.events.subscribe((event: RouterEvent) => {
       if (event && event.url) {
         this.selectedPath = event.url;
       }
     });
-  }
 
-  ngOnInit() {
+    const groupId = this.route.snapshot.paramMap.get('groupId');
 
+    this.pages = [
+      {
+        title: 'All Groups',
+        url: '/groups'
+      },
+      {
+        title: 'Board',
+        url: `/groups/${groupId}/board` // TODO this doesn't seem like the best way to navigate
+      },
+      {
+        title: 'New ticket',
+        url: `/groups/${groupId}/ticket`
+      },
+      {
+        title: 'Chats',
+        url: `/groups/${groupId}/chats`
+      },
+      {
+        title: 'Profile',
+        url: `/groups/${groupId}/profile`
+      },
+    ];
   }
 
   logOut() {

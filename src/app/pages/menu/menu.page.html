@@ -8,15 +8,13 @@
 
     <ion-content forceOverscroll='false'>
       <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let p of pages">
+        <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
           <ion-item
-            [routerLink]="p.url"
-            routerDirection="root"
+            [routerLink]="[page.url]"
             class="menu-item"
-            [class.active]="selectedPath === p.url"
           >
             <ion-label>
-              {{ p.title }}
+              {{ page.title }}
             </ion-label>
           </ion-item>
         </ion-menu-toggle>

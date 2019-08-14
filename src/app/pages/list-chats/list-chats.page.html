@@ -15,7 +15,7 @@
           <ion-item
             button
             *ngIf="chat$ | async as chat; else loadingChat"
-            [routerLink]="['/menu','chat', chat.id || 0]"
+            (click)="goToChat(chat.id)"
           >
             <ion-text text-wrap>{{ chat.title }}</ion-text>
             <ion-note slot='end'>{{ chat.users.length }} members</ion-note>

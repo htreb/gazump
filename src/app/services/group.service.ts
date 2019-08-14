@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { catchError, map, take } from 'rxjs/operators';
-import { group } from '@angular/animations';
 
 export interface GroupUser {
   email: string;
@@ -25,6 +23,6 @@ export class GroupService {
       .collection('groups', ref =>
         ref.where('members', 'array-contains', this.auth.currentUser.value.id)
       )
-      .valueChanges();
+      .valueChanges({idField: 'groupId'});
   }
 }
