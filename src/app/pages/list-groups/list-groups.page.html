@@ -1,40 +1,41 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
     <ion-title>Groups</ion-title>
   </ion-toolbar>
 </ion-header>
 
-  <ion-content forceOverscroll='false'>
+<ion-content forceOverscroll='false'>
 
-    <ng-container *ngIf="groups$ | async as groups; else loading">
-      <ng-container *ngIf="groups.length; else noGroups">
-        <ion-list>
-            <ion-item *ngFor="let group of groups">
-              <ion-text text-wrap>{{ group.title }}</ion-text>
-              <ion-note slot='end'>{{ group.members.length }} members</ion-note>
-            </ion-item>
-        </ion-list>
-      </ng-container><!-- check that we have some groups -->
-      <ng-template #noGroups>
-        <div class='no-groups'>
-          You are not in any groups yet,<br>
-          start one below!
-        </div>
-      </ng-template>
-    </ng-container><!-- fetching all groups -->
-    <ng-template #loading>
-      <div class='loading'>
-        <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
+  <ng-container *ngIf="groups$ | async as groups; else loading">
+    <ng-container *ngIf="groups.length; else noGroups">
+      <ion-list>
+        <ion-item
+          *ngFor="let group of groups"
+          button
+          [routerLink]="['/groups', group.groupId]"
+          >
+          <ion-text text-wrap>{{ group.title }}</ion-text>
+          <ion-note slot='end'>{{ group.members.length }} members</ion-note>
+        </ion-item>
+      </ion-list>
+    </ng-container><!-- check that we have some groups -->
+    <ng-template #noGroups>
+      <div class='no-groups'>
+        You are not in any groups yet,<br>
+        start one below!
       </div>
     </ng-template>
+  </ng-container><!-- fetching all groups -->
+  <ng-template #loading>
+    <div class='loading'>
+      <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
+    </div>
+  </ng-template>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button [routerLink]="['create']">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button [routerLink]="['create']">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
-  </ion-content>
+</ion-content>
