@@ -2,13 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 
-export interface GroupUser {
-  email: string;
-  id: string;
-  userName: string;
-  isAdmin?: boolean;
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +16,20 @@ export class GroupService {
       .collection('groups', ref =>
         ref.where('members', 'array-contains', this.auth.currentUser.value.id)
       )
-      .valueChanges({idField: 'groupId'});
+      .valueChanges({ idField: 'id' });
+  }
+
+  /**
+   * creates a new group with title and users provided
+   * then loops all users and adds the group id to their groups
+   * @param title group name
+   * @param users array of userIds
+   */
+  createGroup(title: string, users: string[]) {
+    const allUsers = [this.auth.currentUser.value.id, ...users];
+    return this.db.collection('groups').add({
+      title,
+      members: allUsers
+    });
   }
 }

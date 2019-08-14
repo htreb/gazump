@@ -12,7 +12,7 @@
         <ion-item
           *ngFor="let group of groups"
           button
-          [routerLink]="['/groups', group.groupId]"
+          [routerLink]="['/groups', group.id]"
           >
           <ion-text text-wrap>{{ group.title }}</ion-text>
           <ion-note slot='end'>{{ group.members.length }} members</ion-note>

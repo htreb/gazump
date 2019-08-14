@@ -4,6 +4,7 @@ import { GroupService } from 'src/app/services/group.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
+import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
   selector: 'app-create-group',
@@ -12,66 +13,50 @@ import { ChatService } from 'src/app/services/chat.service';
 })
 export class CreateGroupPage implements OnInit {
   public title = '';
-  public participant = '';
-  public users = [];
+  public memberToAdd = '';
+  public currentMembers = [];
   private toast;
 
   constructor(
     private auth: AuthService,
     private groupService: GroupService,
-    private chatService: ChatService,
     private router: Router,
     private toastCtrl: ToastController,
+    private profileService: ProfileService
   ) {}
 
   ngOnInit() {}
 
-  addUser() {
-    if (this.participant === this.auth.currentUser.value.email ||
-        this.participant === this.auth.currentUser.value.userName) {
-          this.showWarnToast('You can\'t add yourself');
-          this.participant = '';
-          return;
-        }
-
-    if (
-      this.users.filter(
-        usr =>
-          usr.email === this.participant || usr.userName === this.participant
-      ).length
-    ) {
-      // we already have them in the list don't add them again.
+  addMember() {
+    if (this.memberToAdd === this.auth.currentUser.value.email) {
+      this.showWarnToast('You don\'t need to add yourself!');
+      this.memberToAdd = '';
+      return;
+    }
+    if (this.currentMembers.filter(usr => usr.email === this.memberToAdd).length) {
       this.showWarnToast('That user is already added');
-      this.participant = '';
+      this.memberToAdd = '';
       return;
     }
 
-    this.chatService
-      .findUserByEmailOrUserName(this.participant)
-      .subscribe((res: any) => {
-        let foundUser = false;
-        for (const data of res) {
-          if (data.length) {
-            foundUser = true;
-            this.users.push({
-              email: data[0].email,
-              id: data[0].id,
-              userName: data[0].userName
-            });
-            console.log('no problem, I can add:', data[0]);
-          }
-        }
-        if (!foundUser) {
-          this.showWarnToast('Couldn\'t find that user');
+    this.profileService
+      .getProfileFromEmail(this.memberToAdd)
+      .subscribe(profiles => {
+        if (profiles.length) {
+          this.currentMembers.push({
+            email: profiles[0].email,
+            id: profiles[0].id,
+            name: profiles[0].name
+          });
+          this.memberToAdd = '';
         } else {
-          this.participant = '';
+          this.showWarnToast('Couldn\'t find that user');
         }
       });
-
   }
 
   /**
-   * Show toast about error adding group user
+   * Show toast with passed in string
    * @param message string to show
    */
   async showWarnToast(message: string) {
@@ -87,13 +72,18 @@ export class CreateGroupPage implements OnInit {
   }
 
   createGroup() {
-    if (!this.users.length) {
+    if (!this.currentMembers.length) {
       this.showWarnToast('You must add some users before starting a group');
       return;
     }
-    // TODO show some loading indicator while this is loading...
-    this.groupService.createGroup(this.title, this.users).then(group => {
-      this.router.navigate(['groups']);
+    if (!this.title) {
+      this.showWarnToast('Please choose a group title');
+      return;
+    }
+    const memberIds = this.currentMembers.map(member => member.id);
+    this.groupService.createGroup(this.title, memberIds).catch(err => {
+      console.log('failed to created group with error', err);
     });
+    this.router.navigate(['groups']);
   }
 }
