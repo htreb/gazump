@@ -12,9 +12,8 @@ const routes: Routes = [
     path: '',
     component: MenuPage,
     children: [
-      { path: '', redirectTo: 'board', pathMatch: 'full' },
       {
-        path: 'board',
+        path: '',
         loadChildren: () => import('../board/board.module').then(m => m.BoardPageModule)
       },
       {

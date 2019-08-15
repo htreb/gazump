@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 export interface Page {
@@ -18,29 +18,21 @@ export class MenuPage implements OnInit {
   pages: Page[];
 
   constructor(
-    private router: Router,
     private auth: AuthService,
     private route: ActivatedRoute,
     ) {}
 
 
   ngOnInit() {
-    this.router.events.subscribe((event: RouterEvent) => {
-      if (event && event.url) {
-        this.selectedPath = event.url;
-      }
-    });
-
+    // TODO this doesn't seem like the best way to navigate but I want to stay
+    // within this group, relative navigating gets in a mess when you nav to a
+    // few pages it keeps adding to the url.
+    // ../ 'up one' might work but this is more explicit.
     const groupId = this.route.snapshot.paramMap.get('groupId');
-
     this.pages = [
       {
-        title: 'All Groups',
-        url: '/groups'
-      },
-      {
-        title: 'Board',
-        url: `/groups/${groupId}/board` // TODO this doesn't seem like the best way to navigate
+        title: 'Boards',
+        url: `/groups/${groupId}`
       },
       {
         title: 'New ticket',
@@ -51,8 +43,12 @@ export class MenuPage implements OnInit {
         url: `/groups/${groupId}/chats`
       },
       {
-        title: 'Profile',
+        title: 'Profile', // TODO should this be nested within the group
         url: `/groups/${groupId}/profile`
+      },
+      {
+        title: 'Back To Groups',
+        url: '/groups'
       },
     ];
   }

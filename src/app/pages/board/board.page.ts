@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import {
   CdkDragDrop,
@@ -11,6 +11,7 @@ import {
 import { AlertController, IonContent } from '@ionic/angular';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -42,14 +43,21 @@ export class BoardPage implements OnInit {
   contentRect;
   snapScrolling = false; // flag when currently snap scrolling the page
 
+  public boardsForGroup$: Observable<any>;
+
   constructor(
     private router: Router,
     private ticketService: TicketService,
     private alertCtrl: AlertController,
-    private auth: AuthService
+    private auth: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    const groupId = this.route.snapshot.paramMap.get('groupId');
+
+    this.boardsForGroup$ = this.ticketService.getBoardsForGroup(groupId);
+
     this.ticketService
       .getUserTickets()
       .pipe(takeUntil(this.auth.loggedOutSubject))
@@ -110,11 +118,14 @@ export class BoardPage implements OnInit {
     }
   }
 
-  seeMore(id) {
+  seeMore(id = 'this_is_info_in_the_id_query_params') {
     const navigationExtras: NavigationExtras = {
-      queryParams: { id }
+      queryParams: {
+        id,
+        anotherParam: 'how about this?'
+      }
     };
-    return this.router.navigate(['menu/ticket'], navigationExtras);
+    return this.router.navigate(['ticket'], navigationExtras);
   }
 
   /**
@@ -123,7 +134,6 @@ export class BoardPage implements OnInit {
    */
   @HostListener('window:resize', ['$event'])
   async resize(ev = null) {
-    // console.log('the screen has been resized', ev);
     this.columnElements = document.getElementsByClassName(
       'column-header-footer-container'
     );
@@ -138,24 +148,31 @@ export class BoardPage implements OnInit {
    */
   async snapScrollToColumn(right = true, nextColumnRect = null) {
     // if currently running don't retry
-    if (this.snapScrolling) { return; }
+    if (this.snapScrolling) {
+      return;
+    }
     this.snapScrolling = true;
 
     // make sure we have columns and contentWidth at this point.
-    if (!this.contentRect || !this.columnElements) { await this.resize(); }
+    if (!this.contentRect || !this.columnElements) {
+      await this.resize();
+    }
 
     if (!nextColumnRect) {
       // get the column to aim for
-      nextColumnRect = right ? await this.nextColumn() : await this.previousColumn();
+      nextColumnRect = right
+        ? await this.nextColumn()
+        : await this.previousColumn();
     }
 
     // (screenWidth - column width) = 'space' on each side of column
-    const leftToCenterColumn = (this.contentRect.width - nextColumnRect.width) / 2;
+    const leftToCenterColumn =
+      (this.contentRect.width - nextColumnRect.width) / 2;
 
     // so left offset should be (column left - menu if open) - leftToCenterColumn
-    const scrollHere = nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
-    this.content.scrollByPoint(scrollHere, 0, 800)
-    .then(() => {
+    const scrollHere =
+      nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
+    this.content.scrollByPoint(scrollHere, 0, 800).then(() => {
       this.snapScrolling = false;
     });
   }
@@ -167,7 +184,10 @@ export class BoardPage implements OnInit {
     let nextColumnRect;
     for (const col of this.columnElements) {
       nextColumnRect = col.getBoundingClientRect();
-      if ((nextColumnRect.left - this.contentRect.left) > (this.contentRect.width / 2)) {
+      if (
+        nextColumnRect.left - this.contentRect.left >
+        this.contentRect.width / 2
+      ) {
         break;
       }
     }
@@ -181,29 +201,42 @@ export class BoardPage implements OnInit {
     let previousColumnRect;
     for (let i = this.columnElements.length - 1; i >= 0; i--) {
       previousColumnRect = this.columnElements[i].getBoundingClientRect();
-      if ((previousColumnRect.right - this.contentRect.left)  < (this.contentRect.width / 2)) {
+      if (
+        previousColumnRect.right - this.contentRect.left <
+        this.contentRect.width / 2
+      ) {
         break;
       }
     }
     return previousColumnRect;
   }
 
-
   /**
-   * fired every time a drag item moves.
+   * Fired every time a drag item moves.
+   * Check if cursor is at either edge of the screen (and moving that way).
+   * If so then snap scroll that way.
    * @param event drag event
    */
   onTicketDrag(event: CdkDragMove) {
-    if (event.delta.x > 0 && event.pointerPosition.x > this.contentRect.right - 50) {
+    if (
+      event.delta.x > 0 &&
+      event.pointerPosition.x > this.contentRect.right - 50
+    ) {
       return this.snapScrollToColumn();
     }
-    if (event.delta.x < 0 && event.pointerPosition.x < this.contentRect.left + 50) {
+    if (
+      event.delta.x < 0 &&
+      event.pointerPosition.x < this.contentRect.left + 50
+    ) {
       return this.snapScrollToColumn(false);
     }
   }
 
   dropListHovered(ev: CdkDragEnter<any>) {
-    this.snapScrollToColumn(null, ev.container.element.nativeElement.getBoundingClientRect());
+    this.snapScrollToColumn(
+      null,
+      ev.container.element.nativeElement.getBoundingClientRect()
+    );
   }
 
   /**
@@ -219,7 +252,7 @@ export class BoardPage implements OnInit {
           description: `This is a short description about how ${i} is just such a great ticket.`,
           completedBy: null,
           eta: null,
-          state: Math.floor(Math.random() * 3) + '',
+          state: Math.floor(Math.random() * 3) + ''
         })
       );
     }

@@ -10,6 +10,8 @@
       <ion-list>
         <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
           <ion-item
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
             [routerLink]="[page.url]"
             class="menu-item"
           >

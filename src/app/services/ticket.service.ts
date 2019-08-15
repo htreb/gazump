@@ -21,6 +21,20 @@ export class TicketService {
     }
   }
 
+  /**
+   * Returns an observable of all the board documents the current user is a member of,
+   * which are under the given groupId
+   * @param id the id of the group
+   */
+  getBoardsForGroup(id: string): Observable<any> {
+    return this.db
+      .collection(`/groups/${id}/boards`, ref =>
+        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+      )
+      .valueChanges({ idField: 'id' })
+      .pipe(takeUntil(this.auth.loggedOutSubject));
+  }
+
   getUserTickets(): Observable<any> {
     const creatorId = this.auth.currentUser.value.id;
     return this.db
@@ -34,7 +48,8 @@ export class TicketService {
             const data = ticketData.payload.doc.data();
             const ticketId = ticketData.payload.doc.id;
             return { id: ticketId, ...data };
-          })),
+          })
+        ),
         takeUntil(this.auth.loggedOutSubject)
       );
   }
@@ -44,9 +59,10 @@ export class TicketService {
    * @param id ticketId
    */
   getTicket(id: string): Observable<any> {
-    return this.db.doc(`tickets/${id}`).valueChanges().pipe(
-      take(1),
-    );
+    return this.db
+      .doc(`tickets/${id}`)
+      .valueChanges()
+      .pipe(take(1));
   }
 
   /**
