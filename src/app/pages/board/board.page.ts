@@ -50,14 +50,9 @@ export class BoardPage implements OnInit {
     private ticketService: TicketService,
     private alertCtrl: AlertController,
     private auth: AuthService,
-    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    const groupId = this.route.snapshot.paramMap.get('groupId');
-
-    this.boardsForGroup$ = this.ticketService.getBoardsForGroup(groupId);
-
     this.ticketService
       .getUserTickets()
       .pipe(takeUntil(this.auth.loggedOutSubject))

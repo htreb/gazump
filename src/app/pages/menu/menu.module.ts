@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('../board/board.module').then(m => m.BoardPageModule)
+        loadChildren: () => import('../board-tabs/board-tabs.module').then(m => m.BoardTabsPageModule)
       },
       {
         path: 'ticket',
