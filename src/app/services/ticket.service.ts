@@ -24,12 +24,12 @@ export class TicketService {
   /**
    * Returns an observable of all the board documents the current user is a member of,
    * which are under the given groupId
-   * @param id the id of the group
+   * @param id the groupId
    */
   getBoardsForGroup(id: string): Observable<any> {
     return this.db
       .collection(`/groups/${id}/boards`, ref =>
-        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+        ref.orderBy(`members.${this.auth.currentUser.value.id}`)
       )
       .valueChanges({ idField: 'id' })
       .pipe(takeUntil(this.auth.loggedOutSubject));
