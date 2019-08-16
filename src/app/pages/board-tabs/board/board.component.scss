@@ -1,0 +1,69 @@
+.board {
+  display: inline-flex;
+  height: 100%;
+  padding: 20px;
+}
+
+.column-header-footer-container {
+  position: relative;
+  max-width: 65vw;
+  width: 350px;
+  margin: 5px;
+  background: var(--ion-color-light-tint);
+  border: 1px solid var(--ion-color-medium);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.column-title {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  z-index: 1;
+  border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
+  background: var(--ion-color-light-tint);
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+  text-transform: uppercase;
+  font-size: 0.8em;
+}
+.column-fade-footer {
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  bottom: 0;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.75);
+}
+
+.column {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: scroll;
+}
+
+//////// Drag and drop styling ///////
+.cdk-drag-preview {
+  margin: 0; // angular bug, adds margin twice if this isn't here
+}
+
+.cdk-drag-placeholder {
+  box-shadow: none;
+  &:after {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    background: var(--ion-color-medium);
+    border: dotted 3px var(--ion-color-light);
+  }
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+  transition: 550ms ease-out;
+}

@@ -7,38 +7,45 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ng-container *ngIf="boardsForGroup$ | async as boards; else loading">
-    <ng-container *ngIf="boards.length; else noBoards">
-      <ion-segment
-        scrollable
-        (ionChange)="boardChanged($event)"
-      >
-        <ion-segment-button *ngFor="let board of boards" [value]="board.id">
+
+<ng-template #loading>
+  <div class="loading">
+    <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
+  </div>
+</ng-template>
+
+<ng-template #noBoards>
+  <div class="no-boards">
+    There are no boards yet,<br/>
+    start one below!
+  </div>
+</ng-template>
+
+
+<ng-container *ngIf="boardsForGroup$ | async as boards; else loading">
+  <ng-container *ngIf="boards.length; else noBoards">
+
+    <ion-content
+      forceOverscroll='false'
+      scrollX = true
+    >
+      <ng-container *ngFor="let board of boards">
+        <board *ngIf="board.id === currentBoard" [boardDetails]="board"></board>
+      </ng-container>
+    </ion-content>
+
+    <ion-footer>
+      <ion-segment scrollable (ionChange)="boardChanged($event)">
+        <ion-segment-button
+          *ngFor="let board of boards; let i=index"
+          [value]="board.id"
+          [checked]='i === 0'
+        >
           <ion-label>{{ board.title }}</ion-label>
         </ion-segment-button>
       </ion-segment>
+    </ion-footer>
 
-
-      Here I have fetched the boards info and it is
-      {{boards | json}}
-
-
-
-
-    </ng-container>
-
-    <ng-template #noBoards>
-      <div class='no-boards'>
-        There are no boards yet,<br>
-        start one below!
-      </div>
-    </ng-template>
   </ng-container>
-  <ng-template #loading>
-    <div class='loading'>
-      <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
-    </div>
-  </ng-template>
+</ng-container>
 
-</ion-content>

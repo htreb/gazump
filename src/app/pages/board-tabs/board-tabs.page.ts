@@ -11,6 +11,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 export class BoardTabsPage implements OnInit {
 
   public boardsForGroup$: Observable<any>;
+  public currentBoard: string;
 
   constructor(
     private ticketService: TicketService,
@@ -22,6 +23,6 @@ export class BoardTabsPage implements OnInit {
   }
 
   boardChanged(ev) {
-    console.log('the segments has changed the board', ev);
+    this.currentBoard = ev.detail.value;
   }
 }

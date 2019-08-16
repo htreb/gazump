@@ -1,0 +1,18 @@
+<div class="board" cdkDropListGroup>
+  <div class="column-header-footer-container" *ngFor="let column of boardDetails.states">
+    <div class="column-title">{{ column.title }}</div>
+    <div class="column-fade-footer"></div>
+    <div
+      class="column"
+      (cdkDropListDropped)="drop($event)"
+      (cdkDropListEntered)="dropListHovered($event)"
+      [cdkDropListData]="column"
+      cdkDropList
+    >
+
+    </div>
+    <!-- close column -->
+  </div>
+  <!-- close column container (contains header and footer) -->
+</div>
+<!-- close board-->
