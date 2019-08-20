@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CdkDragEnter, moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { TicketService } from 'src/app/services/ticket.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'board',
@@ -9,45 +11,20 @@ import { CdkDragEnter, moveItemInArray, transferArrayItem, CdkDragDrop } from '@
 
 export class BoardComponent implements OnInit {
 
-  @Input() boardDetails: any;
-  public states: any;
+  @Input() boardData: any;
+  @Input() groupId: string;
+  @Input() currentBoardId: string;
 
-  constructor() { }
+  constructor(
+    private ticketService: TicketService,
+    private alertCtrl: AlertController,
+    ) { }
 
   ngOnInit() {
-    if (!this.boardDetails) {
+    if (!this.boardData) {
       console.error(`got to the board component without any board details!`);
       return;
     }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  dropListHovered(ev: CdkDragEnter<any>) {
-    // this.snapScrollToColumn(
-    //   null,
-    //   ev.container.element.nativeElement.getBoundingClientRect()
-    // );
   }
 
   /**
@@ -61,7 +38,11 @@ export class BoardComponent implements OnInit {
       console.log('Tried to move a ticket with no item data');
       return;
     }
+    const updatedTickets = {};
     if (event.previousContainer === event.container) {
+      if (event.previousIndex === event.currentIndex) {
+        return;
+      }
       moveItemInArray(
         event.container.data.tickets,
         event.previousIndex,
@@ -74,20 +55,26 @@ export class BoardComponent implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      try {
-        // await this.ticketService.createOrUpdate(
-        //   { state: event.container.data.state },
-        //   event.item.data.id
-        // );
-      } catch (err) {
-        // const alert = await this.alertCtrl.create({
-        //   header: 'Error',
-        //   message: err.message, // TODO more human readable error messages?
-        //   buttons: ['OK']
-        // });
-        // alert.present();
-      }
+      updatedTickets[`tickets.${event.previousContainer.data.state}`] = event.previousContainer.data.tickets;
     }
+    updatedTickets[`tickets.${event.container.data.state}`] = event.container.data.tickets;
+    try {
+      await this.ticketService.updateBoardTickets(this.groupId, this.currentBoardId, updatedTickets);
+    } catch (err) {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: err.message, // TODO more human readable error messages?
+        buttons: ['OK']
+      });
+      alert.present();
+    }
+  }
+
+  dropListHovered(ev: CdkDragEnter<any>) {
+    // this.snapScrollToColumn(
+    //   null,
+    //   ev.container.element.nativeElement.getBoundingClientRect()
+    // );
   }
 
 }

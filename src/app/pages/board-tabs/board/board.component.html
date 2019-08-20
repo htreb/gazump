@@ -1,21 +1,45 @@
 <div class="board" cdkDropListGroup>
-  <div class="column-header-footer-container" *ngFor="let column of boardDetails.states">
+  <!-- TODO should I just store states as an array? -->
+  <div class="column-header-footer-container" *ngFor="let column of boardData.states">
     <div class="column-title">{{ column.title }}</div>
     <div class="column-fade-footer"></div>
-    <div
-      class="column"
-      (cdkDropListDropped)="drop($event)"
-      (cdkDropListEntered)="dropListHovered($event)"
-      [cdkDropListData]="column"
-      cdkDropList
-    >
+    <ng-container *ngIf="((boardData.tickets && boardData.tickets[column.state]) || []) as tickets">
+      <div
+        class="column"
+        (cdkDropListDropped)="drop($event)"
+        (cdkDropListEntered)="dropListHovered($event)"
+        [cdkDropListData]="{state: column.state, tickets: tickets}"
+        cdkDropList
+      >
 
-      <!-- <ng-container *ngFor="let ticket of boardDetails.ticketSnippets">
-        <ticket *ngIf="ticket.state === column.state" [ticketDetails]='ticket'></ticket>
-      </ng-container> -->
+        <ion-card
+          *ngFor="let ticket of tickets"
+          color='light'
+          class="ticket"
+          [cdkDragData]="ticket"
+          cdkDrag
+        >
+          <div class="ticket-icon-container">
+            <ion-icon
+              name="more"
+              class="ticket-icon"
+              color="medium"
+            ></ion-icon>
+            <ion-icon
+              name="move"
+              class="ticket-icon"
+              color="medium"
+              cdkDragHandle
+            ></ion-icon>
+            <ng-content></ng-content>
+          </div>
+          <div class="ticket-title">{{ ticket.title }}</div>
+          <div class="ticket-description">{{ ticket.description }}</div>
+        </ion-card>
 
-    </div>
-    <!-- close column -->
+      </div>
+      <!-- close column -->
+    </ng-container>
   </div>
   <!-- close column container (contains header and footer) -->
 </div>

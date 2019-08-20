@@ -1,3 +1,5 @@
+$columnTitleHeight: 40px;
+
 .board {
   display: inline-flex;
   height: 100%;
@@ -19,7 +21,7 @@
   position: absolute;
   text-align: center;
   width: 100%;
-  height: 40px;
+  height: $columnTitleHeight;
   padding: 10px;
   z-index: 1;
   border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
@@ -38,11 +40,43 @@
 
 .column {
   position: absolute;
-  top: 40px;
+  top: $columnTitleHeight;
   bottom: 0;
   left: 0;
   right: 0;
   overflow: scroll;
+}
+
+.ticket {
+  margin: 10px;
+  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+  transition: none; // ios adds an ugly bounce if this isn't here
+  padding-bottom: 10px;
+
+  .ticket-icon-container {
+    display: flex;
+    justify-content: space-between;
+    height: 40px;
+
+    .ticket-icon {
+      height: 20px;
+      width: 20px;
+      padding: 10px;
+    }
+  }
+
+  .ticket-title {
+      margin: 10px;
+      margin-top: 0;
+      font-size: 1.3em
+  }
+
+  .ticket-description {
+      margin: 10px;
+      overflow: hidden;
+  }
 }
 
 //////// Drag and drop styling ///////
@@ -65,5 +99,5 @@
 
 .cdk-drag-animating,
 .cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
-  transition: 550ms ease-out;
+  transition: 350ms ease-out;
 }

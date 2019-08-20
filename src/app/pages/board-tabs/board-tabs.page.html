@@ -7,7 +7,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ng-template #loading>
   <div class="loading">
     <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
@@ -16,36 +15,38 @@
 
 <ng-template #noBoards>
   <div class="no-boards">
-    There are no boards yet,<br/>
+    There are no boards yet,<br />
     start one below!
   </div>
 </ng-template>
 
-
 <ng-container *ngIf="boardsForGroup$ | async as boards; else loading">
   <ng-container *ngIf="boards.length; else noBoards">
+    <ion-content forceOverscroll="false" scrollX="true">
 
-    <ion-content
-      forceOverscroll='false'
-      scrollX = true
-    >
+
+      <!-- TODO should I just pass all the boards data to the board component
+      and let it handle it there? Looping and creating board instances which are not seen seems unnecessary -->
       <ng-container *ngFor="let board of boards">
-        <board *ngIf="board.id === currentBoard" [boardDetails]="board"></board>
+        <board
+          *ngIf="board.id === currentBoard"
+          [groupId]="groupId"
+          [currentBoardId]="currentBoard"
+          [boardData]="board"
+        ></board>
       </ng-container>
     </ion-content>
 
     <ion-footer>
       <ion-segment scrollable (ionChange)="boardChanged($event)">
         <ion-segment-button
-          *ngFor="let board of boards; let i=index"
+          *ngFor="let board of boards"
           [value]="board.id"
-          [checked]='i === 0'
+          [checked]="!currentBoard || board.id === currentBoard"
         >
           <ion-label>{{ board.title }}</ion-label>
         </ion-segment-button>
       </ion-segment>
     </ion-footer>
-
   </ng-container>
 </ng-container>
-

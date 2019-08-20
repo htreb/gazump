@@ -11,16 +11,6 @@ import { Observable } from 'rxjs';
 export class TicketService {
   constructor(private db: AngularFirestore, private auth: AuthService) {}
 
-  createOrUpdate(info, id?): Promise<any> {
-    if (id) {
-      return this.db.doc(`tickets/${id}`).update(info);
-    } else {
-      info.creator = this.auth.currentUser.value.id;
-      info.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      return this.db.collection('tickets').add(info);
-    }
-  }
-
   /**
    * Returns an observable of all the board documents the current user is a member of,
    * which are under the given groupId
@@ -35,6 +25,19 @@ export class TicketService {
       .pipe(takeUntil(this.auth.loggedOutSubject));
   }
 
+  /**
+   * Updates the tickets object saved on a board with the new order of each ticket in each column.
+   * @param groupId the group the board belongs to
+   * @param boardId the board the tickets are on
+   * @param data the updated tickets in the form {tickets.0: [ ...], tickets.1: [ ...]}
+   */
+  updateBoardTickets(groupId: string, boardId: string, data: any): Promise<any> {
+    if (!data) { return; } // no unnecessary db writes
+    return this.db.doc(`/groups/${groupId}/boards/${boardId}`).update(data);
+  }
+
+
+  /// Old methods remove these ///
   getUserTickets(): Observable<any> {
     const creatorId = this.auth.currentUser.value.id;
     return this.db
@@ -52,6 +55,16 @@ export class TicketService {
         ),
         takeUntil(this.auth.loggedOutSubject)
       );
+  }
+
+  createOrUpdate(info, id?): Promise<any> {
+    if (id) {
+      return this.db.doc(`tickets/${id}`).update(info);
+    } else {
+      info.creator = this.auth.currentUser.value.id;
+      info.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      return this.db.collection('tickets').add(info);
+    }
   }
 
   /**

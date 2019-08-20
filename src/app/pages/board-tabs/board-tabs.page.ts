@@ -12,14 +12,15 @@ export class BoardTabsPage implements OnInit {
 
   public boardsForGroup$: Observable<any>;
   public currentBoard: string;
+  public groupId: string;
 
   constructor(
     private ticketService: TicketService,
-    private route: ActivatedRoute, ) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
-    const groupId = this.route.snapshot.paramMap.get('groupId');
-    this.boardsForGroup$ = this.ticketService.getBoardsForGroup(groupId);
+    this.groupId = this.route.snapshot.paramMap.get('groupId');
+    this.boardsForGroup$ = this.ticketService.getBoardsForGroup(this.groupId);
   }
 
   boardChanged(ev) {
