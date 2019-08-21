@@ -78,26 +78,3 @@ $columnTitleHeight: 40px;
       overflow: hidden;
   }
 }
-
-//////// Drag and drop styling ///////
-.cdk-drag-preview {
-  margin: 0; // angular bug, adds margin twice if this isn't here
-}
-
-.cdk-drag-placeholder {
-  box-shadow: none;
-  &:after {
-    content: '';
-    position: absolute;
-    box-sizing: border-box;
-    height: 100%;
-    width: 100%;
-    background: var(--ion-color-medium);
-    border: dotted 3px var(--ion-color-light);
-  }
-}
-
-.cdk-drag-animating,
-.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
-  transition: 350ms ease-out;
-}
