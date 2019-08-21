@@ -22,7 +22,7 @@
 
 <ng-container *ngIf="boardsForGroup$ | async as boards; else loading">
   <ng-container *ngIf="boards.length; else noBoards">
-    <ion-content forceOverscroll="false" scrollX="true">
+    <ion-content forceOverscroll="false" scrollX="true" #content>
 
 
       <!-- TODO should I just pass all the boards data to the board component
@@ -33,6 +33,7 @@
           [groupId]="groupId"
           [currentBoardId]="currentBoard"
           [boardData]="board"
+          [content]='content'
         ></board>
       </ng-container>
     </ion-content>

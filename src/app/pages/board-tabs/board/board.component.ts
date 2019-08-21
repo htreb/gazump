@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CdkDragEnter, moveItemInArray, transferArrayItem, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Component, OnInit, Input, HostListener, ViewChild } from '@angular/core';
+import { CdkDragEnter, moveItemInArray, transferArrayItem, CdkDragDrop, CdkDragMove } from '@angular/cdk/drag-drop';
 import { TicketService } from 'src/app/services/ticket.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'board',
@@ -14,6 +14,12 @@ export class BoardComponent implements OnInit {
   @Input() boardData: any;
   @Input() groupId: string;
   @Input() currentBoardId: string;
+  @Input() content: IonContent;
+  private columnElements: any;
+  private contentRect: any;
+  private snapScrolling = false; // flag when currently snap scrolling the page
+
+  private scrolling = false;
 
   constructor(
     private ticketService: TicketService,
@@ -25,6 +31,7 @@ export class BoardComponent implements OnInit {
       console.error(`got to the board component without any board details!`);
       return;
     }
+    this.resize();
   }
 
   /**
@@ -70,11 +77,130 @@ export class BoardComponent implements OnInit {
     }
   }
 
-  dropListHovered(ev: CdkDragEnter<any>) {
-    // this.snapScrollToColumn(
-    //   null,
-    //   ev.container.element.nativeElement.getBoundingClientRect()
-    // );
+  /**
+   * Get the full width of the board (used to calculate how far to snap scroll)
+   * and the columnElements
+   */
+  @HostListener('window:resize', ['$event'])
+  async resize(ev = null) {
+    this.columnElements = document.getElementsByClassName(
+      'column-header-footer-container'
+    );
+    const scrollEl = await this.content.getScrollElement();
+    const scrollRect = scrollEl.getClientRects();
+    this.contentRect = scrollRect[0];
   }
+
+  /**
+   * Finds the next column and snap scrolls it to the center of the screen
+   * @param right direction (defaults to right)
+   */
+  async snapScrollToColumn(right = true, nextColumnRect = null) {
+    // if currently running don't retry
+    if (this.snapScrolling) {
+      return;
+    }
+    this.snapScrolling = true;
+
+    // make sure we have columns and contentWidth at this point.
+    if (!this.contentRect || !this.columnElements) {
+      await this.resize();
+    }
+
+    if (!nextColumnRect) {
+      // get the column to aim for
+      nextColumnRect = right
+        ? await this.nextColumn()
+        : await this.previousColumn();
+    }
+
+    // (screenWidth - column width) = 'space' on each side of column
+    const leftToCenterColumn =
+      (this.contentRect.width - nextColumnRect.width) / 2;
+
+    // so left offset should be (column left - menu if open) - leftToCenterColumn
+    const scrollHere =
+      nextColumnRect.left - this.contentRect.left - leftToCenterColumn;
+    this.content.scrollByPoint(scrollHere, 0, 800).then(() => {
+      this.snapScrolling = false;
+    });
+  }
+
+  /**
+   * Loop forwards through columns to find first which starts after the middle of the screen
+   */
+  async nextColumn() {
+    let nextColumnRect;
+    for (const col of this.columnElements) {
+      nextColumnRect = col.getBoundingClientRect();
+      if (
+        nextColumnRect.left - this.contentRect.left >
+        this.contentRect.width / 2
+      ) {
+        break;
+      }
+    }
+    return nextColumnRect;
+  }
+
+  /**
+   * Loop backwards through columns to find first which ends before the middle of the screen
+   */
+  async previousColumn() {
+    let previousColumnRect;
+    for (let i = this.columnElements.length - 1; i >= 0; i--) {
+      previousColumnRect = this.columnElements[i].getBoundingClientRect();
+      if (
+        previousColumnRect.right - this.contentRect.left <
+        this.contentRect.width / 2
+      ) {
+        break;
+      }
+    }
+    return previousColumnRect;
+  }
+
+  /**
+   * Fired every time a drag item moves.
+   * Check if cursor is at either edge of the screen (and moving that way).
+   * If so then snap scroll that way.
+   * @param event drag event
+   */
+  onTicketDrag(event: CdkDragMove) {
+    if (this.scrolling) {
+      return;
+    }
+    this.scrolling = true;
+    if (
+      event.delta.x > 0 &&
+      event.pointerPosition.x > this.contentRect.right - 50
+    ) {
+      return this.content.scrollByPoint(20, 0, 500).then(resp => {
+        console.log('finished scrolling', resp);
+        this.scrolling = false;
+      });
+      // return this.snapScrollToColumn();
+    }
+    if (
+      event.delta.x < 0 &&
+      event.pointerPosition.x < this.contentRect.left + 50
+    ) {
+      return this.content.scrollByPoint(-20, 0, 500).then(resp => {
+        console.log('finished scrolling', resp);
+        this.scrolling = false;
+      });
+      // return this.snapScrollToColumn(false);
+    }
+  }
+
+
+
+
+  // dropListHovered(ev: CdkDragEnter<any>) {
+  //   this.snapScrollToColumn(
+  //     null,
+  //     ev.container.element.nativeElement.getBoundingClientRect()
+  //   );
+  // }
 
 }

@@ -7,7 +7,6 @@
       <div
         class="column"
         (cdkDropListDropped)="drop($event)"
-        (cdkDropListEntered)="dropListHovered($event)"
         [cdkDropListData]="{state: column.state, tickets: tickets}"
         cdkDropList
       >
@@ -17,6 +16,7 @@
           color='light'
           class="ticket"
           [cdkDragData]="ticket"
+          (cdkDragMoved)="onTicketDrag($event)"
           cdkDrag
         >
           <div class="ticket-icon-container">
