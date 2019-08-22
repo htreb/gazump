@@ -37,6 +37,34 @@ export class TicketService {
   }
 
 
+  // TODO remove this!
+  makeDummyTickets(groupId: string, boardId: string): Promise<any> {
+    const newTickets = {};
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 10; j++) {
+        newTickets[`tickets.${i}`] = newTickets[`tickets.${i}`] || [];
+        newTickets[`tickets.${i}`].push({
+          title: `${i}${j} ticket about ${i}${j}`,
+          description: `${i}${j}${i}${j}${i}${j}${i}${j}`
+        });
+      }
+    }
+    console.log('my new tickets are', newTickets);
+    return this.updateBoardTickets(groupId, boardId, newTickets);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
   /// Old methods remove these ///
   getUserTickets(): Observable<any> {
     const creatorId = this.auth.currentUser.value.id;
