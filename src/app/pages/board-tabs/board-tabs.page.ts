@@ -26,4 +26,11 @@ export class BoardTabsPage implements OnInit {
   boardChanged(ev) {
     this.currentBoard = ev.detail.value;
   }
+
+
+  makeDummyTickets() {
+    this.ticketService.makeDummyTickets(this.groupId, this.currentBoard);
+  }
+
 }
+

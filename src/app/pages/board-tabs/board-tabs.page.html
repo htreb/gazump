@@ -4,6 +4,11 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Board</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="makeDummyTickets()">👶</ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -22,23 +27,22 @@
 
 <ng-container *ngIf="boardsForGroup$ | async as boards; else loading">
   <ng-container *ngIf="boards.length; else noBoards">
-    <ion-content forceOverscroll="false" scrollX="true">
 
+    <ion-content scrollX="true">
 
       <!-- TODO should I just pass all the boards data to the board component
       and let it handle it there? Looping and creating board instances which are not seen seems unnecessary -->
       <ng-container *ngFor="let board of boards">
         <board
           *ngIf="board.id === currentBoard"
-          [groupId]="groupId"
-          [currentBoardId]="currentBoard"
           [boardData]="board"
         ></board>
       </ng-container>
+
     </ion-content>
 
     <ion-footer>
-      <ion-segment scrollable (ionChange)="boardChanged($event)">
+      <ion-segment mode='md' scrollable (ionChange)="boardChanged($event)">
         <ion-segment-button
           *ngFor="let board of boards"
           [value]="board.id"

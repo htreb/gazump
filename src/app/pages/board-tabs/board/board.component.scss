@@ -1,5 +1,3 @@
-$columnTitleHeight: 40px;
-
 .board {
   display: inline-flex;
   height: 100%;
@@ -7,45 +5,34 @@ $columnTitleHeight: 40px;
 }
 
 .column-header-footer-container {
-  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
   max-width: 65vw;
   width: 350px;
   margin: 5px;
   background: var(--ion-color-light-tint);
   border: 1px solid var(--ion-color-medium);
   border-radius: 4px;
-  overflow: hidden;
+
+  .column-title {
+    height: 40px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
+    background: var(--ion-color-light-tint);
+    text-transform: uppercase;
+    font-size: 0.8em;
+    border-bottom: 1px solid var(--ion-color-medium);
+  }
+
+  .column {
+    overflow-y: auto;
+  }
 }
 
-.column-title {
-  position: absolute;
-  text-align: center;
-  width: 100%;
-  height: $columnTitleHeight;
-  padding: 10px;
-  z-index: 1;
-  border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
-  background: var(--ion-color-light-tint);
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
-  text-transform: uppercase;
-  font-size: 0.8em;
-}
-.column-fade-footer {
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-  bottom: 0;
-  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.75);
-}
 
-.column {
-  position: absolute;
-  top: $columnTitleHeight;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow: scroll;
-}
+
 
 .ticket {
   margin: 10px;
@@ -55,9 +42,16 @@ $columnTitleHeight: 40px;
   transition: none; // ios adds an ugly bounce if this isn't here
   padding-bottom: 10px;
 
+
+  background: white;
+  border-bottom: 1px solid var(--ion-color-medium);
+  border-radius: 4px;
+  transition: background-color 0.5s ease;
+
+
   .ticket-icon-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 40px;
 
     .ticket-icon {
@@ -70,11 +64,47 @@ $columnTitleHeight: 40px;
   .ticket-title {
       margin: 10px;
       margin-top: 0;
-      font-size: 1.3em
-  }
+    }
 
-  .ticket-description {
+    .ticket-description {
       margin: 10px;
-      overflow: hidden;
+      // overflow: hidden;
+      font-size: 0.8em
   }
 }
+
+
+
+
+/////// draggable styles ///////
+
+.draggable-mirror {
+  z-index: 9999;
+}
+
+.draggable-source {
+  transition: background-color 0.5s ease;
+}
+.draggable-source--placed {
+  background: green;
+}
+
+// .draggable-container--placed {
+//   background: yellow;
+// }
+
+// .draggable--over {
+//   background: orange;
+// }
+
+// .draggable-container--over {
+//   background: pink;
+// }
+
+// .draggable-source--is-dragging {
+//   background: rebeccapurple;
+// }
+
+// .draggable-container--is-dragging {
+//   background: brown;
+// }

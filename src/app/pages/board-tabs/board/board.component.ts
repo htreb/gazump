@@ -8,12 +8,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 export class BoardComponent implements OnInit {
 
-  @Input() groupId: string;
-  @Input() currentBoardId: string;
   @Input() boardData: any;
-
-  constructor(
-    ) { }
+  constructor() { }
 
   ngOnInit() {
     if (!this.boardData) {

@@ -1,17 +1,17 @@
-<div class="board">
+<div class="board" appSortable>
   <!-- TODO should I just store states as an array? -->
   <div class="column-header-footer-container" *ngFor="let column of boardData.states">
     <div class="column-title">{{ column.title }}</div>
-    <div class="column-fade-footer"></div>
+
     <ng-container *ngIf="((boardData.tickets && boardData.tickets[column.state]) || []) as tickets">
       <div
         class="column"
+        #sortContainer
       >
 
-        <ion-card
+        <div
           *ngFor="let ticket of tickets"
-          color='light'
-          class="ticket"
+          class="ticket draggable"
         >
           <div class="ticket-icon-container">
             <ion-icon
@@ -19,20 +19,16 @@
               class="ticket-icon"
               color="medium"
             ></ion-icon>
-            <ion-icon
-              name="move"
-              class="ticket-icon"
-              color="medium"
-            ></ion-icon>
-            <ng-content></ng-content>
           </div>
           <div class="ticket-title">{{ ticket.title }}</div>
           <div class="ticket-description">{{ ticket.description }}</div>
-        </ion-card>
+        </div>
 
       </div>
       <!-- close column -->
     </ng-container>
+
+
   </div>
   <!-- close column container (contains header and footer) -->
 </div>
