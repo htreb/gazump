@@ -1,4 +1,8 @@
-<div class="board" appSortable>
+<div class="board"
+  appSortable
+  (drag)='onDrag($event)'
+  (stop)='onStopDrag($event)'
+>
   <!-- TODO should I just store states as an array? -->
   <div class="column-header-footer-container" *ngFor="let column of boardData.states">
     <div class="column-title">{{ column.title }}</div>

@@ -1,14 +1,16 @@
-import { Directive, AfterViewInit, ContentChildren, QueryList } from '@angular/core';
+import { Directive, AfterViewInit, ContentChildren, QueryList, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Sortable, Plugins } from '@shopify/draggable';
 import SwapAnimation from '@shopify/draggable/lib/plugins/swap-animation';
 
 @Directive({
   selector: '[appSortable]'
 })
-export class SortableDirective implements AfterViewInit {
+export class SortableDirective implements AfterViewInit, OnDestroy {
 
   private sortable: any;
   private containers: any;
+  @Output() stop = new EventEmitter();
+  @Output() drag = new EventEmitter();
   @ContentChildren('sortContainer') containersRef: QueryList<any>;
 
   constructor() { }
@@ -34,6 +36,20 @@ export class SortableDirective implements AfterViewInit {
         ],
       },
     });
+
+    this.sortable.on('sortable:stop', e => this.handleStop(e));
+    this.sortable.on('drag:move', e => this.handleDrag(e));
   }
 
+  ngOnDestroy() {
+    this.sortable.destroy();
+  }
+
+  handleStop(event) {
+    this.stop.emit(event);
+  }
+
+  handleDrag(event) {
+    this.drag.emit(event);
+  }
 }

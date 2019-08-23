@@ -16,6 +16,14 @@ export class BoardComponent implements OnInit {
       console.error(`got to the board component without any board details!`);
       return;
     }
+
   }
 
+  onDrag(event) {
+    console.log(`dragging now`, event);
+  }
+
+  onStopDrag(event) {
+    console.log('finished dragging', event);
+  }
 }
