@@ -75,13 +75,16 @@
 
 
 
-
 /////// drag drop styles ///////
+.cdk-drag-preview {
+  margin: 0; // angular bug, adds margin twice if this isn't here
+}
+
 .cdk-drag-animating,
 .cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
 .cdk-drag-placeholder {
-  opacity: 0.5;
+  opacity: 0;
 }

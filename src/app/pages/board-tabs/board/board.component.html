@@ -9,12 +9,14 @@
       <div
         class="column"
         cdkDropList
-        [cdkDropListData]='tickets'
+        [cdkDropListData]="{state: column.state, tickets: tickets}"
+        (cdkDropListDropped)="drop($event)"
       >
 
         <div
           *ngFor="let ticket of tickets"
           class="ticket draggable"
+          [cdkDragData]='ticket'
           cdkDrag
         >
           <div class="ticket-icon-container">
