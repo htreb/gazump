@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BoardTabsPage } from './board-tabs.page';
 import { BoardComponent } from './board/board.component';
-import { SortableDirective } from './sortable.directive';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
@@ -19,8 +19,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    DragDropModule
   ],
-  declarations: [BoardTabsPage, BoardComponent, SortableDirective]
+  declarations: [BoardTabsPage, BoardComponent]
 })
 export class BoardTabsPageModule {}

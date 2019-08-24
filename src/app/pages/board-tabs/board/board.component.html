@@ -1,7 +1,5 @@
 <div class="board"
-  appSortable
-  (drag)='onDrag($event)'
-  (stop)='onStopDrag($event)'
+  cdkDropListGroup
 >
   <!-- TODO should I just store states as an array? -->
   <div class="column-header-footer-container" *ngFor="let column of boardData.states">
@@ -10,18 +8,26 @@
     <ng-container *ngIf="((boardData.tickets && boardData.tickets[column.state]) || []) as tickets">
       <div
         class="column"
-        #sortContainer
+        cdkDropList
+        [cdkDropListData]='tickets'
       >
 
         <div
           *ngFor="let ticket of tickets"
           class="ticket draggable"
+          cdkDrag
         >
           <div class="ticket-icon-container">
             <ion-icon
               name="more"
               class="ticket-icon"
               color="medium"
+            ></ion-icon>
+            <ion-icon
+              name="move"
+              class="ticket-icon"
+              color="medium"
+              cdkDragHandle
             ></ion-icon>
           </div>
           <div class="ticket-title">{{ ticket.title }}</div>

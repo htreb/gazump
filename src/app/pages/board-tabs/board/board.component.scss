@@ -51,7 +51,7 @@
 
   .ticket-icon-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     height: 40px;
 
     .ticket-icon {
@@ -76,35 +76,12 @@
 
 
 
-/////// draggable styles ///////
-
-.draggable-mirror {
-  z-index: 9999;
+/////// drag drop styles ///////
+.cdk-drag-animating,
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.draggable-source {
-  transition: background-color 0.5s ease;
+.cdk-drag-placeholder {
+  opacity: 0.5;
 }
-.draggable-source--placed {
-  background: green;
-}
-
-// .draggable-container--placed {
-//   background: yellow;
-// }
-
-// .draggable--over {
-//   background: orange;
-// }
-
-// .draggable-container--over {
-//   background: pink;
-// }
-
-// .draggable-source--is-dragging {
-//   background: rebeccapurple;
-// }
-
-// .draggable-container--is-dragging {
-//   background: brown;
-// }
