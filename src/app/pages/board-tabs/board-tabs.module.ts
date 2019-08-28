@@ -4,14 +4,25 @@ import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { BoardTabsPage } from './board-tabs.page';
-import { BoardComponent } from './board/board.component';
+import { BoardComponent } from './Old board component/board.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
+    path: 'board',
+    component: BoardTabsPage,
+    children: [
+      {
+        path: ':boardId',
+        loadChildren: () => import('./board/board.module').then(m => m.BoardPageModule),
+      }
+    ],
+  },
+  {
     path: '',
-    component: BoardTabsPage
-  }
+    redirectTo: 'board',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

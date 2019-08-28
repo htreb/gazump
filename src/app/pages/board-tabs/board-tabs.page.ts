@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { TicketService } from 'src/app/services/ticket.service';
+import { BoardService } from 'src/app/services/board.service';
 
 @Component({
   selector: 'app-board-tabs',
@@ -10,20 +10,17 @@ import { TicketService } from 'src/app/services/ticket.service';
 })
 export class BoardTabsPage implements OnInit {
 
-  public boardsForGroup$: Observable<any>;
-  public currentBoard: string;
-  public groupId: string;
+  public boardsForGroup$: Observable<any> = this.boardService.currentGroup$;
 
   constructor(
-    private ticketService: TicketService,
-    private route: ActivatedRoute) { }
+    private boardService: BoardService,
+    private route: ActivatedRoute
+    ) { }
 
   ngOnInit() {
-    this.groupId = this.route.snapshot.paramMap.get('groupId');
-    this.boardsForGroup$ = this.ticketService.getBoardsForGroup(this.groupId);
+    const groupId = this.route.snapshot.paramMap.get('groupId');
+    this.boardService.setGroup(groupId);
   }
 
-  boardChanged(ev) {
-    this.currentBoard = ev.detail.value;
-  }
+
 }

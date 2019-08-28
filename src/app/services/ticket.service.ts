@@ -11,31 +11,6 @@ import { Observable } from 'rxjs';
 export class TicketService {
   constructor(private db: AngularFirestore, private auth: AuthService) {}
 
-  /**
-   * Returns an observable of all the board documents the current user is a member of,
-   * which are under the given groupId
-   * @param id the groupId
-   */
-  getBoardsForGroup(id: string): Observable<any> {
-    return this.db
-      .collection(`/groups/${id}/boards`, ref =>
-        ref.orderBy(`members.${this.auth.currentUser.value.id}`)
-      )
-      .valueChanges({ idField: 'id' })
-      .pipe(takeUntil(this.auth.loggedOutSubject));
-  }
-
-  /**
-   * Updates the tickets object saved on a board with the new order of each ticket in each column.
-   * @param groupId the group the board belongs to
-   * @param boardId the board the tickets are on
-   * @param data the updated tickets in the form {tickets.0: [ ...], tickets.1: [ ...]}
-   */
-  updateBoardTickets(groupId: string, boardId: string, data: any): Promise<any> {
-    if (!data) { return; } // no unnecessary db writes
-    return this.db.doc(`/groups/${groupId}/boards/${boardId}`).update(data);
-  }
-
 
   /// Old methods remove these ///
   getUserTickets(): Observable<any> {
