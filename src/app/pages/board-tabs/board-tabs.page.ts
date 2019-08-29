@@ -10,7 +10,7 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardTabsPage implements OnInit {
 
-  public boardsForGroup$: Observable<any> = this.boardService.currentGroup$;
+  public allBoards$: Observable<any> = this.boardService.boardsFromCurrentGroup();
 
   constructor(
     private boardService: BoardService,
@@ -19,8 +19,6 @@ export class BoardTabsPage implements OnInit {
 
   ngOnInit() {
     const groupId = this.route.snapshot.paramMap.get('groupId');
-    this.boardService.setGroup(groupId);
+    this.boardService.setGroup(groupId); // TODO set this when navigating on the list-groups page
   }
-
-
 }

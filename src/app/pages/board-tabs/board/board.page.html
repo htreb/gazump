@@ -1,9 +1,39 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>board</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="board$ | async as board">
 
-<ion-content>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{ board.title }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-</ion-content>
+  <ion-content
+    forceOverscroll='false'
+    scrollX = true
+    >
+    <div class="board" >
+      <div class="column-container" *ngFor="let column of board.states">
+        <div class="column-title">{{ column.title }}</div>
+        <div class="column">
+
+          <div class='ticket' *ngFor="let ticket of (board.tickets && board.tickets[column.state])">
+            <div class='ticket-title'>{{ticket.title}}</div>
+            <div class='ticket-title'>{{ticket.description}}</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO  delete this -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="dummyTickets()">
+        <ion-icon name="add">dummy Tickets</ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>
+
+</ng-container>

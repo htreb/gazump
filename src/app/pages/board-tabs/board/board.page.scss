@@ -1,0 +1,36 @@
+.board {
+    display: inline-flex;
+    height: 100%;
+    padding: 20px;
+}
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 65vw;
+    width: 350px;
+    flex-shrink: 0;
+    margin: 5px;
+    background: var(--ion-color-light-tint);
+    border: 1px solid var(--ion-color-medium);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.column-title {
+    text-align: center;
+    height: 40px;
+    padding: 10px;
+    border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
+    background: var(--ion-color-light-tint);
+    border-bottom: 1px solid var(--ion-color-medium);
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.column {
+    flex: 1;
+    overflow: scroll;
+}
+
+

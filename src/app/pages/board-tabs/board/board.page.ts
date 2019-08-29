@@ -9,15 +9,27 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardPage implements OnInit {
 
+  board$;
+  private boardId: string;
+
   constructor(
     private route: ActivatedRoute,
     private boardService: BoardService) { }
 
   ngOnInit() {
-    const boardId = this.route.snapshot.paramMap.get('boardId');
-    const boardData = this.boardService.currentGroupSubject.value;
+    // I shouldn't need to save this if it's coming down with the board
+    this.boardId = this.route.snapshot.paramMap.get('boardId');
 
-    console.log(`the board data I have is`, boardData);
+    console.log(`${this.boardId} init`);
+    this.board$ = this.boardService.boardsFromCurrentGroup(this.boardId);
+    console.log('the board is now', this.board$);
   }
 
+
+
+
+  // TODO  delete this
+  dummyTickets() {
+    this.boardService.makeDummyTickets(this.boardId);
+  }
 }

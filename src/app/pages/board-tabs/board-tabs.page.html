@@ -1,11 +1,4 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Board</ion-title>
-  </ion-toolbar>
-</ion-header>
+<!-- TODO need a header when loading or there are no groups, need way to open the menu -->
 
 <ng-template #loading>
   <div class="loading">
@@ -20,14 +13,14 @@
   </div>
 </ng-template>
 
-<ng-container *ngIf="boardsForGroup$ | async as boards">
-  <ng-container *ngIf="!boards.loading; else loading">
-    <ng-container *ngIf="boards.length; else noBoards">
+<ng-container *ngIf="allBoards$ | async as allBoards">
+  <ng-container *ngIf="!allBoards.loading; else loading">
+    <ng-container *ngIf="allBoards.length; else noBoards">
 
       <ion-tabs>
         <ion-tab-bar slot="bottom">
           <ion-tab-button
-            *ngFor="let board of boards"
+            *ngFor="let board of allBoards"
             tab="{{ board.id }}"
           >
             <ion-icon name="clipboard"></ion-icon>
