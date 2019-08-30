@@ -1,58 +1,66 @@
-.board {
-    display: inline-flex;
-    height: 100%;
-    padding: 20px;
+$boardPadding: 20px;
+$columnColor: var(--ion-color-light-tint);
+$columnBorderColor: var(--ion-color-medium);
+$ticketColor: white;
+$columnMargin: 0px 5px;
+
+:host {
+    // ionic auto justify is space-between;
+    justify-content: flex-start;
 }
 
-.column-container {
+.column-header-container {
+    margin-top: calc(#{$boardPadding}/2);
+    overflow: hidden; // prevents user scrolling
+    display: flex;
+    height: 50px;
+}
+
+.board {
+    padding-top: 0;
+    padding-bottom: $boardPadding;
+    min-height: 100%;
+}
+
+.scrolling-container {
+    overflow: auto;
+    flex: 1; // fill page
+}
+
+.board, .column-headers {
+    display: inline-flex;
+    padding-left: $boardPadding;
+    padding-right: $boardPadding;
+}
+
+.column, .column-title {
     display: flex;
     flex-direction: column;
     max-width: 65vw;
     width: 350px;
     flex-shrink: 0;
-    margin: 5px;
-    background: var(--ion-color-light-tint);
-    border: 1px solid var(--ion-color-medium);
-    border-radius: 4px;
-    overflow: hidden;
+    margin: $columnMargin;
+}
+
+.column {
+    background: $columnColor;
+    border: 1px solid $columnBorderColor;
+    border-top: none;
 }
 
 .column-title {
     text-align: center;
-    height: 40px;
-    padding: 10px;
-    border-radius: 4px 4px 0px 0px; // overflow hidden doesn't cut it on ios
-    background: var(--ion-color-light-tint);
-    border-bottom: 1px solid var(--ion-color-medium);
     text-transform: uppercase;
     font-size: 0.8em;
+    justify-content: center;
+    background: $columnColor;
+    border: 1px solid $columnBorderColor;
 }
 
-.column {
-    flex: 1;
-    overflow: scroll;
-}
 
 .ticket {
     margin: 5px;
     background-color: white;
     box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
     padding: 10px;
-}
-
-.board-scroll-container {
-    overflow: scroll;
-    height: 100%;
-}
-.scroll-area {
-    position: fixed;
-    height: 100%;
-    width: 30px;
-    left: 0;
-    z-index: 99;
-
-    &.right{
-        left: auto;
-        right: 0;
-    }
 }

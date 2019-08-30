@@ -6,19 +6,32 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <ion-title>{{ board.title }}</ion-title>
+
+      <!-- remove vvv -->
+      <ion-buttons slot="end">
+        <ion-button (click)="dummyTickets()">
+          <ion-icon name="copy"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <!-- Remove ^^^ -->
+
     </ion-toolbar>
   </ion-header>
 
-  <div class="board-scroll-container">
-    <div class="scroll-area left"></div>
-    <div class="scroll-area right"></div>
+  <div #columnHeaderContainer class='column-header-container'>
+    <div class='column-headers'>
+      <div
+        *ngFor="let column of board.states"
+        class="column-title"
+      >
+        {{ column.title }}
+      </div>
+    </div>
+  </div>
 
+  <div class="scrolling-container" (scroll)=onBoardScroll($event)>
     <div class="board" >
-
-
-      <div class="column-container" *ngFor="let column of board.states">
-        <div class="column-title">{{ column.title }}</div>
-
+      <ng-container *ngFor="let column of board.states">
         <ng-container *ngIf="(board.tickets && board.tickets[column.state]) || [] as tickets">
 
           <smooth-dnd-container
@@ -26,7 +39,6 @@
             [groupName]="'col'"
             (drop)="onTicketDrop(column, tickets, $event)"
             [getChildPayload]="getTicketPayload(tickets)"
-            [dragBeginDelay]='200'
           >
 
             <smooth-dnd-draggable
@@ -41,19 +53,8 @@
           </smooth-dnd-container>
 
         </ng-container>
-
-      </div>
-
-
+      </ng-container>
     </div>
-
-    <!-- TODO  delete this -->
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="dummyTickets()">
-        <ion-icon name="add">dummy Tickets</ion-icon>
-      </ion-fab-button>
-    </ion-fab>
-
   </div>
 
 </ng-container>

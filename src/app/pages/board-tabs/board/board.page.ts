@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 import * as debounce from 'debounce-promise';
@@ -12,9 +12,10 @@ export class BoardPage implements OnInit, OnDestroy {
   board$;
   private boardId: string;
   private newTicketSequence = {};
-  debouncedUpdateBoard = debounce(function() {
+  private debouncedUpdateBoard = debounce(function() {
     return this.boardService.updateBoard(...arguments);
   }, 100); // the debounce delay can be tweaked
+  @ViewChild('columnHeaderContainer', {static: false}) columnHeaderContainer: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,6 +34,15 @@ export class BoardPage implements OnInit, OnDestroy {
       console.log('updated board');
       this.newTicketSequence = {};
     });
+  }
+
+  /**
+   * keeps column headers lined up with the board
+   * @param event scroll event from board
+   */
+  onBoardScroll(event) {
+    const boardLeft = event.srcElement.scrollLeft;
+    this.columnHeaderContainer.nativeElement.scroll(boardLeft, 0);
   }
 
   onTicketDrop(column, tickets, dropResult) {
