@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
+import * as debounce from 'debounce-promise';
 
 @Component({
   selector: 'app-board',
@@ -11,6 +12,9 @@ export class BoardPage implements OnInit {
   board$;
   private boardId: string;
   private newTicketSequence = {};
+  debouncedUpdateBoard = debounce(function() {
+    return this.boardService.updateBoard(...arguments);
+  }, 5000);
 
   constructor(
     private route: ActivatedRoute,
@@ -27,7 +31,10 @@ export class BoardPage implements OnInit {
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
       const newTickets = this.applyDrag(tickets, dropResult);
       this.newTicketSequence[`tickets.${column.state}`] = newTickets;
-      this.updateDbTickets();
+      this.debouncedUpdateBoard(this.boardId, this.newTicketSequence).then(resp => {
+        console.log('updated board');
+        this.newTicketSequence = {};
+      });
     }
   }
 
@@ -50,16 +57,6 @@ export class BoardPage implements OnInit {
     }
     return arr;
   }
-
-  updateDbTickets() {
-    // TODO DEBOUNCE THIS!
-    return this.boardService.updateBoard(this.boardId, this.newTicketSequence).then(() => {
-      console.log('updated db tickets were', this.newTicketSequence);
-      this.newTicketSequence = {};
-    });
-  }
-
-
 
   // TODO  delete this
   dummyTickets() {

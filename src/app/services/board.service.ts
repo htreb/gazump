@@ -45,7 +45,7 @@ export class BoardService {
   updateBoard(boardId: string, data: any): Promise<any> {
     if (!data) {
       // no unnecessary db writes
-      return;
+      return Promise.resolve();
     }
     return this.db
       .doc(`/groups/${this.groupId}/boards/${boardId}`)

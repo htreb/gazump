@@ -30,6 +30,7 @@
     "cordova-android": "^8.0.0",
     "cordova-ios": "^5.0.1",
     "core-js": "^2.5.4",
+    "debounce-promise": "^3.1.2",
     "firebase": "^6.3.1",
     "ngx-smooth-dnd": "^0.3.0",
     "rxjs": "~6.5.1",
