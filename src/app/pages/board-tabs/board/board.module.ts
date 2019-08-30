@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { BoardPage } from './board.page';
+import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
 
 const routes: Routes = [
   {
@@ -19,7 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NgxSmoothDnDModule,
+
   ],
   declarations: [BoardPage]
 })

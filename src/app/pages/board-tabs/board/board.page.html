@@ -14,17 +14,36 @@
     scrollX = true
     >
     <div class="board" >
+
+
       <div class="column-container" *ngFor="let column of board.states">
         <div class="column-title">{{ column.title }}</div>
-        <div class="column">
 
-          <div class='ticket' *ngFor="let ticket of (board.tickets && board.tickets[column.state])">
-            <div class='ticket-title'>{{ticket.title}}</div>
-            <div class='ticket-title'>{{ticket.description}}</div>
-          </div>
+        <ng-container *ngIf="(board.tickets && board.tickets[column.state]) || [] as tickets">
 
-        </div>
+          <smooth-dnd-container
+            class="column"
+            [groupName]="'col'"
+            (drop)="onTicketDrop(column, tickets, $event)"
+            [getChildPayload]="getTicketPayload(tickets)"
+          >
+
+            <smooth-dnd-draggable
+              *ngFor="let ticket of tickets"
+            >
+              <div class='ticket'>
+                <div class='ticket-title'>{{ticket.title}}</div>
+                <div class='ticket-title'>{{ticket.description}}</div>
+              </div>
+            </smooth-dnd-draggable>
+
+          </smooth-dnd-container>
+
+        </ng-container>
+
       </div>
+
+
     </div>
 
     <!-- TODO  delete this -->
