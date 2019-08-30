@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 import * as debounce from 'debounce-promise';
@@ -8,13 +8,13 @@ import * as debounce from 'debounce-promise';
   templateUrl: './board.page.html',
   styleUrls: ['./board.page.scss']
 })
-export class BoardPage implements OnInit {
+export class BoardPage implements OnInit, OnDestroy {
   board$;
   private boardId: string;
   private newTicketSequence = {};
   debouncedUpdateBoard = debounce(function() {
     return this.boardService.updateBoard(...arguments);
-  }, 5000);
+  }, 1000); // the debounce delay can be tweaked
 
   constructor(
     private route: ActivatedRoute,
@@ -27,11 +27,19 @@ export class BoardPage implements OnInit {
     this.board$ = this.boardService.boardsFromCurrentGroup(this.boardId);
   }
 
+  ngOnDestroy() {
+    // in case page is destroyed before a debounced call completes
+    this.boardService.updateBoard(this.boardId, this.newTicketSequence).then(() => {
+      console.log('updated board');
+      this.newTicketSequence = {};
+    });
+  }
+
   onTicketDrop(column, tickets, dropResult) {
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
       const newTickets = this.applyDrag(tickets, dropResult);
       this.newTicketSequence[`tickets.${column.state}`] = newTickets;
-      this.debouncedUpdateBoard(this.boardId, this.newTicketSequence).then(resp => {
+      this.debouncedUpdateBoard(this.boardId, this.newTicketSequence).then(() => {
         console.log('updated board');
         this.newTicketSequence = {};
       });
