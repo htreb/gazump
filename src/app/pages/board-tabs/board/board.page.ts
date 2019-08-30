@@ -14,7 +14,7 @@ export class BoardPage implements OnInit, OnDestroy {
   private newTicketSequence = {};
   debouncedUpdateBoard = debounce(function() {
     return this.boardService.updateBoard(...arguments);
-  }, 1000); // the debounce delay can be tweaked
+  }, 100); // the debounce delay can be tweaked
 
   constructor(
     private route: ActivatedRoute,

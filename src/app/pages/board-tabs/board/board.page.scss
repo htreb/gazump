@@ -40,3 +40,19 @@
     padding: 10px;
 }
 
+.board-scroll-container {
+    overflow: scroll;
+    height: 100%;
+}
+.scroll-area {
+    position: fixed;
+    height: 100%;
+    width: 30px;
+    left: 0;
+    z-index: 99;
+
+    &.right{
+        left: auto;
+        right: 0;
+    }
+}
