@@ -18,14 +18,12 @@
     </ion-toolbar>
   </ion-header>
 
-  <div #columnHeaderContainer class='column-header-container'>
-    <div class='column-headers'>
-      <div
-        *ngFor="let column of board.states"
-        class="column-title"
-      >
-        {{ column.title }}
-      </div>
+  <div #columnHeaderContainer class='column-headers'>
+    <div
+      *ngFor="let column of board.states"
+      class="column-title"
+    >
+      {{ column.title }}
     </div>
   </div>
 

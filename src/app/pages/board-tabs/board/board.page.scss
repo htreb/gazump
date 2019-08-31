@@ -9,10 +9,9 @@ $columnMargin: 0px 5px;
     justify-content: flex-start;
 }
 
-.column-header-container {
+.column-headers {
     margin-top: calc(#{$boardPadding}/2);
     overflow: hidden; // prevents user scrolling
-    display: flex;
     height: 50px;
 }
 
@@ -28,7 +27,7 @@ $columnMargin: 0px 5px;
 }
 
 .board, .column-headers {
-    display: inline-flex;
+    display: flex;
     padding-left: $boardPadding;
     padding-right: $boardPadding;
 }
@@ -37,8 +36,8 @@ $columnMargin: 0px 5px;
     display: flex;
     flex-direction: column;
     max-width: 65vw;
-    width: 350px;
-    flex-shrink: 0;
+    min-width: 250px;
+    flex: 1;
     margin: $columnMargin;
 }
 
