@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 import * as debounce from 'debounce-promise';
+import { ModalController } from '@ionic/angular';
+import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 
 @Component({
   selector: 'app-board',
@@ -19,7 +21,8 @@ export class BoardPage implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private boardService: BoardService
+    private boardService: BoardService,
+    public modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -75,6 +78,19 @@ export class BoardPage implements OnInit, OnDestroy {
     }
     return arr;
   }
+
+
+  async openTicketDetail(details) {
+    const modal = await this.modalController.create({
+      component: TicketDetailComponent,
+      componentProps: {details}
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    return console.log(data);
+  }
+
 
   // TODO  delete this
   dummyTickets() {

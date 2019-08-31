@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { BoardPage } from './board.page';
 import { NgxSmoothDnDModule } from 'ngx-smooth-dnd';
+import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 
 const routes: Routes = [
   {
@@ -22,8 +23,8 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
     NgxSmoothDnDModule,
-
   ],
-  declarations: [BoardPage]
+  declarations: [BoardPage, TicketDetailComponent],
+  entryComponents: [TicketDetailComponent] // since the ticket is loaded dynamically it needs to be here too
 })
 export class BoardPageModule {}

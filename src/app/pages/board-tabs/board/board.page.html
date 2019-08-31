@@ -44,7 +44,7 @@
             <smooth-dnd-draggable
               *ngFor="let ticket of tickets"
             >
-              <div class='ticket'>
+              <div class='ticket' (click)="openTicketDetail(ticket)">
                 <div class='ticket-title'>{{ticket.title}}</div>
                 <div class='ticket-title'>{{ticket.description}}</div>
               </div>
