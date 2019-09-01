@@ -14,7 +14,9 @@
 
 :root {
   --ion-font-family: 'Crossten';
-
+  --ion-font-color: var(--ion-color-dark);
+  --ion-display-font: 'Crossten bold';
+  --ion-display-font-color: var(--ion-color-dark);
 
   --ion-color-primary: #99f2c8;
   --ion-color-primary-rgb: 153,242,200;

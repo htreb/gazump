@@ -21,9 +21,9 @@
   <div #columnHeaderContainer class='column-headers'>
     <div
       *ngFor="let column of board.states"
-      class="column-title"
+      class="column-header"
     >
-      {{ column.title }}
+      <div class="title">{{ column.title }}</div>
     </div>
   </div>
 
@@ -43,8 +43,8 @@
               *ngFor="let ticket of tickets"
             >
               <div class='ticket' (click)="openTicketDetail(ticket)">
-                <div class='ticket-title'>{{ticket.title}}</div>
-                <div class='ticket-title'>{{ticket.description}}</div>
+                <div class='title'>{{ticket.title}}</div>
+                <div class='description'>{{ticket.description}}</div>
               </div>
             </smooth-dnd-draggable>
 

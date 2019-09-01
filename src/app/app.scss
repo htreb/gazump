@@ -1,13 +1,8 @@
 ///////////////////////////////////////////   Color mixins   ///////////////////////////////////////////
 $colorTransitionFunc: 0.5s ease;
 
-@mixin backgroundColor($colour) {
+@mixin bgColor($colour) {
   background-color: $colour;
-  transition: background-color $colorTransitionFunc;
-}
-
-@mixin fontColor($colour) {
-  color: $colour;
   transition: background-color $colorTransitionFunc;
 }
 
@@ -15,6 +10,27 @@ $colorTransitionFunc: 0.5s ease;
   background-color: $backgroundColor;
   color: $fontColor;
   transition: background-color $colorTransitionFunc, color $colorTransitionFunc;
+}
+
+@mixin displayFont(){
+  color: var(--ion-display-font-color);
+  font-weight: bold;
+  font-size: 1.3em;
+  text-transform: uppercase;
+  font-family: var(--ion-display-font);
+  transition: color $colorTransitionFunc;
+}
+
+@mixin subTitleFont(){
+  color: var(--ion-font-color);
+  font-family: var(--ion-display-font);
+  transition: color $colorTransitionFunc;
+}
+
+@mixin bodyFont(){
+  color: var(--ion-font-color);
+  font-family: var(--ion-font-family);
+  transition: color $colorTransitionFunc;
 }
 ///////////////////////////////////////////   Color mixins   ///////////////////////////////////////////
 
