@@ -29,8 +29,9 @@ $columnMargin: 0px 5px;
 
 .board, .column-headers {
     display: flex;
-    padding-left: $boardPadding;
-    padding-right: $boardPadding;
+    // force margins on either side, "flex loses right padding when overflowing"
+    &::before { content: ' '; min-width: $boardPadding; }
+    &::after { content: ' '; min-width: $boardPadding; }
 }
 
 .column, .column-header {
