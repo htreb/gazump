@@ -1,3 +1,5 @@
+@import 'src/app/app.scss';
+
 $boardPadding: 20px;
 $columnColor: var(--ion-color-light-tint);
 $columnBorderColor: var(--ion-color-medium);
@@ -59,7 +61,7 @@ $columnMargin: 0px 5px;
 
 .ticket {
     margin: 5px;
-    background-color: white;
     box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
     padding: 10px;
+    @include bgFontColor(var(--ion-color-light), var(--ion-color-dark));
 }

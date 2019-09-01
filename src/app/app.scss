@@ -1,17 +1,38 @@
-// App Styles
-// ----------------------------------------------------------------------------
-// Put style rules here that you want to apply to the entire application. These 
-// styles are for the entire app and not just one component. Additionally, this 
-// file can hold Sass mixins, functions, and placeholder classes to be imported 
-// and used throughout the application.
+///////////////////////////////////////////   Color mixins   ///////////////////////////////////////////
+$colorTransitionFunc: 0.5s ease;
 
-.theme-background {
-    background: var(--ion-color-secondary);  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary));  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+@mixin backgroundColor($colour) {
+  background-color: $colour;
+  transition: background-color $colorTransitionFunc;
 }
 
-// Animations //
+@mixin fontColor($colour) {
+  color: $colour;
+  transition: background-color $colorTransitionFunc;
+}
+
+@mixin bgFontColor($backgroundColor, $fontColor) {
+  background-color: $backgroundColor;
+  color: $fontColor;
+  transition: background-color $colorTransitionFunc, color $colorTransitionFunc;
+}
+///////////////////////////////////////////   Color mixins   ///////////////////////////////////////////
+
+
+
+
+
+
+
+/////////////////////////////////////////////   Themes   /////////////////////////////////////////////
+.theme-background {
+  background: var(--ion-color-secondary);  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary));  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+/////////////////////////////////////////////   Themes   /////////////////////////////////////////////
+
+///////////////////////////////////////////// Animations /////////////////////////////////////////////
 .shake {
     /* Start the shake animation and make the animation last for 0.7 seconds */
     animation: shake 0.7s;
@@ -33,10 +54,10 @@
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
   }
+///////////////////////////////////////////// Animations /////////////////////////////////////////////
 
-// drag and drop styles
+/////////////////////////////////////////// drag and drop ////////////////////////////////////////////
 .smooth-dnd-container {
   height: 100%;
 }
-
-
+/////////////////////////////////////////// drag and drop ////////////////////////////////////////////
