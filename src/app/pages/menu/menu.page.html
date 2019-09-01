@@ -1,41 +1,36 @@
-<ion-split-pane>
-  <ion-menu contentId="content" swipe-gesture='false'>
-    <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Menu</ion-title>
-      </ion-toolbar>
-    </ion-header>
+<ion-menu contentId="content" swipe-gesture='false'>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-    <ion-content forceOverscroll='false'>
-      <ion-list>
-        <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
-          <ion-item
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            [routerLink]="[page.url]"
-            class="menu-item"
-          >
-            <ion-label>
-              {{ page.title }}
-            </ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-
+  <ion-content forceOverscroll='false'>
+    <ion-list>
+      <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
         <ion-item
-          tappable
-          routerLink="/login"
-          routerDirection="root"
-          (click)="logOut()"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLink]="[page.url]"
+          class="menu-item"
         >
-          <ion-icon name="log-out" slot="start"></ion-icon>
-          Logout
+          <ion-label>
+            {{ page.title }}
+          </ion-label>
         </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-menu>
+      </ion-menu-toggle>
 
-  <ion-router-outlet id="content" main [swipeGesture]="false"></ion-router-outlet>
-</ion-split-pane>
+      <ion-item
+        tappable
+        routerLink="/login"
+        routerDirection="root"
+        (click)="logOut()"
+      >
+        <ion-icon name="log-out" slot="start"></ion-icon>
+        Logout
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
 
-
-
+<ion-router-outlet id="content" main [swipeGesture]="false"></ion-router-outlet>
