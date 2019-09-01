@@ -61,5 +61,12 @@ $columnMargin: 0px 5px;
     margin: 5px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
     padding: 10px;
-    @include bgFontColor(var(--ion-color-light), var(--ion-color-dark));
+    @include bgColor($ticketColor);
+
+    .title {
+        @include subTitleFont();
+    }
+    .description {
+        @include bodyFont();
+    }
 }
