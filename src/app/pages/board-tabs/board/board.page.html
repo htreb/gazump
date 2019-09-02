@@ -19,37 +19,40 @@
   </ion-header>
 
   <div #columnHeaderContainer class='column-headers'>
-    <div
+    <ion-card
       *ngFor="let column of board.states"
       class="column-header"
     >
-      <div class="title">{{ column.title }}</div>
-    </div>
+      <ion-card-header>
+        <ion-card-subtitle class='title'>{{column.title}}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
   </div>
 
   <div class="scrolling-container" (scroll)=onBoardScroll($event)>
     <div class="board" >
       <ng-container *ngFor="let column of board.states">
         <ng-container *ngIf="(board.tickets && board.tickets[column.state]) || [] as tickets">
-
-          <smooth-dnd-container
-            class="column"
-            [groupName]="'col'"
-            (drop)="onTicketDrop(column, tickets, $event)"
-            [getChildPayload]="getTicketPayload(tickets)"
-          >
-
+          <ion-card class="column" color='light-shade'>
+            <smooth-dnd-container
+              [groupName]="'col'"
+              (drop)="onTicketDrop(column, tickets, $event)"
+              [getChildPayload]="getTicketPayload(tickets)"
+            >
             <smooth-dnd-draggable
               *ngFor="let ticket of tickets"
             >
-              <div class='ticket' (click)="openTicketDetail(ticket)">
-                <div class='title'>{{ticket.title}}</div>
-                <div class='description'>{{ticket.description}}</div>
-              </div>
-            </smooth-dnd-draggable>
-
-          </smooth-dnd-container>
-
+                <ion-card class='ticket' (click)="openTicketDetail(ticket)" color='light'>
+                  <ion-card-header>
+                    <ion-card-subtitle class='title'>{{ticket.title}}</ion-card-subtitle>
+                  </ion-card-header>
+                  <ion-card-content class='description'>
+                    {{ticket.description}}
+                  </ion-card-content>
+                </ion-card>
+              </smooth-dnd-draggable>
+            </smooth-dnd-container>
+          </ion-card>
         </ng-container>
       </ng-container>
     </div>

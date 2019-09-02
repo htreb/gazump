@@ -1,9 +1,4 @@
-@import 'src/app/app.scss';
-
 $boardPadding: 20px;
-$columnColor: var(--ion-color-light-tint);
-$ticketColor: white;
-$columnMargin: 0px 5px;
 
 :host {
     // ionic auto justify is space-between;
@@ -11,15 +6,12 @@ $columnMargin: 0px 5px;
 }
 
 .column-headers {
-    margin-top: calc(#{$boardPadding}/2);
     overflow: hidden; // prevents user scrolling
-    height: 50px;
 }
 
 .board {
-    padding-top: 0;
-    padding-bottom: $boardPadding;
     min-height: 100%;
+    padding-bottom: $boardPadding;
 }
 
 .scrolling-container {
@@ -40,34 +32,24 @@ $columnMargin: 0px 5px;
     max-width: 65vw;
     min-width: 250px;
     flex: 1;
-    margin: $columnMargin;
 }
 
 .column {
-    @include bgColor($columnColor);
+
 }
 
 .column-header {
-    justify-content: center;
-    @include bgColor($columnColor);
 
     .title {
         text-align: center;
-        @include displayFont();
     }
 }
 
 
 .ticket {
-    margin: 5px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24);
-    padding: 10px;
-    @include bgColor($ticketColor);
 
     .title {
-        @include subTitleFont();
     }
     .description {
-        @include bodyFont();
     }
 }
