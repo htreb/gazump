@@ -27,7 +27,7 @@ export class ListGroupsPage implements OnInit {
   }
 
   switchTheme(): void {
-    this.themeService.setNextTheme().then( _ => this.setThemeIcon() );
+    this.themeService.toggleThemes().then( _ => this.setThemeIcon() );
   }
 
 

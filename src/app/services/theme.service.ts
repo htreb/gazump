@@ -193,7 +193,7 @@ export class ThemeService {
     });
   }
 
-  setNextTheme() {
+  toggleThemes() {
     return this.getNextTheme().then(t => this.setTheme(t));
   }
 }
