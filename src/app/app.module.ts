@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
 import { PageLoadingSpinnerComponent } from './page-loading-spinner/page-loading-spinner.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { IonicStorageModule } from '@ionic/storage';
 
 // import { Camera } from '@ionic-native/camera/ngx';
 
@@ -31,7 +32,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    IonicStorageModule.forRoot()
   ],
   providers: [
     StatusBar,
