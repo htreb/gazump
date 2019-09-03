@@ -80,4 +80,11 @@
   --ion-color-light-contrast-rgb: 0,0,0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  ion-item {
+    // toolbar and ion-content inner scroll are inside shadow doms without css variables
+    // for transition. Cannot animate their theme switch. ion-item looks terrible lagging behind,
+    // no transitions until that's fixed.
+    --transition: var(--theme-switch-transition);
+  }
 }

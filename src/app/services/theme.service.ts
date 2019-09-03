@@ -3,6 +3,8 @@ import { DOCUMENT } from '@angular/common';
 import * as Color from 'color';
 import { Storage } from '@ionic/storage';
 
+const transition = 'background-color 0ms';
+
 const defaults = {
     icon: 'cloudy',
     primary: '#3880ff',
@@ -54,7 +56,7 @@ const themes = [
   }
 ];
 
-function CSSTextGenerator(colors) {
+function CSSTextGenerator(colors, fromStorage = false) {
   colors = { ...defaults, ...colors };
 
   const {
@@ -72,8 +74,9 @@ function CSSTextGenerator(colors) {
   const shadeRatio = 0.1;
   const tintRatio = 0.1;
 
-  // TODO add the rgb values as well
   return `
+    --theme-switch-transition: ${fromStorage ? '' : transition};
+
     --ion-color-base: ${light};
     --ion-color-contrast: ${dark};
     --ion-background-color: ${light};
@@ -82,6 +85,7 @@ function CSSTextGenerator(colors) {
     --ion-toolbar-text-color: ${contrast(dark, 0.1).hex()};
     --ion-item-background-color: ${contrast(light, 0.3).hex()};
     --ion-item-text-color: ${contrast(dark, 0.3).hex()};
+
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${Color(primary).rgb().array()};
     --ion-color-primary-contrast: ${contrast(primary).hex()};
@@ -161,7 +165,7 @@ export class ThemeService {
 
   // Override all global variables with a new theme
   setTheme(theme, fromStorage = false) {
-    const cssText = CSSTextGenerator(theme);
+    const cssText = CSSTextGenerator(theme, fromStorage);
     this.setGlobalCSS(cssText);
     if (!fromStorage) {
       return this.storage.set('theme', theme);
