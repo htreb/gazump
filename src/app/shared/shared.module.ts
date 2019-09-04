@@ -4,13 +4,17 @@ import { IonicModule } from '@ionic/angular';
 import { SettingsIconComponent } from './settings-icon/settings-icon.component';
 import { SettingsListComponent } from './settings-list/settings-list.component';
 import { RouterModule } from '@angular/router';
+import { LoadingComponent } from './loading/loading.component';
+import { EmptyListComponent } from './empty-list/empty-list.component';
 
 
 
 @NgModule({
   declarations: [
     SettingsIconComponent,
-    SettingsListComponent
+    SettingsListComponent,
+    LoadingComponent,
+    EmptyListComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +22,9 @@ import { RouterModule } from '@angular/router';
     RouterModule,
   ],
   exports: [
-    SettingsIconComponent
+    SettingsIconComponent,
+    LoadingComponent,
+    EmptyListComponent,
   ],
   entryComponents: [SettingsListComponent]
 })

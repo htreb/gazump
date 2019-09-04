@@ -5,6 +5,16 @@
   </ion-toolbar>
 </ion-header>
 
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+<ng-template #noGroups>
+  <app-empty-list [listType]="'groups'"></app-empty-list>
+</ng-template>
+
+
 <ion-content forceOverscroll='false'>
   <ng-container *ngIf="groups$ | async as groups; else loading">
     <ng-container *ngIf="groups.length; else noGroups">
@@ -19,18 +29,7 @@
         </ion-item>
       </ion-list>
     </ng-container><!-- check that we have some groups -->
-    <ng-template #noGroups>
-      <div class='no-groups'>
-        You are not in any groups yet,<br>
-        start one below!
-      </div>
-    </ng-template>
   </ng-container><!-- fetching all groups -->
-  <ng-template #loading>
-    <div class='loading'>
-      <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
-    </div>
-  </ng-template>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [routerLink]="['create']">
