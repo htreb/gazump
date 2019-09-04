@@ -33,7 +33,7 @@
     <div class="board" >
       <ng-container *ngFor="let column of board.states">
         <ng-container *ngIf="(board.tickets && board.tickets[column.state]) || [] as tickets">
-          <ion-card class="column" color='light-shade'>
+          <ion-card class="column">
             <smooth-dnd-container
               [groupName]="'col'"
               (drop)="onTicketDrop(column, tickets, $event)"
@@ -42,7 +42,7 @@
             <smooth-dnd-draggable
               *ngFor="let ticket of tickets"
             >
-                <ion-card class='ticket' (click)="openTicketDetail(ticket)" color='light'>
+                <ion-card class='ticket' (click)="openTicketDetail(ticket)">
                   <ion-card-header>
                     <ion-card-subtitle class='title'>{{ticket.title}}</ion-card-subtitle>
                   </ion-card-header>
