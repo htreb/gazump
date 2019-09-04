@@ -1,30 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { ThemeService } from 'src/app/services/theme.service';
+import { Component } from '@angular/core';
+import { PopoverController } from '@ionic/angular';
+import { SettingsListComponent } from '../settings-list/settings-list.component';
 
 @Component({
   selector: 'app-settings-icon',
   templateUrl: './settings-icon.component.html',
   styleUrls: ['./settings-icon.component.scss'],
 })
-export class SettingsIconComponent implements OnInit {
-
-  public nextThemeIcon: string;
+export class SettingsIconComponent {
 
   constructor(
-    private themeService: ThemeService,
+    private popoverController: PopoverController,
   ) { }
 
-  ngOnInit() {
-    this.setThemeIcon();
+  async showSettingsOptions(ev: any) {
+    const popover = await this.popoverController.create({
+      component: SettingsListComponent,
+      event: ev,
+    });
+    return await popover.present();
   }
-
-  setThemeIcon() {
-    this.themeService.getNextTheme().then(t => this.nextThemeIcon = t.icon );
-  }
-
-  switchTheme(): void {
-    this.themeService.toggleThemes().then( _ => this.setThemeIcon() );
-  }
-
 
 }

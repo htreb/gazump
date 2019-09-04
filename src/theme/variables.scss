@@ -87,4 +87,7 @@
     // no transitions until that's fixed.
     --transition: var(--theme-switch-transition);
   }
+  ion-popover {
+    --background: var(--ion-background-color);
+  }
 }
