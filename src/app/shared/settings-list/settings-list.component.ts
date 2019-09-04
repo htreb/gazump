@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
@@ -10,6 +10,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class SettingsListComponent implements OnInit {
 
   public nextThemeIcon: string;
+  @Input() closePopover: () => {};
 
   constructor(
     private auth: AuthService,
@@ -29,6 +30,7 @@ export class SettingsListComponent implements OnInit {
   }
 
   logOut(): void {
+    this.closePopover();
     this.auth.logOut();
   }
 }

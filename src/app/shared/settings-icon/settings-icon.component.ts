@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { SettingsListComponent } from '../settings-list/settings-list.component';
 
@@ -9,16 +9,26 @@ import { SettingsListComponent } from '../settings-list/settings-list.component'
 })
 export class SettingsIconComponent {
 
+  private popover: HTMLIonPopoverElement;
   constructor(
     private popoverController: PopoverController,
   ) { }
 
-  async showSettingsOptions(ev: any) {
-    const popover = await this.popoverController.create({
+  async showSettings(ev: any) {
+    this.popover = await this.popoverController.create({
       component: SettingsListComponent,
       event: ev,
+      componentProps: {
+        closePopover: this.closeSettings,
+      }
     });
-    return await popover.present();
+    return await this.popover.present();
   }
+
+  @HostListener('window:resize', ['$event'])
+  closeSettings(ev: any) {
+    this.popover.dismiss();
+  }
+
 
 }
