@@ -1,16 +1,11 @@
 <!-- TODO need a header when loading or there are no groups, need way to open the menu -->
 
 <ng-template #loading>
-  <div class="loading">
-    <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
-  </div>
+  <app-loading></app-loading>
 </ng-template>
 
 <ng-template #noBoards>
-  <div class="no-boards">
-    There are no boards yet,<br />
-    start one below!
-  </div>
+  <app-empty-list [listType]="'boards'"></app-empty-list>
 </ng-template>
 
 <ng-container *ngIf="allBoards$ | async as allBoards">

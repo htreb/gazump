@@ -7,6 +7,15 @@
   </ion-toolbar>
 </ion-header>
 
+<ng-template #noChats>
+  <app-empty-list [listType]="'chats'"></app-empty-list>
+</ng-template>
+
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+
 <ion-content forceOverscroll='false'>
   <ng-container *ngIf="chats$ | async as chats; else loading">
     <ng-container *ngIf="chats.length; else noChats">
@@ -29,18 +38,7 @@
         </ng-container>
       </ion-list>
     </ng-container><!-- check that we have some chats -->
-    <ng-template #noChats>
-      <div class='no-chats'>
-        You are not in any chats yet,<br>
-        start one below!
-      </div>
-    </ng-template>
   </ng-container><!-- fetching all chats -->
-  <ng-template #loading>
-    <div class='loading'>
-      <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
-    </div>
-  </ng-template>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button [routerLink]="['create']">
