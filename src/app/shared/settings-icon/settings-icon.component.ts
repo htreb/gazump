@@ -27,7 +27,9 @@ export class SettingsIconComponent {
 
   @HostListener('window:resize', ['$event'])
   closeSettings(ev: any) {
-    this.popover.dismiss();
+    if (this.popover) {
+      this.popover.dismiss();
+    }
   }
 
 
