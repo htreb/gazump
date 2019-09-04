@@ -1,12 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SettingsIconComponent } from './settings-icon/settings-icon.component';
+import { IonicModule } from '@ionic/angular';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [SettingsIconComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    IonicModule,
+  ],
+  exports: [
+    SettingsIconComponent
   ]
 })
 export class SharedModule { }

@@ -1,20 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Groups</ion-title>
-
-    <!-- remove vvv -->
-    <ion-buttons slot="end">
-      <ion-button (click)="switchTheme()">
-        <ion-icon [name]="nextThemeIcon"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <!-- Remove ^^^ -->
-
+    <app-settings-icon slot='end'></app-settings-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content forceOverscroll='false'>
-
   <ng-container *ngIf="groups$ | async as groups; else loading">
     <ng-container *ngIf="groups.length; else noGroups">
       <ion-list>
@@ -22,7 +13,7 @@
           *ngFor="let group of groups"
           button
           [routerLink]="['/groups', group.id]"
-          >
+        >
           <ion-text text-wrap>{{ group.title }}</ion-text>
           <ion-note slot='end' color='primary'>{{ group.members.length }} members</ion-note>
         </ion-item>
