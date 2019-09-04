@@ -154,8 +154,6 @@ function contrast(color, ratio = 0.8) {
 })
 export class ThemeService {
 
-  currentTheme; // needed? use case?
-
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private storage: Storage
