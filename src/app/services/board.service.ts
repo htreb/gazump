@@ -68,7 +68,7 @@ export class BoardService {
    * @param data the updated tickets in the form {tickets.0: [ ...], tickets.1: [ ...]}
    */
   updateBoard(boardId: string, data: any): Promise<any> {
-    if (!data) {
+    if (!Object.keys(data).length) {
       // no unnecessary db writes
       return Promise.resolve();
     }
