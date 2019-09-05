@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { takeUntil, map } from 'rxjs/operators';
@@ -8,14 +8,20 @@ import { takeUntil, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class BoardService {
+
   private groupId: string;
+  private groupSub: Subscription;
+
   currentGroupSubject = new BehaviorSubject<any>({ loading: true });
-  boardsFromCurrentGroup = (boardId = null) =>
-    this.currentGroupSubject.pipe(
-      map(allBoards => (boardId ? allBoards.filter(b => b.id === boardId)[0] : allBoards))
-    )
+  currentBoardTitle = new BehaviorSubject<string>(
+    'Default board title from service'
+  );
 
   constructor(private db: AngularFirestore, private auth: AuthService) {}
+
+  setCurrentBoardTitle(title: string) {
+    this.currentBoardTitle.next(title);
+  }
 
   /**
    * sets the currentGroupSubject to all the board documents the current user is a member of
@@ -24,7 +30,7 @@ export class BoardService {
    */
   setGroup(groupId: string) {
     // TODO make sure this subscription is cleaning up after itself and unsubscribing when changing groups
-    this.db
+    this.groupSub = this.db
       .collection(`/groups/${groupId}/boards`, ref =>
         ref.orderBy(`members.${this.auth.currentUser.value.id}`)
       )
@@ -34,6 +40,25 @@ export class BoardService {
         this.groupId = groupId;
         this.currentGroupSubject.next(boards);
       });
+  }
+
+  unSubFromGroup() {
+    if (this.groupSub && this.groupSub) {
+      this.groupSub.unsubscribe();
+    }
+    this.currentGroupSubject.next({ loading: true });
+    this.groupId = null;
+  }
+
+  boardsFromCurrentGroup(boardId = null) {
+    return this.currentGroupSubject.pipe(
+      map(allBoards => {
+        if (!boardId || allBoards.loading) {
+          return allBoards;
+        }
+        // if boardId entered then return just that match not an array
+        return allBoards.filter(b => b.id === boardId)[0];
+      }));
   }
 
   /**
