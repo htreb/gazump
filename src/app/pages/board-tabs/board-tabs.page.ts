@@ -10,6 +10,7 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardTabsPage implements OnInit {
 
+  public boardTitle = this.boardService.currentBoardTitle;
   public allBoards$: Observable<any> = this.boardService.boardsFromCurrentGroup();
 
   constructor(

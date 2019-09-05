@@ -1,4 +1,12 @@
-<!-- TODO need a header when loading or there are no groups, need way to open the menu -->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ boardTitle | async }}</ion-title>
+    <app-settings-icon slot='end'></app-settings-icon>
+  </ion-toolbar>
+</ion-header>
 
 <ng-template #loading>
   <app-loading></app-loading>
@@ -10,7 +18,8 @@
 
 <ng-container *ngIf="allBoards$ | async as allBoards">
   <ng-container *ngIf="!allBoards.loading; else loading">
-    <ng-container *ngIf="allBoards.length; else noBoards">
+    <ion-content *ngIf="allBoards.length; else noBoards">
+      this is board tabs content right here
 
       <ion-tabs>
         <ion-tab-bar slot="bottom">
@@ -24,6 +33,7 @@
         </ion-tab-bar>
       </ion-tabs>
 
-    </ng-container>
+    </ion-content>
+
   </ng-container>
 </ng-container>

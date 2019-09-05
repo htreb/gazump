@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -58,7 +58,9 @@ export class BoardService {
         }
         // if boardId entered then return just that match not an array
         return allBoards.filter(b => b.id === boardId)[0];
-      }));
+      }),
+      tap(b => console.log(`boardsFromCurrentGroup ${boardId} is`, b))
+    );
   }
 
   /**
@@ -85,7 +87,8 @@ export class BoardService {
         newTickets[`tickets.${i}`] = newTickets[`tickets.${i}`] || [];
         newTickets[`tickets.${i}`].push({
           title: `${i}${j} ticket about ${i}${j}`,
-          description: `${i}${j}${i}${j}${i}${j}${i}${j}`
+          description: `${i}${j}${i}${j}${i}${j}${i}${j}`,
+          id: `id_${i}${j}${i}${j}${i}${j}${i}${j}`,
         });
       }
     }

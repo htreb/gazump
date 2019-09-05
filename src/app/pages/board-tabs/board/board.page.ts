@@ -50,6 +50,7 @@ export class BoardPage implements OnInit, OnDestroy {
 
   onTicketDrop(column, tickets, dropResult) {
     if (dropResult.removedIndex !== null || dropResult.addedIndex !== null) {
+      console.log(`changing tickets on board page ${this.boardId}`);
       const newTickets = this.applyDrag(tickets, dropResult);
       this.newTicketSequence[`tickets.${column.state}`] = newTickets;
       this.debouncedUpdateBoard(this.boardId, this.newTicketSequence).then(() => {
@@ -91,6 +92,18 @@ export class BoardPage implements OnInit, OnDestroy {
     return console.log(data);
   }
 
+  changeBoardTitle(boardData) {
+    console.log('boardData is', boardData);
+    this.boardService.setCurrentBoardTitle(boardData.title);
+  }
+
+  columTrackBy(index, column) {
+    return column.state;
+  }
+
+  ticketTrackBy(index, ticket) {
+    return ticket.id;
+  }
 
   // TODO  delete this
   dummyTickets() {
