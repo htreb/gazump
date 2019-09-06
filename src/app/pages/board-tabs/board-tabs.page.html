@@ -24,7 +24,7 @@
       <ion-tabs>
         <ion-tab-bar slot="bottom">
           <ion-tab-button
-            *ngFor="let board of allBoards"
+            *ngFor="let board of allBoards; trackBy: boardTrackBy"
             tab="{{ board.id }}"
           >
             <ion-icon name="clipboard"></ion-icon>
