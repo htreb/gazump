@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -6,7 +6,7 @@ import {
   transferArrayItem,
   CdkDragDrop
 } from '@angular/cdk/drag-drop';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 
 @Component({
@@ -14,21 +14,30 @@ import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
   templateUrl: './board.page.html',
   styleUrls: ['./board.page.scss']
 })
-export class BoardPage implements OnInit {
-  public board$;
-  private boardId;
+export class BoardPage implements OnInit, OnDestroy {
+  public boardDataSub;
+  public board;
 
   constructor(
     private boardService: BoardService,
     private route: ActivatedRoute,
     private modalController: ModalController,
-    private changeDetector: ChangeDetectorRef,
-
+    private alertCtrl: AlertController,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    this.boardId = this.route.snapshot.paramMap.get('boardId');
-    this.board$ = this.boardService.boardsFromCurrentGroup(this.boardId);
+    const boardId = this.route.snapshot.paramMap.get('boardId');
+    this.boardDataSub = this.boardService.boardsFromCurrentGroup(boardId).subscribe(boardData => {
+      this.board = boardData;
+      this.changeDetector.detectChanges();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.boardDataSub) {
+      this.boardDataSub.unsubscribe();
+    }
   }
 
   columTrackBy(index, column) {
@@ -39,21 +48,38 @@ export class BoardPage implements OnInit {
     return ticket.id;
   }
 
-
-  drop(event: CdkDragDrop<string[]>) {
+  async drop(event) {
+    const updatedTickets = {};
     if (event.previousContainer === event.container) {
+      if (event.previousIndex === event.currentIndex) {
+        return;
+      }
       moveItemInArray(
-        event.container.data,
+        event.container.data.tickets,
         event.previousIndex,
         event.currentIndex
       );
     } else {
       transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+        event.previousContainer.data.tickets,
+        event.container.data.tickets,
         event.previousIndex,
         event.currentIndex
       );
+      updatedTickets[`tickets.${event.previousContainer.data.state}`] =
+        event.previousContainer.data.tickets;
+    }
+    updatedTickets[`tickets.${event.container.data.state}`] =
+      event.container.data.tickets;
+    try {
+      await this.boardService.updateBoard(this.board.id, updatedTickets);
+    } catch (err) {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: err.message, // TODO more human readable error messages?
+        buttons: ['OK']
+      });
+      alert.present();
     }
     this.changeDetector.detectChanges();
   }

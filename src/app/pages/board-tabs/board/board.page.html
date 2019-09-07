@@ -1,4 +1,4 @@
-<ng-container *ngIf="board$ | async as board">
+<ng-container *ngIf="board">
   <div class="board"
     cdkDropListGroup
   >
@@ -14,7 +14,7 @@
         *ngIf="board.tickets && board.tickets[column.state] || [] as tickets"
         class="ticket-drop-zone"
         cdkDropList
-        [cdkDropListData]="tickets"
+        [cdkDropListData]="{state: column.state, tickets: tickets}"
         (cdkDropListDropped)="drop($event)"
       >
         <ion-card
