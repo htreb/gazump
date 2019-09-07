@@ -43,7 +43,7 @@ export class BoardService {
   }
 
   unSubFromGroup() {
-    if (this.groupSub && this.groupSub) {
+    if (this.groupSub && this.groupSub.unsubscribe) {
       this.groupSub.unsubscribe();
     }
     this.currentGroupSubject.next({ loading: true });

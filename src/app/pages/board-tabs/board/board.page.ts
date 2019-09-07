@@ -8,6 +8,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
@@ -15,7 +16,7 @@ import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
   styleUrls: ['./board.page.scss']
 })
 export class BoardPage implements OnInit, OnDestroy {
-  public boardDataSub;
+  public boardDataSub: Subscription;
   public board;
 
   constructor(
@@ -35,7 +36,7 @@ export class BoardPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.boardDataSub) {
+    if (this.boardDataSub && this.boardDataSub.unsubscribe) {
       this.boardDataSub.unsubscribe();
     }
   }
@@ -95,8 +96,12 @@ export class BoardPage implements OnInit, OnDestroy {
     return console.log(data);
   }
 
+  ionViewDidEnter() {
+    this.boardService.setCurrentBoardTitle(this.board.title);
+  }
+
   // TODO  delete this
   dummyTickets() {
-    this.boardService.makeDummyTickets(this.boardId);
+    this.boardService.makeDummyTickets(this.board.id);
   }
 }
