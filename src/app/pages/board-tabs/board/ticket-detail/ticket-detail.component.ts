@@ -15,7 +15,6 @@ export class TicketDetailComponent implements OnInit {
   }
 
   closePage() {
-    console.log('Kill me!!');
     this.modalCtrl.dismiss({
       message: 'Tell my wife I said hello...',
     });

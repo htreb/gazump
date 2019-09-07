@@ -1,61 +1,56 @@
 $boardPadding: 20px;
-
-:host {
-    // ionic auto justify is space-between;
-    justify-content: flex-start;
-}
-
-.column-headers {
-    overflow: hidden; // prevents user scrolling
+:host{
+    overflow: scroll;
 }
 
 .board {
-    min-height: 100%;
-    padding-bottom: $boardPadding;
-}
-
-.scrolling-container {
-    overflow: auto;
-    flex: 1; // fill page
-}
-
-.board, .column-headers {
     display: flex;
+    // align-items: flex-start; // uncomment if you want columns to resize and not be 100%
+    flex: 1;
+    overflow: scroll;
+    margin: $boardPadding 0;
     // force margins on either side, "flex loses right padding when overflowing"
     &::before { content: ' '; min-width: $boardPadding; }
     &::after { content: ' '; min-width: $boardPadding; }
 }
 
-.column, .column-header {
+.column {
     display: flex;
+    flex: 1;
     flex-direction: column;
     max-width: 65vw;
     min-width: 250px;
-    flex: 1;
-    background: var(--ion-color-light-shade);
-}
+    padding-bottom: 10px;
 
-.column {
-
-}
-
-.column-header {
-
-    .title {
-        text-align: center;
+    .ticket-drop-zone {
+        flex: 1;
+        overflow: scroll;
+        min-height: 80px;
     }
 }
-
 
 .ticket {
-    background: var(--ion-color-light-tint);
-    margin-bottom: 0px;
+    transition: none; // ios adds an ugly bounce if this isn't here
 
-    &:last-child {
-        margin-bottom: 10px;
+    .title, .description {
+        margin: 16px;
     }
-    .title {
-    }
-    .description {
-    }
+}
+
+/////// drag drop styles ///////
+.cdk-drag-preview {
+    margin: 0; // angular bug, adds margin twice if this isn't here
+}
+
+.cdk-drag-animating,
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+    transition: transform 300ms ease;
+    transition-delay: 0ms;
+}
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+    transition-delay: 200ms;
+}
+
+.cdk-drag-placeholder {
+    opacity: 0;
 }

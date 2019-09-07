@@ -1,49 +1,33 @@
 <ng-container *ngIf="board$ | async as board">
-  <!-- remove vvv -->
-  <ion-button (click)="dummyTickets()">
-    <ion-icon name="copy"></ion-icon>
-  </ion-button>
-  <!-- Remove ^^^ -->
-
-  <div #columnHeaderContainer class='column-headers'>
+  <div class="board"
+    cdkDropListGroup
+  >
     <ion-card
       *ngFor="let column of board.states; trackBy: columTrackBy"
-      class="column-header"
+      class="column"
+      color="medium"
     >
       <ion-card-header>
-        <ion-card-subtitle class='title'>{{column.title}}</ion-card-subtitle>
+        <ion-card-subtitle>{{ column.title }}</ion-card-subtitle>
       </ion-card-header>
+      <div
+        *ngIf="board.tickets && board.tickets[column.state] || [] as tickets"
+        class="ticket-drop-zone"
+        cdkDropList
+        [cdkDropListData]="tickets"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <ion-card
+          *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
+          cdkDrag
+          color="light"
+          class="ticket"
+          (click)="openTicketDetail(ticket)"
+        >
+          <div class='title'>{{ticket.title}}</div>
+          <div class='description'>{{ticket.description}}</div>
+        </ion-card>
+      </div>
     </ion-card>
   </div>
-
-  <div class="scrolling-container" (scroll)=onBoardScroll($event)>
-    <div class="board" >
-      <ng-container *ngFor="let column of board.states; trackBy: columTrackBy">
-        <ng-container *ngIf="(board.tickets && board.tickets[column.state]) || [] as tickets">
-          <ion-card class="column">
-            <smooth-dnd-container
-              class='drag-container'
-              [groupName]="'col'"
-              (drop)="onTicketDrop(column, tickets, $event)"
-              [getChildPayload]="getTicketPayload(tickets)"
-            >
-              <smooth-dnd-draggable
-                *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
-              >
-                <ion-card class='ticket' (click)="openTicketDetail(ticket)">
-                  <ion-card-header>
-                    <ion-card-subtitle class='title'>{{ticket.title}}</ion-card-subtitle>
-                  </ion-card-header>
-                  <ion-card-content class='description'>
-                    {{ticket.description}}
-                  </ion-card-content>
-                </ion-card>
-              </smooth-dnd-draggable>
-            </smooth-dnd-container>
-          </ion-card>
-        </ng-container>
-      </ng-container>
-    </div>
-  </div>
-
 </ng-container>

@@ -19,7 +19,6 @@
 <ng-container *ngIf="allBoards$ | async as allBoards">
   <ng-container *ngIf="!allBoards.loading; else loading">
     <ion-content *ngIf="allBoards.length; else noBoards">
-      this is board tabs content right here
 
       <ion-tabs>
         <ion-tab-bar slot="bottom">
