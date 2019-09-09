@@ -11,13 +11,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
-    path: 'board',
-    component: BoardTabsPage,
-  },
-  {
     path: '',
-    redirectTo: 'board',
-    pathMatch: 'full'
+    component: BoardTabsPage,
   },
 ];
 
