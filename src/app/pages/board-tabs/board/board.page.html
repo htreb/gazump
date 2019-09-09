@@ -14,7 +14,7 @@
   >
     <ion-card-header class='header'>
       <ion-card-subtitle>{{ column.title }}</ion-card-subtitle>
-      <ion-icon class='drag-handle' src='/assets/icons/drag.svg'></ion-icon>
+      <ion-icon cdkDragHandle class='drag-handle' src='/assets/icons/drag.svg'></ion-icon>
     </ion-card-header>
     <div
       *ngIf="data?.tickets && data.tickets[column.state] || [] as tickets"
