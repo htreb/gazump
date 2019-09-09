@@ -23,7 +23,8 @@
       <app-board
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
         [data]='board'
-        [ngClass]="{'active': board === currentBoard}">
+        [showing]='board.id === currentBoard?.id'
+       >
       </app-board>
 
     </ion-content>

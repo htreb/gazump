@@ -1,5 +1,6 @@
 <div class="board"
   cdkDropListGroup
+  [@showing]="showing ? 'active' : 'hidden'"
 >
   <ion-card
     *ngFor="let column of data?.states; trackBy: columTrackBy"

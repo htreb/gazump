@@ -50,8 +50,7 @@ export class BoardService {
         }
         // if boardId entered then return just that match not an array
         return allBoards.filter(b => b.id === boardId)[0];
-      }),
-      tap(b => console.log(`boardsFromCurrentGroup ${boardId} is`, b))
+      })
     );
   }
 
@@ -84,7 +83,7 @@ export class BoardService {
         });
       }
     }
-    console.log('my new tickets are', newTickets);
+    console.log('Dummy tickets are', newTickets);
     return this.updateBoard(boardId, newTickets);
   }
 }

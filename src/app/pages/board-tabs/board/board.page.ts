@@ -7,14 +7,24 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.page.html',
-  styleUrls: ['./board.page.scss']
+  styleUrls: ['./board.page.scss'],
+  animations: [
+    trigger('showing', [
+      state('active', style({ })),
+      state('hidden', style({ display: 'none' })),
+      transition('hidden => active', [animate('0s')]),
+      transition('active => hidden', [animate('0s')])
+    ]),
+  ]
 })
 export class BoardPage implements OnInit {
   @Input() data;
+  @Input() showing;
 
   constructor(
     private boardService: BoardService,
