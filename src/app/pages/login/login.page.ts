@@ -339,7 +339,7 @@ export class LoginPage implements OnInit {
       async err => {
         const alert = await this.alertCtrl.create({
           header: 'Error',
-          message: err.message,
+          message: err.message, // TODO human readable message
           buttons: ['OK']
         });
         alert.present();

@@ -41,9 +41,16 @@ $boardPadding: 20px;
     }
 }
 
+.drag-handle {
+    cursor: move;
+    font-size: 20px;
+    padding: 5px;
+}
+
 /////// drag drop styles ///////
 .cdk-drag-preview {
     margin: 0; // angular bug, adds margin twice if this isn't here
+    transform: rotate(5deg);
 }
 
 .cdk-drag-animating,
