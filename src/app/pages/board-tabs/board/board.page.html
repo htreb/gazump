@@ -1,33 +1,31 @@
-<ng-container *ngIf="board">
-  <div class="board"
-    cdkDropListGroup
+<div class="board"
+  cdkDropListGroup
+>
+  <ion-card
+    *ngFor="let column of data?.states; trackBy: columTrackBy"
+    class="column"
+    color="medium"
   >
-    <ion-card
-      *ngFor="let column of board.states; trackBy: columTrackBy"
-      class="column"
-      color="medium"
+    <ion-card-header>
+      <ion-card-subtitle>{{ column.title }}</ion-card-subtitle>
+    </ion-card-header>
+    <div
+      *ngIf="data?.tickets && data.tickets[column.state] || [] as tickets"
+      cdkDropList
+      [cdkDropListData]="{state: column.state, tickets: tickets}"
+      (cdkDropListDropped)="drop($event)"
+      class="ticket-drop-zone"
     >
-      <ion-card-header>
-        <ion-card-subtitle>{{ column.title }}</ion-card-subtitle>
-      </ion-card-header>
-      <div
-        *ngIf="board.tickets && board.tickets[column.state] || [] as tickets"
-        class="ticket-drop-zone"
-        cdkDropList
-        [cdkDropListData]="{state: column.state, tickets: tickets}"
-        (cdkDropListDropped)="drop($event)"
+      <ion-card
+        *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
+        cdkDrag
+        color="light"
+        class="ticket"
+        (click)="openTicketDetail(ticket)"
       >
-        <ion-card
-          *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
-          cdkDrag
-          color="light"
-          class="ticket"
-          (click)="openTicketDetail(ticket)"
-        >
-          <div class='title'>{{ticket.title}}</div>
-          <div class='description'>{{ticket.description}}</div>
-        </ion-card>
-      </div>
-    </ion-card>
-  </div>
-</ng-container>
+        <div class='title'>{{ticket.title}}</div>
+        <div class='description'>{{ticket.description}}</div>
+      </ion-card>
+    </div>
+  </ion-card>
+</div>

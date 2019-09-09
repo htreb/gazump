@@ -11,17 +11,9 @@ export class BoardService {
 
   private groupId: string;
   private groupSub: Subscription;
-
-  currentGroupSubject = new BehaviorSubject<any>({ loading: true });
-  currentBoardTitle = new BehaviorSubject<string>(
-    'Default board title from service'
-  );
+  private currentGroupSubject = new BehaviorSubject<any>({ loading: true });
 
   constructor(private db: AngularFirestore, private auth: AuthService) {}
-
-  setCurrentBoardTitle(title: string) {
-    this.currentBoardTitle.next(title);
-  }
 
   /**
    * sets the currentGroupSubject to all the board documents the current user is a member of

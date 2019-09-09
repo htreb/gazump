@@ -3,8 +3,8 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ title }}</ion-title>
-    <app-settings-icon slot='end'></app-settings-icon>
+    <ion-title>{{ currentBoard?.title || "Boards" }}</ion-title>
+    <app-settings-icon slot="end"></app-settings-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -20,19 +20,26 @@
   <ng-container *ngIf="!allBoards.loading; else loading">
     <ion-content *ngIf="allBoards.length; else noBoards">
 
-      <ion-tabs>
-        <ion-tab-bar slot="bottom">
-          <ion-tab-button
-            *ngFor="let board of allBoards; trackBy: boardTrackBy"
-            tab="{{ board.id }}"
-          >
-            <ion-icon name="clipboard"></ion-icon>
-            <ion-label>{{ board.title }}</ion-label>
-          </ion-tab-button>
-        </ion-tab-bar>
-      </ion-tabs>
+      <app-board
+        *ngFor="let board of allBoards; trackBy: boardTrackBy"
+        [data]='board'
+        [ngClass]="{'active': board === currentBoard}">
+      </app-board>
 
     </ion-content>
 
+    <ion-footer>
+      <ion-segment mode="ios" (ionChange)="segmentChanged($event)" scrollable>
+        <ion-segment-button
+          *ngFor="let board of allBoards; trackBy: boardTrackBy"
+          [value]="board"
+          mode="ios"
+          [checked]='!currentBoard'
+        >
+          <ion-icon name="clipboard"></ion-icon>
+          <ion-label>{{ board.title }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-footer>
   </ng-container>
 </ng-container>

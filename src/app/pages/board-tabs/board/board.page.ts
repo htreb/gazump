@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
-import { ActivatedRoute } from '@angular/router';
 import {
   moveItemInArray,
   transferArrayItem,
@@ -8,38 +7,24 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.page.html',
   styleUrls: ['./board.page.scss']
 })
-export class BoardPage implements OnInit, OnDestroy {
-  public boardDataSub: Subscription;
-  public board;
+export class BoardPage implements OnInit {
+  @Input() data;
 
   constructor(
     private boardService: BoardService,
-    private route: ActivatedRoute,
     private modalController: ModalController,
     private alertCtrl: AlertController,
-    private changeDetector: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
-    const boardId = this.route.snapshot.paramMap.get('boardId');
-    this.boardDataSub = this.boardService.boardsFromCurrentGroup(boardId).subscribe(boardData => {
-      this.board = boardData;
-      this.changeDetector.detectChanges();
-    });
   }
 
-  ngOnDestroy(): void {
-    if (this.boardDataSub && this.boardDataSub.unsubscribe) {
-      this.boardDataSub.unsubscribe();
-    }
-  }
 
   columTrackBy(index, column) {
     return column.state;
@@ -49,7 +34,7 @@ export class BoardPage implements OnInit, OnDestroy {
     return ticket.id;
   }
 
-  async drop(event) {
+  async drop(event: CdkDragDrop<any>) {
     const updatedTickets = {};
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) {
@@ -73,7 +58,7 @@ export class BoardPage implements OnInit, OnDestroy {
     updatedTickets[`tickets.${event.container.data.state}`] =
       event.container.data.tickets;
     try {
-      await this.boardService.updateBoard(this.board.id, updatedTickets);
+      await this.boardService.updateBoard(this.data.id, updatedTickets);
     } catch (err) {
       const alert = await this.alertCtrl.create({
         header: 'Error',
@@ -82,7 +67,6 @@ export class BoardPage implements OnInit, OnDestroy {
       });
       alert.present();
     }
-    this.changeDetector.detectChanges();
   }
 
   async openTicketDetail(details) {
@@ -96,12 +80,8 @@ export class BoardPage implements OnInit, OnDestroy {
     return console.log(data);
   }
 
-  ionViewDidEnter() {
-    this.boardService.setCurrentBoardTitle(this.board.title);
-  }
-
   // TODO  delete this
   dummyTickets() {
-    this.boardService.makeDummyTickets(this.board.id);
+    this.boardService.makeDummyTickets(this.data.id);
   }
 }

@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 
@@ -10,31 +10,24 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardTabsPage implements OnInit, OnDestroy {
 
-  public title: string;
-  private boardTitleSub: Subscription;
-
+  public currentBoard;
   public allBoards$: Observable<any> = this.boardService.boardsFromCurrentGroup();
 
   constructor(
     private boardService: BoardService,
     private route: ActivatedRoute,
-    private changeDetector: ChangeDetectorRef
     ) { }
 
   ngOnInit() {
     const groupId = this.route.snapshot.paramMap.get('groupId');
     this.boardService.setGroup(groupId); // TODO set this when navigating on the list-groups page
+  }
 
-    this.boardTitleSub = this.boardService.currentBoardTitle.asObservable().subscribe(newTitle => {
-      this.title = newTitle;
-      this.changeDetector.detectChanges();
-    });
+  segmentChanged(ev) {
+    this.currentBoard = ev.detail.value;
   }
 
   ngOnDestroy(): void {
-    if (this.boardTitleSub && this.boardTitleSub.unsubscribe) {
-      this.boardTitleSub.unsubscribe();
-    }
     this.boardService.unSubFromGroup();
   }
 

@@ -1,14 +1,13 @@
 $boardPadding: 20px;
 :host{
-    overflow: scroll;
 }
 
 .board {
     display: flex;
-    // align-items: flex-start; // uncomment if you want columns to resize and not be 100%
     flex: 1;
     overflow: scroll;
-    margin: $boardPadding 0;
+    height: 100%;
+    padding: $boardPadding 0;
     // force margins on either side, "flex loses right padding when overflowing"
     &::before { content: ' '; min-width: $boardPadding; }
     &::after { content: ' '; min-width: $boardPadding; }
