@@ -38,7 +38,7 @@ export class BoardPage implements OnInit {
   getColumnIds() {
     const ids = [];
     if (this.data.states) {
-      this.data.states.forEach(s => ids.push(`column-${s.state}`));
+      this.data.states.forEach(s => ids.push(`${this.data.id.toLowerCase()}${s.state}`));
     }
     return ids;
   }

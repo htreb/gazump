@@ -37,7 +37,7 @@
           mode="ios"
           [checked]='!currentBoard'
         >
-          <ion-icon name="clipboard"></ion-icon>
+          <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
           <ion-label>{{ board.title }}</ion-label>
         </ion-segment-button>
       </ion-segment>
