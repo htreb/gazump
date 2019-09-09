@@ -9,8 +9,8 @@ $boardPadding: 20px;
     height: 100%;
     padding: $boardPadding 0;
     // force margins on either side, "flex loses right padding when overflowing"
-    &::before { content: ' '; min-width: $boardPadding; }
-    &::after { content: ' '; min-width: $boardPadding; }
+    &:before { content: ''; min-width: $boardPadding; }
+    &:after { content: ''; min-width: $boardPadding; }
 }
 
 .column {
@@ -21,6 +21,11 @@ $boardPadding: 20px;
     min-width: 250px;
     padding-bottom: 10px;
 
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
     .ticket-drop-zone {
         flex: 1;
         overflow: scroll;
@@ -42,11 +47,13 @@ $boardPadding: 20px;
 }
 
 .cdk-drag-animating,
-.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder),
+.cdk-drop-list-dragging .column:not(.cdk-drag-placeholder) {
     transition: transform 300ms ease;
     transition-delay: 0ms;
 }
-.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder) {
+.cdk-drop-list-dragging .ticket:not(.cdk-drag-placeholder),
+.cdk-drop-list-dragging .column:not(.cdk-drag-placeholder) {
     transition-delay: 200ms;
 }
 

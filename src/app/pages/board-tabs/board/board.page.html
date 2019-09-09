@@ -1,20 +1,28 @@
 <div class="board"
-  cdkDropListGroup
   [@showing]="showing ? 'active' : 'hidden'"
+
+  cdkDropList
+  cdkDropListOrientation = 'horizontal'
+  [cdkDropListData]="data?.states"
+  (cdkDropListDropped)="columnDrop($event)"
 >
   <ion-card
-    *ngFor="let column of data?.states; trackBy: columTrackBy"
+    *ngFor="let column of data?.states; let i = index; trackBy: columTrackBy"
+    cdkDrag
     class="column"
     color="medium"
   >
-    <ion-card-header>
+    <ion-card-header class='header'>
       <ion-card-subtitle>{{ column.title }}</ion-card-subtitle>
+      <ion-icon cdkDragHandle name='move'></ion-icon>
     </ion-card-header>
     <div
       *ngIf="data?.tickets && data.tickets[column.state] || [] as tickets"
       cdkDropList
+      id="column-{{i}}"
+      [cdkDropListConnectedTo]="getColumnIds()"
       [cdkDropListData]="{state: column.state, tickets: tickets}"
-      (cdkDropListDropped)="drop($event)"
+      (cdkDropListDropped)="ticketDrop($event)"
       class="ticket-drop-zone"
     >
       <ion-card

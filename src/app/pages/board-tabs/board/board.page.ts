@@ -35,6 +35,13 @@ export class BoardPage implements OnInit {
   ngOnInit() {
   }
 
+  getColumnIds() {
+    const ids = [];
+    if (this.data.states) {
+      this.data.states.forEach(s => ids.push(`column-${s.state}`));
+    }
+    return ids;
+  }
 
   columTrackBy(index, column) {
     return column.state;
@@ -44,7 +51,34 @@ export class BoardPage implements OnInit {
     return ticket.id;
   }
 
-  async drop(event: CdkDragDrop<any>) {
+  async updateDb(data: any) {
+    try {
+      await this.boardService.updateBoard(this.data.id, data);
+    } catch (err) {
+      const alert = await this.alertCtrl.create({
+        header: 'Error',
+        message: err.message, // TODO more human readable error messages?
+        buttons: ['OK']
+      });
+      alert.present();
+    }
+  }
+
+  columnDrop(event: CdkDragDrop<any>) {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    this.updateDb({states: event.container.data});
+  }
+
+
+  ticketDrop(event: CdkDragDrop<any>) {
     const updatedTickets = {};
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) {
@@ -67,16 +101,8 @@ export class BoardPage implements OnInit {
     }
     updatedTickets[`tickets.${event.container.data.state}`] =
       event.container.data.tickets;
-    try {
-      await this.boardService.updateBoard(this.data.id, updatedTickets);
-    } catch (err) {
-      const alert = await this.alertCtrl.create({
-        header: 'Error',
-        message: err.message, // TODO more human readable error messages?
-        buttons: ['OK']
-      });
-      alert.present();
-    }
+
+    this.updateDb(updatedTickets);
   }
 
   async openTicketDetail(details) {
