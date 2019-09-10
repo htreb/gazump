@@ -19,7 +19,7 @@
     <div
       *ngIf="data?.tickets && data.tickets[column.state] || [] as tickets"
       cdkDropList
-      id="{{data.id | lowercase}}{{i}}"
+      id="{{data.id | lowercase}}{{column.state}}"
       [cdkDropListConnectedTo]="getColumnIds()"
       [cdkDropListData]="{state: column.state, tickets: tickets}"
       (cdkDropListDropped)="ticketDrop($event)"
