@@ -50,7 +50,7 @@ $boardPadding: 20px;
 /////// drag drop styles ///////
 .cdk-drag-preview {
     margin: 0; // angular bug, adds margin twice if this isn't here
-    transform: rotate(5deg);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
 
 .cdk-drag-animating,
