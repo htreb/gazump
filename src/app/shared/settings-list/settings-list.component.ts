@@ -9,7 +9,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 })
 export class SettingsListComponent implements OnInit {
 
-  public nextThemeIcon: string;
+  public nextTheme: any;
   @Input() closePopover: () => {};
 
   constructor(
@@ -18,15 +18,15 @@ export class SettingsListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.setThemeIcon();
+    this.getNextTheme();
   }
 
-  setThemeIcon(): void {
-    this.themeService.getNextTheme().then(t => this.nextThemeIcon = t.icon );
+  getNextTheme(): void {
+    this.themeService.getNextTheme().then(t => this.nextTheme = t);
   }
 
   switchTheme(): void {
-    this.themeService.toggleThemes().then( _ => this.setThemeIcon() );
+    this.themeService.toggleThemes().then( _ => this.getNextTheme() );
   }
 
   logOut(): void {

@@ -5,8 +5,8 @@
     (click)="switchTheme()"
     lines='full'
   >
-    Switch theme
-    <ion-icon [name]="nextThemeIcon" slot="end"></ion-icon>
+    {{ nextTheme?.name || "Switch" }} Theme
+    <ion-icon [name]="nextTheme?.icon" slot="end"></ion-icon>
   </ion-item>
   <ion-item
     tappable

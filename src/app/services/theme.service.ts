@@ -20,12 +20,12 @@ const defaults = {
 
 const themes = [
   {
-    name: 'default',
+    name: 'Default',
     icon: defaults.icon,
     // colors auto filled inside CSSTextGenerator
   },
   {
-    name: 'autumn',
+    name: 'Autumn',
     icon: 'partly-sunny',
     primary: '#F78154',
     secondary: '#4D9078',
@@ -35,7 +35,7 @@ const themes = [
     dark: '#B89876'
   },
   {
-    name: 'night',
+    name: 'Night',
     icon: 'moon',
     primary: '#8CBA80',
     secondary: '#FCFF6C',
@@ -45,7 +45,7 @@ const themes = [
     light: '#495867'
   },
   {
-    name: 'neon',
+    name: 'Neon',
     icon: 'flash',
     primary: '#39BFBD',
     secondary: '#4CE0B3',
