@@ -6,6 +6,8 @@ import { SettingsListComponent } from './settings-list/settings-list.component';
 import { RouterModule } from '@angular/router';
 import { LoadingComponent } from './loading/loading.component';
 import { EmptyListComponent } from './empty-list/empty-list.component';
+import { TipComponent } from './tip/tip.component';
+import { TextComponent } from './text/text.component';
 
 
 
@@ -14,7 +16,9 @@ import { EmptyListComponent } from './empty-list/empty-list.component';
     SettingsIconComponent,
     SettingsListComponent,
     LoadingComponent,
-    EmptyListComponent
+    EmptyListComponent,
+    TipComponent,
+    TextComponent,
   ],
   imports: [
     CommonModule,
@@ -25,7 +29,9 @@ import { EmptyListComponent } from './empty-list/empty-list.component';
     SettingsIconComponent,
     LoadingComponent,
     EmptyListComponent,
+    TipComponent,
+    TextComponent
   ],
-  entryComponents: [SettingsListComponent]
+  entryComponents: [SettingsListComponent, TextComponent]
 })
 export class SharedModule { }
