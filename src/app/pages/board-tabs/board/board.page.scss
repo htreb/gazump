@@ -1,6 +1,4 @@
-$boardPadding: 20px;
-:host{
-}
+$boardPadding: 8px;
 
 .board {
     display: flex;
@@ -17,15 +15,17 @@ $boardPadding: 20px;
     display: flex;
     flex: 1;
     flex-direction: column;
+    min-width: 300px;
     max-width: 65vw;
-    min-width: 250px;
-    padding-bottom: 10px;
 
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+    .card-title {
+        font-size: 1em;
     }
+
+    .drag-handle {
+        cursor: move;
+    }
+
     .ticket-drop-zone {
         flex: 1;
         overflow: scroll;
@@ -35,16 +35,6 @@ $boardPadding: 20px;
 
 .ticket {
     transition: none; // ios adds an ugly bounce if this isn't here
-
-    .title, .description {
-        margin: 16px;
-    }
-}
-
-.drag-handle {
-    cursor: move;
-    font-size: 20px;
-    padding: 5px;
 }
 
 /////// drag drop styles ///////
