@@ -34,7 +34,6 @@
     >
       <ion-card
         mode='md'
-        button
         *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
         cdkDrag
         color="light"
@@ -46,9 +45,19 @@
       </ion-card>
     </div>
     <ion-footer mode='md'>
-      <ion-button fill='clear' expand='block' color='dark'>
-        <ion-icon  slot='icon-only' src='/assets/icons/add-ticket.svg'></ion-icon>
+      <ion-button fill='clear' expand='block' color='dark' (click)="openTicketDetail({ ticket: {}, state: column })">
+        <ion-icon slot='icon-only' src='/assets/icons/add-ticket.svg'></ion-icon>
       </ion-button>
     </ion-footer>
   </ion-card>
+
+  <ion-card
+    button
+    class="column add"
+    color="light"
+  >
+    <ion-icon name="add"></ion-icon>
+  </ion-card>
+
+
 </div>

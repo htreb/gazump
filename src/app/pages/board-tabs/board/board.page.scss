@@ -33,6 +33,19 @@ $boardPadding: 8px;
     }
 }
 
+.column.add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px dashed;
+    font-size: 4em;
+    box-shadow: none;
+    text-align: center;
+    min-width: 150px;
+    border-color: var(--ion-color-light-shade);
+    color: var(--ion-color-light-shade);
+}
+
 .ticket {
     transition: none; // ios adds an ugly bounce if this isn't here
 }
