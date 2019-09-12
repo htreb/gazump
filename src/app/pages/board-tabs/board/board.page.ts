@@ -108,7 +108,7 @@ export class BoardPage implements OnInit {
   async openTicketDetail(details) {
     const modal = await this.modalController.create({
       component: TicketDetailComponent,
-      componentProps: { details }
+      componentProps: { details, completedBy: this.data.completedBy, states: this.data.states }
     });
 
     await modal.present();

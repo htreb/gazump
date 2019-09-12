@@ -1,0 +1,26 @@
+.state-select {
+    display: none;
+}
+
+.description {
+    min-height: 100px;
+    margin: 0px;
+}
+
+.completed-by {
+    border-top: 1px solid var(--ion-color-medium);
+    border-bottom: 1px solid var(--ion-color-medium);
+
+    .chips {
+        // direction: rtl;
+        padding: 0 16px 5px 16px;
+    }
+}
+
+.footer-buttons {
+    display: flex;
+
+    .footer-button {
+        flex: 1;
+    }
+}

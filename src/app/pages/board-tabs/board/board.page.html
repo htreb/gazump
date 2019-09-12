@@ -7,7 +7,7 @@
   (cdkDropListDropped)="columnDrop($event)"
 >
   <ion-card
-    *ngFor="let column of data?.states; let i = index; trackBy: columTrackBy"
+    *ngFor="let column of data?.states; trackBy: columTrackBy"
     cdkDrag
     class="column"
     color="medium"
@@ -30,7 +30,7 @@
         cdkDrag
         color="light"
         class="ticket"
-        (click)="openTicketDetail(ticket)"
+        (click)="openTicketDetail({ticket: ticket, state: column})"
       >
         <div class='title'>{{ticket.title}}</div>
         <div class='description'>{{ticket.description}}</div>

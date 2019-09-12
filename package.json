@@ -34,6 +34,7 @@
     "core-js": "^2.5.4",
     "debounce-promise": "^3.1.2",
     "firebase": "^6.3.1",
+    "ngx-autosize": "^1.6.4",
     "ngx-smooth-dnd": "^0.3.0",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",

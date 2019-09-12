@@ -1,5 +1,92 @@
-<p>
-  {{ details | json }}
-</p>
+<ng-container [formGroup]="ticketForm">
+  <ion-header no-border>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button (click)="closePage()">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-badge [color]="details.state.color" slot='end' class='ion-margin'>
+        {{ details.state.title | uppercase }}
+      </ion-badge>
+      <!-- <ion-buttons slot="end">
+        <ion-button (click)="stateSelect.open($event)">
+          <ion-badge [color]="details.state.color">
+            {{ details.state.title | uppercase }}
+          </ion-badge>
+          <ion-select
+            #stateSelect
+            interface="popover"
+            selectedText=" "
+            class="state-select"
+            formControlName="state"
+          >
+            <ion-select-option *ngFor="let state of states" class='state-option' [value]="state.state">{{ state.title }}</ion-select-option>
+          </ion-select>
+        </ion-button>
+      </ion-buttons> -->
+    </ion-toolbar>
+  </ion-header>
 
-<ion-button (click)="closePage()">Kill me!</ion-button>
+  <ion-content>
+    <ion-textarea
+      formControlName="title"
+      placeholder="Title"
+      class="title ion-padding-horizontal"
+      autosize
+    >
+    </ion-textarea>
+    <ion-textarea
+      formControlName="description"
+      placeholder="Description"
+      class="description ion-padding-horizontal"
+      autosize
+    >
+    </ion-textarea>
+
+    <div class="completed-by">
+      <ion-item lines="none">
+        <ion-label>Completed by</ion-label>
+        <ion-select
+          #completedBySelect
+          multiple="true"
+          selectedText=" "
+          formControlName="completedBy"
+        >
+          <ion-select-option
+            *ngFor="let person of completedBy"
+            [value]="person"
+            >{{ person }}</ion-select-option
+          >
+        </ion-select>
+      </ion-item>
+      <div class="chips">
+        <ion-chip
+          *ngFor="let person of this.ticketForm.get('completedBy').value"
+          (click)="completedBySelect.open()"
+          [color]="getCompletedByColor(person)"
+        >
+          <ion-label>{{ person }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <ion-list>
+      <ion-item lines='none'>
+        <ion-label>
+            Linked chats
+        </ion-label>
+        <app-tip slot="end" [text]='linkedChatsTip'></app-tip>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer no-border class='footer-buttons'>
+      <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' color='danger'>
+        Close
+      </ion-button>
+      <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' strong='true' color='success'>
+        Save
+      </ion-button>
+  </ion-footer>
+</ng-container>

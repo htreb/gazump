@@ -43,4 +43,13 @@ ion-popover.tip-popover {
   --background: var(--ion-color-dark);
   color: var(--ion-color-light);
 }
+
+.title {
+  textarea {
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
