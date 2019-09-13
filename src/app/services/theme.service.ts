@@ -24,10 +24,30 @@ const themes = [
     icon: defaults.icon,
     // colors auto filled inside CSSTextGenerator
   },
+      {
+        name: 'Dark',
+        icon: 'basket',
+        primary: '#F39C6B',
+        // secondary: '4D9078',
+        // tertiary: 'BFFFF1',
+        light: '#5D5877',
+        medium: '#312F3D',
+        dark: '#46425B'
+      },
+      {
+        name: 'Sea',
+        icon: 'basketball',
+        primary: '#349681',
+        // secondary: '#4D9078',
+        // tertiary: 'BFFFF1',
+        light: '#7CFFE2',
+        medium: '#74F2D6',
+        dark: '#003327'
+      },
   {
     name: 'Autumn',
     icon: 'partly-sunny',
-    primary: '#F78154',
+    primary: '#F39C6B',
     secondary: '#4D9078',
     tertiary: '#B4436C',
     light: '#FDE8DF',
@@ -40,8 +60,8 @@ const themes = [
     primary: '#8CBA80',
     secondary: '#FCFF6C',
     tertiary: '#FE5F55',
-    medium: '#BCC2C7',
-    dark: '#F7F7FF',
+    medium: '#596774',
+    dark: '#7A8590',
     light: '#495867'
   },
   {
@@ -74,19 +94,24 @@ function CSSTextGenerator(colors, fromStorage = false) {
   const shadeRatio = 0.1;
   const tintRatio = 0.1;
 
+  // --ion-color-step-550 = popover checkbox borders
+  // --ion-color-step-850 = popover checkbox labels
   return `
     --theme-switch-transition: ${fromStorage ? '' : transition};
 
+    --ion-color-step-550: ${contrast(light).hex()};
+    --ion-color-step-850: ${contrast(light).hex()};
     --ion-color-base: ${light};
-    --ion-color-contrast: ${dark};
+    --ion-color-contrast: ${contrast(light).hex()};
+    --ion-text-color: ${contrast(light).hex()};
+    --ion-text-color-rgb: ${contrast(light).rgb().array()};
     --ion-background-color: ${light};
-    --ion-text-color: ${dark};
-    --ion-toolbar-background-color: ${contrast(light, 0.1).hex()};
-    --ion-toolbar-text-color: ${contrast(dark, 0.1).hex()};
+    --ion-overlay-background-color: ${light};
     --ion-tab-bar-background: ${light};
     --ion-tab-bar-color: ${dark};
-    --ion-item-background-color: ${contrast(light, 0.3).hex()};
-    --ion-item-text-color: ${contrast(dark, 0.3).hex()};
+    --ion-item-color: ${contrast(light).hex()};
+    --ion-item-background: ${light};
+    --ion-item-background-activated: ${contrast(light).hex()};
 
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${Color(primary).rgb().array()};
