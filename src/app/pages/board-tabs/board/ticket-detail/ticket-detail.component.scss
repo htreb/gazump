@@ -2,9 +2,15 @@
     display: none;
 }
 
+.title {
+    // padding-bottom: 0px;
+    font-size: 1.3em;
+}
+
 .description {
     min-height: 100px;
     margin: 0px;
+    padding-top: 0px;
 }
 
 .completed-by {
@@ -13,7 +19,7 @@
 
     .chips {
         // direction: rtl;
-        padding: 0 16px 5px 16px;
+        padding-top: 0;
     }
 }
 

@@ -1,6 +1,6 @@
 <ng-container [formGroup]="ticketForm">
   <ion-header no-border>
-    <ion-toolbar>
+    <ion-toolbar mode='md'>
       <ion-buttons slot="start">
         <ion-button (click)="closePage()">
           <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -39,7 +39,7 @@
     <ion-textarea
       formControlName="description"
       placeholder="Description"
-      class="description ion-padding-horizontal"
+      class="description ion-padding"
       autosize
     >
     </ion-textarea>
@@ -60,7 +60,9 @@
           >
         </ion-select>
       </ion-item>
-      <div class="chips">
+      <div class="chips ion-padding"
+        *ngIf="this.ticketForm.get('completedBy').value && this.ticketForm.get('completedBy').value.length"
+      >
         <ion-chip
           *ngFor="let person of this.ticketForm.get('completedBy').value"
           (click)="completedBySelect.open()"
@@ -82,11 +84,11 @@
   </ion-content>
 
   <ion-footer no-border class='footer-buttons'>
-      <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' color='danger'>
-        Close
-      </ion-button>
-      <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' strong='true' color='success'>
-        Save
-      </ion-button>
+    <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' color='danger'>
+      Close
+    </ion-button>
+    <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' strong='true' color='success'>
+      Save
+    </ion-button>
   </ion-footer>
 </ng-container>

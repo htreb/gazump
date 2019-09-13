@@ -41,15 +41,13 @@
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
 ion-popover.tip-popover {
   --background: var(--ion-color-dark);
-  color: var(--ion-color-light);
+  color: var(--ion-color-dark-contrast);
 }
 
-.title {
+.title { // title for ticket details modal
   textarea {
     --padding-top: 0;
     --padding-bottom: 0;
-    --padding-start: 0;
-    --padding-end: 0;
   }
 }
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
