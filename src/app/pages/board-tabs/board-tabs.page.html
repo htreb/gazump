@@ -35,7 +35,7 @@
           *ngFor="let board of allBoards; trackBy: boardTrackBy"
           [value]="board"
           mode="ios"
-          [checked]='!currentBoard'
+          [checked]='!currentBoard || board.id === currentBoard.id'
         >
           <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
           <ion-label>{{ board.title }}</ion-label>

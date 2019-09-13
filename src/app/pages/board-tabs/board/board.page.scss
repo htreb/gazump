@@ -33,6 +33,10 @@ $boardPadding: 8px;
     }
 }
 
+.new-ticket-icon {
+    color: var(--ion-color-medium-contrast);
+}
+
 .column.add {
     display: flex;
     justify-content: center;
@@ -41,7 +45,7 @@ $boardPadding: 8px;
     font-size: 4em;
     box-shadow: none;
     text-align: center;
-    min-width: 150px;
+    max-width: 300px;
     border-color: var(--ion-color-light-shade);
     color: var(--ion-color-light-shade);
 }

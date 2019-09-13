@@ -1,63 +1,66 @@
-<div class="board"
+<div
+  class="board"
   [@showing]="showing ? 'active' : 'hidden'"
-
   cdkDropList
-  cdkDropListOrientation = 'horizontal'
+  cdkDropListOrientation="horizontal"
   [cdkDropListData]="data?.states"
   (cdkDropListDropped)="columnDrop($event)"
 >
   <ion-card
-    mode='md'
+    mode="md"
     *ngFor="let column of data?.states; trackBy: columTrackBy"
     cdkDrag
     class="column"
     color="medium"
   >
-    <ion-header mode='md'>
-      <ion-toolbar color='transparent'>
-        <ion-title class='card-title'>{{ column.title }}</ion-title>
-        <ion-buttons cdkDragHandle slot="end" class='drag-handle'>
-          <ion-button disabled fill='clear'>
-            <ion-icon slot='icon-only' src='/assets/icons/drag.svg'></ion-icon>
+    <ion-header mode="md">
+      <ion-toolbar color="medium">
+        <ion-title class="card-title">{{ column.title }}</ion-title>
+        <ion-buttons cdkDragHandle slot="end" class="drag-handle">
+          <ion-button disabled fill="clear">
+            <ion-icon slot="icon-only" src="/assets/icons/drag.svg"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <div
-      *ngIf="data?.tickets && data.tickets[column.state] || [] as tickets"
+      *ngIf="(data?.tickets && data.tickets[column.state]) || [] as tickets"
       cdkDropList
-      id="{{data.id | lowercase}}{{column.state}}"
+      id="{{ data.id | lowercase }}{{ column.state }}"
       [cdkDropListConnectedTo]="getColumnIds()"
-      [cdkDropListData]="{state: column.state, tickets: tickets}"
+      [cdkDropListData]="{ state: column.state, tickets: tickets }"
       (cdkDropListDropped)="ticketDrop($event)"
       class="ticket-drop-zone"
     >
       <ion-card
-        mode='md'
+        mode="md"
         *ngFor="let ticket of tickets; trackBy: ticketTrackBy"
         cdkDrag
         color="light"
         class="ticket"
-        (click)="openTicketDetail({ticket: ticket, state: column})"
+        (click)="openTicketDetail({ ticket: ticket, state: column })"
       >
-        <div class='ion-margin'>{{ticket.title}}</div>
-        <div class='ion-margin'>{{ticket.description}}</div>
+        <div class="ion-margin">{{ ticket.title }}</div>
+        <div class="ion-margin">{{ ticket.description }}</div>
       </ion-card>
     </div>
-    <ion-footer mode='md'>
-      <ion-button fill='clear' expand='block' color='dark' (click)="openTicketDetail({ ticket: {}, state: column })">
-        <ion-icon slot='icon-only' src='/assets/icons/add-ticket.svg'></ion-icon>
+    <ion-footer mode="md">
+      <ion-button
+        fill="clear"
+        expand="block"
+        color='medium'
+        (click)="openTicketDetail({ ticket: {}, state: column })"
+      >
+        <ion-icon
+          slot="icon-only"
+          src="/assets/icons/add-ticket.svg"
+          class='new-ticket-icon'
+        ></ion-icon>
       </ion-button>
     </ion-footer>
   </ion-card>
 
-  <ion-card
-    button
-    class="column add"
-    color="light"
-  >
+  <ion-card button type="md" class="column add" color="light">
     <ion-icon name="add"></ion-icon>
   </ion-card>
-
-
 </div>
