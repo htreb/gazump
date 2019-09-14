@@ -35,10 +35,6 @@ export class MenuPage implements OnInit {
         url: `/groups/${groupId}`
       },
       {
-        title: 'New ticket',
-        url: `/groups/${groupId}/ticket`
-      },
-      {
         title: 'Chats',
         url: `/groups/${groupId}/chats`
       },
