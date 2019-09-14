@@ -169,7 +169,7 @@ function CSSTextGenerator(colors, fromStorage = false) {
     --ion-color-light-tint: ${Color(light).lighten(tintRatio).hex()};`;
 }
 
-function contrast(color, ratio = 0.8) {
+function contrast(color, ratio = 3) {
   color = Color(color);
   return color.isDark() ? color.lighten(ratio) : color.darken(ratio);
 }
