@@ -125,11 +125,10 @@ export class BoardPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data && data.saveTicket) {
-      if (currentTicketSnippet.id) {
+      if (data.ticketFormValue.id) {
         // updating a ticket which already exists
         this.boardService.updateTicketSnippet(
           this.boardData.id,
-          currentTicketSnippet.id,
           currentState.id,
           data.ticketFormValue
         );

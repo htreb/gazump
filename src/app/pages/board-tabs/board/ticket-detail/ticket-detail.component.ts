@@ -19,6 +19,7 @@ export class TicketDetailComponent implements OnInit {
 
   ngOnInit() {
     this.ticketForm = this.fb.group({
+      id: [''],
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
       completedBy: [''],

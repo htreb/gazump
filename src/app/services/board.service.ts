@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { takeUntil, map, tap } from 'rxjs/operators';
+import { takeUntil, map } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
+import isEqual from 'lodash.isequal';
 
 @Injectable({
   providedIn: 'root'
@@ -86,7 +87,7 @@ export class BoardService {
     };
   }
 
-  updateTicketSnippet(boardId: string, ticketId: string, newStateId: string, snippet: any) {
+  updateTicketSnippet(boardId: string, newStateId: string, snippet: any) {
     // Find matching board and copy all tickets in all states
     const matchingBoard = this.currentGroupSubject.value.filter(board => board.id === boardId)[0];
     const allTickets = Object.assign({}, matchingBoard.tickets);
@@ -95,7 +96,7 @@ export class BoardService {
     let currentStateId;
     let currentIndex;
     Object.keys(allTickets).forEach(s => {
-      const idx = allTickets[s].findIndex(t => t.id === ticketId);
+      const idx = allTickets[s].findIndex(t => t.id === snippet.id);
       if (idx > -1) {
         currentStateId = s;
         currentIndex = idx;
@@ -103,7 +104,7 @@ export class BoardService {
     });
 
     if (currentStateId === undefined || currentIndex === -1) {
-      console.log(`can't find the ticket with id ${ticketId}`);
+      console.log(`can't find the ticket with id ${snippet.id}`);
       return Promise.reject();
     }
 
@@ -112,7 +113,10 @@ export class BoardService {
 
     // if new state is same as current state then replace ticket with new snippet
     if (currentStateId === newStateId) {
-      allTickets[currentStateId].splice(currentIndex, 1, snippet);
+      const oldSnippet = allTickets[currentStateId].splice(currentIndex, 1, snippet);
+      if (isEqual(oldSnippet[0], snippet)) {
+        return Promise.resolve(); // no change to make save a db write
+      }
     } else { // otherwise remove ticket from it's current state and push it to the end of it's new state
       allTickets[currentStateId].splice(currentIndex, 1);
       allTickets[newStateId].push(snippet);
@@ -124,7 +128,7 @@ export class BoardService {
   }
 
   // TODO just use updateTicketSnippet and remove this?
-  addTicketSnippet(boardId: string, state: string, snippet: any) {
+  addTicketSnippet(boardId: string, stateId: string, snippet: any) {
     snippet = { id: this.getId(), ...snippet };
     return this.db
       .collection('groups')
@@ -132,7 +136,7 @@ export class BoardService {
       .collection('boards')
       .doc(boardId)
       .update({
-        [`tickets.${state}`]: firebase.firestore.FieldValue.arrayUnion(snippet)
+        [`tickets.${stateId}`]: firebase.firestore.FieldValue.arrayUnion(snippet)
       });
   }
 
@@ -164,6 +168,7 @@ export class BoardService {
           title: `${j} ticket ${j}`,
           description: lorem.slice(0, Math.floor(Math.random() * 200) + 30),
           id: this.getId(),
+          completedBy: '',
         });
       }
     });
