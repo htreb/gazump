@@ -87,7 +87,6 @@ export class BoardService {
   }
 
   updateTicketSnippet(boardId: string, ticketId: string, newStateId: string, snippet: any) {
-    console.log('current group is', this.currentGroupSubject.value);
     // Find matching board and copy all tickets in all states
     const matchingBoard = this.currentGroupSubject.value.filter(board => board.id === boardId)[0];
     const allTickets = Object.assign({}, matchingBoard.tickets);
@@ -126,6 +125,7 @@ export class BoardService {
 
   // TODO just use updateTicketSnippet and remove this?
   addTicketSnippet(boardId: string, state: string, snippet: any) {
+    snippet = { id: this.getId(), ...snippet };
     return this.db
       .collection('groups')
       .doc(this.groupId)
@@ -162,7 +162,7 @@ export class BoardService {
         newTickets[`tickets.${state.id}`] = newTickets[`tickets.${state.id}`] || [];
         newTickets[`tickets.${state.id}`].push({
           title: `${j} ticket ${j}`,
-          description: lorem.slice(0, Math.floor(Math.random() * 150) + 30),
+          description: lorem.slice(0, Math.floor(Math.random() * 200) + 30),
           id: this.getId(),
         });
       }

@@ -3,12 +3,12 @@
   [@showing]="showing ? 'active' : 'hidden'"
   cdkDropList
   cdkDropListOrientation="horizontal"
-  [cdkDropListData]="data?.states"
+  [cdkDropListData]="boardData?.states"
   (cdkDropListDropped)="columnDrop($event)"
 >
   <ion-card
     mode="md"
-    *ngFor="let column of data?.states; trackBy: columTrackBy"
+    *ngFor="let column of boardData?.states; trackBy: columTrackBy"
     cdkDrag
     class="column"
     color="medium"
@@ -24,9 +24,9 @@
       </ion-toolbar>
     </ion-header>
     <div
-      *ngIf="(data?.tickets && data.tickets[column.id]) || [] as tickets"
+      *ngIf="(boardData?.tickets && boardData.tickets[column.id]) || [] as tickets"
       cdkDropList
-      id="{{ data.id | lowercase }}{{ column.id }}"
+      id="{{ boardData.id | lowercase }}{{ column.id }}"
       [cdkDropListConnectedTo]="getColumnIds()"
       [cdkDropListData]="{ stateId: column.id, tickets: tickets }"
       (cdkDropListDropped)="ticketDrop($event)"
@@ -38,7 +38,7 @@
         cdkDrag
         color="light"
         class="ticket"
-        (click)="openTicketDetail({ ticket: ticket, state: column })"
+        (click)="openTicketDetail( ticket, column )"
       >
         <div class="ion-margin">{{ ticket.title }}</div>
         <div class="ion-margin">{{ ticket.description }}</div>
@@ -49,7 +49,7 @@
         fill="clear"
         expand="block"
         color='medium'
-        (click)="openTicketDetail({ ticket: {}, state: column })"
+        (click)="openTicketDetail( {}, column )"
       >
         <ion-icon
           slot="icon-only"

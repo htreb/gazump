@@ -22,7 +22,7 @@
 
       <app-board
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
-        [data]='board'
+        [boardData]='board'
         [showing]='board.id === currentBoard?.id'
       >
       </app-board>

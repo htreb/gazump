@@ -8,9 +8,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./ticket-detail.component.scss']
 })
 export class TicketDetailComponent implements OnInit {
-  @Input() details;
+  @Input() currentTicketSnippet;
+  @Input() currentState;
   @Input() completedBy;
-  @Input() states;
+  @Input() allStates;
   public ticketForm: FormGroup;
   public linkedChatsTip = `These are the chats which mention this ticket. Only chats you are a member of will appear here.`;
 
@@ -24,13 +25,13 @@ export class TicketDetailComponent implements OnInit {
       // state: [''] TODO hook this up so it works and moves the card
     });
 
-    this.ticketForm.patchValue(this.details.ticket);
+    this.ticketForm.patchValue(this.currentTicketSnippet);
   }
 
   closePage(saveTicket = false) {
     this.modalCtrl.dismiss({
       saveTicket,
-      ticketDetails: this.ticketForm.value
+      ticketFormValue: this.ticketForm.value
     });
   }
 

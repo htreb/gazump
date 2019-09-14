@@ -7,7 +7,13 @@ import {
 } from '@angular/cdk/drag-drop';
 import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate
+} from '@angular/animations';
 
 @Component({
   selector: 'app-board',
@@ -15,30 +21,31 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
   styleUrls: ['./board.page.scss'],
   animations: [
     trigger('showing', [
-      state('active', style({ })),
+      state('active', style({})),
       state('hidden', style({ display: 'none' })),
       transition('hidden => active', [animate('0s')]),
       transition('active => hidden', [animate('0s')])
-    ]),
+    ])
   ]
 })
 export class BoardPage implements OnInit {
-  @Input() data;
+  @Input() boardData;
   @Input() showing;
 
   constructor(
     private boardService: BoardService,
     private modalController: ModalController,
-    private alertCtrl: AlertController,
+    private alertCtrl: AlertController
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getColumnIds() {
     const ids = [];
-    if (this.data.states) {
-      this.data.states.forEach(s => ids.push(`${this.data.id.toLowerCase()}${s.id}`));
+    if (this.boardData.states) {
+      this.boardData.states.forEach(s =>
+        ids.push(`${this.boardData.id.toLowerCase()}${s.id}`)
+      );
     }
     return ids;
   }
@@ -51,9 +58,9 @@ export class BoardPage implements OnInit {
     return ticket.id;
   }
 
-  async updateDb(data: any) {
+  async updateDb(newDbValue: any) {
     try {
-      await this.boardService.updateBoard(this.data.id, data);
+      await this.boardService.updateBoard(this.boardData.id, newDbValue);
     } catch (err) {
       const alert = await this.alertCtrl.create({
         header: 'Error',
@@ -74,9 +81,8 @@ export class BoardPage implements OnInit {
       event.currentIndex
     );
 
-    this.updateDb({states: event.container.data});
+    this.updateDb({ states: event.container.data });
   }
-
 
   ticketDrop(event: CdkDragDrop<any>) {
     const updatedTickets = {};
@@ -105,31 +111,40 @@ export class BoardPage implements OnInit {
     this.updateDb(updatedTickets);
   }
 
-  async openTicketDetail(details) {
+  async openTicketDetail(currentTicketSnippet: any, currentState: any) {
     const modal = await this.modalController.create({
       component: TicketDetailComponent,
       componentProps: {
-        details,
-        completedBy: this.data.completedBy,
-        states: this.data.states,
+        currentTicketSnippet,
+        currentState,
+        completedBy: this.boardData.completedBy,
+        allStates: this.boardData.states
       }
     });
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data.saveTicket) {
-      if (details.ticket.id ) {
+    if (data && data.saveTicket) {
+      if (currentTicketSnippet.id) {
         // updating a ticket which already exists
-        this.boardService.updateTicketSnippet(this.data.id, details.ticket.id, details.state.id, data.ticketDetails);
+        this.boardService.updateTicketSnippet(
+          this.boardData.id,
+          currentTicketSnippet.id,
+          currentState.id,
+          data.ticketFormValue
+        );
       } else {
-        this.boardService.addTicketSnippet(this.data.id, details.state.id, data.ticketDetails);
+        this.boardService.addTicketSnippet(
+          this.boardData.id,
+          currentState.id,
+          data.ticketFormValue
+        );
       }
     }
-    return console.log(data);
   }
 
   // TODO  delete this
   dummyTickets() {
-    this.boardService.makeDummyTickets(this.data.id);
+    this.boardService.makeDummyTickets(this.boardData.id);
   }
 }

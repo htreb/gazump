@@ -1,18 +1,18 @@
 <ng-container [formGroup]="ticketForm">
   <ion-header no-border>
-    <ion-toolbar mode='md'>
+    <ion-toolbar mode="md">
       <ion-buttons slot="start">
         <ion-button (click)="closePage()">
           <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-badge [color]="details.state.color" slot='end' class='ion-margin'>
-        {{ details.state.title | uppercase }}
+      <ion-badge [color]="currentState.color" slot="end" class="ion-margin">
+        {{ currentState.title | uppercase }}
       </ion-badge>
       <!-- <ion-buttons slot="end">
         <ion-button (click)="stateSelect.open($event)">
-          <ion-badge [color]="details.state.color">
-            {{ details.state.title | uppercase }}
+          <ion-badge [color]="currentState.color">
+            {{ currentState.title | uppercase }}
           </ion-badge>
           <ion-select
             #stateSelect
@@ -21,7 +21,7 @@
             class="state-select"
             formControlName="state"
           >
-            <ion-select-option *ngFor="let state of states" class='state-option' [value]="state.state">{{ state.title }}</ion-select-option>
+            <ion-select-option *ngFor="let state of allStates" class='state-option' [value]="state.state">{{ state.title }}</ion-select-option>
           </ion-select>
         </ion-button>
       </ion-buttons> -->
@@ -60,8 +60,12 @@
           >
         </ion-select>
       </ion-item>
-      <div class="chips ion-padding"
-        *ngIf="this.ticketForm.get('completedBy').value && this.ticketForm.get('completedBy').value.length"
+      <div
+        class="chips ion-padding"
+        *ngIf="
+          this.ticketForm.get('completedBy').value &&
+          this.ticketForm.get('completedBy').value.length
+        "
       >
         <ion-chip
           *ngFor="let person of this.ticketForm.get('completedBy').value"
@@ -74,20 +78,31 @@
     </div>
 
     <ion-list>
-      <ion-item lines='none'>
+      <ion-item lines="none">
         <ion-label>
-            Linked chats
+          Linked chats
         </ion-label>
-        <app-tip slot="end" [text]='linkedChatsTip'></app-tip>
+        <app-tip slot="end" [text]="linkedChatsTip"></app-tip>
       </ion-item>
     </ion-list>
   </ion-content>
 
-  <ion-footer no-border class='footer-buttons'>
-    <ion-button (click)="closePage()" class='ion-margin footer-button' fill='clear' color='danger'>
+  <ion-footer no-border class="footer-buttons">
+    <ion-button
+      (click)="closePage()"
+      class="ion-margin footer-button"
+      fill="clear"
+      color="danger"
+    >
       Close
     </ion-button>
-    <ion-button (click)="closePage(true)" class='ion-margin footer-button' fill='clear' strong='true' color='success'>
+    <ion-button
+      (click)="closePage(true)"
+      class="ion-margin footer-button"
+      fill="clear"
+      strong="true"
+      color="success"
+    >
       Save
     </ion-button>
   </ion-footer>
