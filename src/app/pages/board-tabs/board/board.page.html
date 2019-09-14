@@ -24,11 +24,11 @@
       </ion-toolbar>
     </ion-header>
     <div
-      *ngIf="(data?.tickets && data.tickets[column.state]) || [] as tickets"
+      *ngIf="(data?.tickets && data.tickets[column.id]) || [] as tickets"
       cdkDropList
-      id="{{ data.id | lowercase }}{{ column.state }}"
+      id="{{ data.id | lowercase }}{{ column.id }}"
       [cdkDropListConnectedTo]="getColumnIds()"
-      [cdkDropListData]="{ state: column.state, tickets: tickets }"
+      [cdkDropListData]="{ stateId: column.id, tickets: tickets }"
       (cdkDropListDropped)="ticketDrop($event)"
       class="ticket-drop-zone"
     >
@@ -60,7 +60,7 @@
     </ion-footer>
   </ion-card>
 
-  <ion-card button type="md" class="column add" color="light">
+  <ion-card button type="md" class="column add" color="light" (click)="dummyTickets()">
     <ion-icon name="add"></ion-icon>
   </ion-card>
 </div>

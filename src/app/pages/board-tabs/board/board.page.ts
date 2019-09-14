@@ -38,13 +38,13 @@ export class BoardPage implements OnInit {
   getColumnIds() {
     const ids = [];
     if (this.data.states) {
-      this.data.states.forEach(s => ids.push(`${this.data.id.toLowerCase()}${s.state}`));
+      this.data.states.forEach(s => ids.push(`${this.data.id.toLowerCase()}${s.id}`));
     }
     return ids;
   }
 
   columTrackBy(index, column) {
-    return column.state;
+    return column.id;
   }
 
   ticketTrackBy(index, ticket) {
@@ -96,10 +96,10 @@ export class BoardPage implements OnInit {
         event.previousIndex,
         event.currentIndex
       );
-      updatedTickets[`tickets.${event.previousContainer.data.state}`] =
+      updatedTickets[`tickets.${event.previousContainer.data.stateId}`] =
         event.previousContainer.data.tickets;
     }
-    updatedTickets[`tickets.${event.container.data.state}`] =
+    updatedTickets[`tickets.${event.container.data.stateId}`] =
       event.container.data.tickets;
 
     this.updateDb(updatedTickets);
@@ -108,11 +108,23 @@ export class BoardPage implements OnInit {
   async openTicketDetail(details) {
     const modal = await this.modalController.create({
       component: TicketDetailComponent,
-      componentProps: { details, completedBy: this.data.completedBy, states: this.data.states }
+      componentProps: {
+        details,
+        completedBy: this.data.completedBy,
+        states: this.data.states,
+      }
     });
-
     await modal.present();
+
     const { data } = await modal.onWillDismiss();
+    if (data.saveTicket) {
+      if (details.ticket.id ) {
+        // updating a ticket which already exists
+        this.boardService.updateTicketSnippet(this.data.id, details.ticket.id, details.state.id, data.ticketDetails);
+      } else {
+        this.boardService.addTicketSnippet(this.data.id, details.state.id, data.ticketDetails);
+      }
+    }
     return console.log(data);
   }
 

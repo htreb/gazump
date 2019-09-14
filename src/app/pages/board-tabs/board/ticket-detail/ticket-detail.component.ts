@@ -27,9 +27,10 @@ export class TicketDetailComponent implements OnInit {
     this.ticketForm.patchValue(this.details.ticket);
   }
 
-  closePage() {
+  closePage(saveTicket = false) {
     this.modalCtrl.dismiss({
-      message: this.ticketForm.value
+      saveTicket,
+      ticketDetails: this.ticketForm.value
     });
   }
 
