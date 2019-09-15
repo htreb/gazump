@@ -20,13 +20,15 @@
   <ng-container *ngIf="!allBoards.loading; else loading">
     <ion-content *ngIf="allBoards.length; else noBoards">
 
+      <!-- ion segments don't want to auto select, this does it -->
+      <ng-container *ngIf="!currentBoard && setCurrentBoard(allBoards)"></ng-container>
+
       <app-board
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
         [boardData]='board'
         [showing]='board.id === currentBoard?.id'
       >
       </app-board>
-
     </ion-content>
 
     <ion-footer>
@@ -35,7 +37,7 @@
           *ngFor="let board of allBoards; trackBy: boardTrackBy"
           [value]="board"
           mode="ios"
-          [checked]='!currentBoard || board.id === currentBoard.id'
+          [checked]='board.id === currentBoard?.id'
         >
           <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
           <ion-label>{{ board.title }}</ion-label>

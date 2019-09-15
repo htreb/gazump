@@ -23,6 +23,11 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     this.boardService.setGroup(groupId); // TODO set this when navigating on the list-groups page
   }
 
+  setCurrentBoard(allBoards) {
+    this.currentBoard = allBoards[0];
+    return false;
+  }
+
   segmentChanged(ev) {
     this.currentBoard = ev.detail.value;
   }
