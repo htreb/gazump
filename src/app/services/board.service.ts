@@ -12,7 +12,7 @@ import { GroupService } from './group.service';
 })
 export class BoardService {
   private boardsSub: Subscription;
-  private allBoardsSubject = new BehaviorSubject<any>({ loading: true });
+  public allBoardsSubject = new BehaviorSubject<any>({ loading: true });
 
   constructor(
     private groupService: GroupService,
@@ -56,18 +56,6 @@ export class BoardService {
     }
     this.allBoardsSubject.next({ loading: true });
     this.boardsSub = null;
-  }
-
-  boardsFromCurrentGroup(boardId = null) {
-    return this.allBoardsSubject.pipe(
-      map(allBoards => {
-        if (!boardId || allBoards.loading) {
-          return allBoards;
-        }
-        // if boardId entered then return just that match not an array
-        return allBoards.filter(b => b.id === boardId)[0];
-      })
-    );
   }
 
   /**

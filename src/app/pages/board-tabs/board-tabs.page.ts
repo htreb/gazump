@@ -12,7 +12,7 @@ import { GroupService } from 'src/app/services/group.service';
 export class BoardTabsPage implements OnInit, OnDestroy {
 
   public currentBoard;
-  public allBoards$: Observable<any> = this.boardService.boardsFromCurrentGroup();
+  public allBoards$: Observable<any> = this.boardService.allBoardsSubject;
 
   constructor(
     private groupService: GroupService,
