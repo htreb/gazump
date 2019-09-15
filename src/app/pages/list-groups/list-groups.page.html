@@ -5,7 +5,6 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ng-template #loading>
   <app-loading></app-loading>
 </ng-template>
@@ -14,27 +13,26 @@
   <app-empty-list [listType]="'groups'"></app-empty-list>
 </ng-template>
 
-
-<ion-content forceOverscroll='false'>
-  <ng-container *ngIf="groups$ | async as groups; else loading">
-    <ng-container *ngIf="groups.length; else noGroups">
+<ng-container *ngIf="groups$ | async as groups">
+  <ng-container *ngIf="!groups.loading; else loading">
+    <ion-content *ngIf="groups.length; else noGroups">
       <ion-list>
         <ion-item
           *ngFor="let group of groups"
           button
+          routerDirection="root"
           [routerLink]="['/groups', group.id]"
         >
-          <ion-text text-wrap>{{ group.title }}</ion-text>
+          <ion-text class="ion-text-wrap">{{ group.title }}</ion-text>
           <ion-note slot='end' color='primary'>{{ group.members.length }} members</ion-note>
         </ion-item>
       </ion-list>
-    </ng-container><!-- check that we have some groups -->
-  </ng-container><!-- fetching all groups -->
+    </ion-content><!-- check that we have some groups -->
+  </ng-container><!-- check we are not loading them still -->
+</ng-container><!-- fetching all groups -->
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button [routerLink]="['create']">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-</ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button [routerLink]="['create']">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

@@ -8,13 +8,14 @@ import { GroupService } from 'src/app/services/group.service';
 })
 export class ListGroupsPage implements OnInit {
 
-  groups$;
+  public groups$;
 
   constructor(
     private groupService: GroupService,
     ) { }
 
   ngOnInit() {
-    this.groups$ = this.groupService.getUsersGroups();
+    this.groupService.subscribeToUsersGroups();
+    this.groups$ = this.groupService.allGroupsSubject.asObservable();
   }
 }

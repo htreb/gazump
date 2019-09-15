@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { GroupService } from 'src/app/services/group.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ToastController } from '@ionic/angular';
-import { ChatService } from 'src/app/services/chat.service';
 import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({

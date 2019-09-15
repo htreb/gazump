@@ -1,52 +1,65 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, map, switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import isEqual from 'lodash.isequal';
+import { GroupService } from './group.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoardService {
-  private groupId: string;
-  private groupSub: Subscription;
-  private currentGroupSubject = new BehaviorSubject<any>({ loading: true });
+  private boardsSub: Subscription;
+  private allBoardsSubject = new BehaviorSubject<any>({ loading: true });
 
-  constructor(private db: AngularFirestore, private auth: AuthService) {}
+  constructor(
+    private groupService: GroupService,
+    private db: AngularFirestore,
+    private auth: AuthService
+  ) {}
 
   /**
-   * sets the currentGroupSubject to all the board documents the current user is a member of
-   * which are under the given groupId
-   * @param id the groupId
+   * subscribes to all the boards the user is member of under the current group
    */
-  setGroup(groupId: string) {
+  subToGroupBoards() {
     // TODO make sure this subscription is cleaning up after itself and unsubscribing when changing groups
-    this.groupSub = this.db
-      .collection('groups')
-      .doc(groupId)
-      .collection('boards', ref =>
-        ref.orderBy(`members.${this.auth.currentUser.value.id}`)
+    if (this.boardsSub) {
+      return;
+    }
+    this.boardsSub = this.groupService.currentGroupSubject
+      .pipe(
+        takeUntil(this.auth.loggedOutSubject),
+        switchMap(group => {
+          if (group.loading || !group.id) {
+            return of(group);
+          }
+          return this.db
+            .collection('groups')
+            .doc(group.id)
+            .collection('boards', ref =>
+              ref.orderBy(`members.${this.auth.currentUser.value.id}`)
+            )
+            .valueChanges({ idField: 'id' });
+        })
       )
-      .valueChanges({ idField: 'id' })
-      .pipe(takeUntil(this.auth.loggedOutSubject))
       .subscribe((boards: any) => {
-        this.groupId = groupId;
-        this.currentGroupSubject.next(boards);
+        this.allBoardsSubject.next(boards);
+        return boards;
       });
   }
 
-  unSubFromGroup() {
-    if (this.groupSub && this.groupSub.unsubscribe) {
-      this.groupSub.unsubscribe();
+  unSubFromGroupBoards() {
+    if (this.boardsSub && this.boardsSub.unsubscribe) {
+      this.boardsSub.unsubscribe();
     }
-    this.currentGroupSubject.next({ loading: true });
-    this.groupId = null;
+    this.allBoardsSubject.next({ loading: true });
+    this.boardsSub = null;
   }
 
   boardsFromCurrentGroup(boardId = null) {
-    return this.currentGroupSubject.pipe(
+    return this.allBoardsSubject.pipe(
       map(allBoards => {
         if (!boardId || allBoards.loading) {
           return allBoards;
@@ -73,7 +86,7 @@ export class BoardService {
     }
     return this.db
       .collection('groups')
-      .doc(this.groupId)
+      .doc(this.groupService.currentGroupId)
       .collection('boards')
       .doc(boardId)
       .update(data);
@@ -89,10 +102,12 @@ export class BoardService {
 
   updateTicketSnippet(boardId: string, newStateId: string, snippet: any) {
     // Find matching board and copy all tickets in all states
-    const matchingBoard = this.currentGroupSubject.value.filter(board => board.id === boardId)[0];
+    const matchingBoard = this.allBoardsSubject.value.filter(
+      board => board.id === boardId
+    )[0];
     const allTickets = Object.assign({}, matchingBoard.tickets);
 
-    // loop all ticket states to find matching ticket id and save it's state and index
+    // loop all ticket states to find matching ticket id and save its state and index
     let currentStateId;
     let currentIndex;
     Object.keys(allTickets).forEach(s => {
@@ -113,11 +128,16 @@ export class BoardService {
 
     // if new state is same as current state then replace ticket with new snippet
     if (currentStateId === newStateId) {
-      const oldSnippet = allTickets[currentStateId].splice(currentIndex, 1, snippet);
+      const oldSnippet = allTickets[currentStateId].splice(
+        currentIndex,
+        1,
+        snippet
+      );
       if (isEqual(oldSnippet[0], snippet)) {
         return Promise.resolve(); // no change to make save a db write
       }
-    } else { // otherwise remove ticket from it's current state and push it to the end of it's new state
+    } else {
+      // otherwise remove ticket from it's current state and push it to the end of it's new state
       allTickets[currentStateId].splice(currentIndex, 1);
       allTickets[newStateId].push(snippet);
       updatedTickets[`tickets.${newStateId}`] = allTickets[currentStateId];
@@ -132,11 +152,13 @@ export class BoardService {
     snippet = { id: this.getId(), ...snippet };
     return this.db
       .collection('groups')
-      .doc(this.groupId)
+      .doc(this.groupService.currentGroupId)
       .collection('boards')
       .doc(boardId)
       .update({
-        [`tickets.${stateId}`]: firebase.firestore.FieldValue.arrayUnion(snippet)
+        [`tickets.${stateId}`]: firebase.firestore.FieldValue.arrayUnion(
+          snippet
+        )
       });
   }
 
@@ -160,15 +182,18 @@ export class BoardService {
     officia deserunt mollit anim id est laborum.`;
 
     const newTickets = {};
-    const matchingBoard = this.currentGroupSubject.value.filter(board => board.id === boardId)[0];
+    const matchingBoard = this.allBoardsSubject.value.filter(
+      board => board.id === boardId
+    )[0];
     matchingBoard.states.map(state => {
       for (let j = 0; j < 6; j++) {
-        newTickets[`tickets.${state.id}`] = newTickets[`tickets.${state.id}`] || [];
+        newTickets[`tickets.${state.id}`] =
+          newTickets[`tickets.${state.id}`] || [];
         newTickets[`tickets.${state.id}`].push({
           title: `${j} ticket ${j}`,
           description: lorem.slice(0, Math.floor(Math.random() * 200) + 30),
           id: this.getId(),
-          completedBy: '',
+          completedBy: ''
         });
       }
     });
