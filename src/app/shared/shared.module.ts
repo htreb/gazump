@@ -8,6 +8,9 @@ import { LoadingComponent } from './loading/loading.component';
 import { EmptyListComponent } from './empty-list/empty-list.component';
 import { TipComponent } from './tip/tip.component';
 import { TextComponent } from './text/text.component';
+import { AutosizeModule } from 'ngx-autosize';
+import { ChatComponent } from './chat/chat.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -19,19 +22,23 @@ import { TextComponent } from './text/text.component';
     EmptyListComponent,
     TipComponent,
     TextComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,
     IonicModule,
     RouterModule,
+    FormsModule,
+    AutosizeModule,
   ],
   exports: [
     SettingsIconComponent,
     LoadingComponent,
     EmptyListComponent,
     TipComponent,
-    TextComponent
+    TextComponent,
+    ChatComponent,
   ],
-  entryComponents: [SettingsListComponent, TextComponent]
+  entryComponents: [SettingsListComponent, TextComponent, ChatComponent]
 })
 export class SharedModule { }

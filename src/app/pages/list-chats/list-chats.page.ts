@@ -1,27 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { ChatService } from 'src/app/services/chat.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { ChatService } from 'src/app/chat.service';
+import { Observable } from 'rxjs';
+import { ModalController } from '@ionic/angular';
+import { ChatComponent } from 'src/app/shared/chat/chat.component';
 
 @Component({
-  selector: 'app-chats',
+  selector: 'app-list-chats',
   templateUrl: './list-chats.page.html',
   styleUrls: ['./list-chats.page.scss'],
 })
-export class ListChatsPage implements OnInit {
+export class ListChatsPage {
 
-  chats$;
+  public chats$: Observable<any> = this.chatService.allChatsSubject;
 
   constructor(
     private chatService: ChatService,
-    private router: Router,
+    private modalController: ModalController,
     ) { }
 
-  ngOnInit() {
-    this.chats$ = this.chatService.getChats();
+  startChat() {
+    console.log('you want to start a chat');
   }
 
-  goToChat(chatId: string) {
-    this.router.navigate([this.router.url, chatId]); // TODO this doesn't seem like the best way to navigate
+  async showChat(chat: any) {
+    const modal = await this.modalController.create({
+      component: ChatComponent,
+      componentProps: {
+        chat,
+      }
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
   }
-
 }

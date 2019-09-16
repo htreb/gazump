@@ -4,45 +4,36 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Chats</ion-title>
+    <app-settings-icon slot='end'></app-settings-icon>
   </ion-toolbar>
 </ion-header>
-
-<ng-template #noChats>
-  <app-empty-list [listType]="'chats'"></app-empty-list>
-</ng-template>
 
 <ng-template #loading>
   <app-loading></app-loading>
 </ng-template>
 
+<ng-template #noChats>
+  <app-empty-list [listType]="'chats'"></app-empty-list>
+</ng-template>
 
-<ion-content forceOverscroll='false'>
-  <ng-container *ngIf="chats$ | async as chats; else loading">
-    <ng-container *ngIf="chats.length; else noChats">
-      <ion-list>
-        <ng-container *ngFor="let chat$ of chats">
-          <ion-item
-            button
-            *ngIf="chat$ | async as chat; else loadingChat"
-            (click)="goToChat(chat.id)"
-          >
-            <ion-text text-wrap>{{ chat.title }}</ion-text>
-            <ion-note slot='end'>{{ chat.users.length }} members</ion-note>
-          </ion-item>
-          <ng-template #loadingChat><!-- display skeleton text while we fetch chat details -->
-            <ion-item>
-              <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-              <ion-skeleton-text animated slot='end' style="width: 10%"></ion-skeleton-text>
-            </ion-item>
-          </ng-template>
-        </ng-container>
-      </ion-list>
+  <ng-container *ngIf="chats$ | async as chats">
+    <ng-container *ngIf="!chats.loading; else loading">
+      <ion-content *ngIf="chats.length; else noChats">
+        <ion-item
+          *ngFor="let chat of chats"
+          button
+          (click)="showChat(chat)"
+        >
+          <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
+          <!-- // TODO make my own pipe for below I use it a bunch -->
+          <ion-note slot='end' color='primary'>{{ (chat.members | keyvalue).length }} members</ion-note>
+        </ion-item>
+      </ion-content>
     </ng-container><!-- check that we have some chats -->
   </ng-container><!-- fetching all chats -->
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button [routerLink]="['create']">
+    <ion-fab-button (click)="startChat()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</ion-content>
