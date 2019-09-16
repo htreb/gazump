@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export interface Page {
   title: string;
   url: string;
+  routerDirection: string;
 }
 
 @Component({
@@ -32,19 +33,23 @@ export class MenuPage implements OnInit {
     this.pages = [
       {
         title: 'Boards',
-        url: `/groups/${groupId}`
+        url: `/groups/${groupId}`,
+        routerDirection: 'forward',
       },
       {
         title: 'Chats',
-        url: `/groups/${groupId}/chats`
+        url: `/groups/${groupId}/chats`,
+        routerDirection: 'forward',
       },
       {
         title: 'Profile', // TODO should this be nested within the group
-        url: `/groups/${groupId}/profile`
+        url: `/groups/${groupId}/profile`,
+        routerDirection: 'forward',
       },
       {
         title: 'Back To Groups',
-        url: '/groups'
+        url: '/groups',
+        routerDirection: 'root',
       },
     ];
   }

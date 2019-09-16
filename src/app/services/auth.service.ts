@@ -45,6 +45,7 @@ export class AuthService {
 
     this.afAuth.authState.subscribe(user => {
       if (!user) {
+        console.log('got no user in the auth service emitting loggedOutSubject...', user);
         this.loggedOutSubject.next();
         // this.loggedOutSubject.complete(); // TODO! ticket #23
       }
@@ -98,7 +99,7 @@ export class AuthService {
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             userName: 'colin' // TODO some way of letting users change their userName
           })
-        ).pipe(
+        ).pipe( // TODO does the set above this not return this info?
           switchMap(() => {
             return this.db
               .doc(`users/${data.user.uid}`)
