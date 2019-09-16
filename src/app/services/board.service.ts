@@ -17,8 +17,10 @@ export class BoardService {
   constructor(
     private groupService: GroupService,
     private db: AngularFirestore,
-    private auth: AuthService
-  ) {}
+    private auth: AuthService,
+  ) {
+    this.subToGroupBoards();
+  }
 
   /**
    * subscribes to all the boards the user is member of under the current group
@@ -32,9 +34,13 @@ export class BoardService {
       .pipe(
         takeUntil(this.auth.loggedOutSubject),
         switchMap(group => {
-          if (group.loading || !group.id) {
+          if (group.loading) {
             return of(group);
           }
+          if (!group.id) {
+            return of([]);
+          }
+          this.allBoardsSubject.next({ loading: true });
           return this.db
             .collection('groups')
             .doc(group.id)
@@ -46,7 +52,6 @@ export class BoardService {
       )
       .subscribe((boards: any) => {
         this.allBoardsSubject.next(boards);
-        return boards;
       });
   }
 

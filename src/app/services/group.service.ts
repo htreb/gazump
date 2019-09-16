@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
+import isEqual from 'lodash.isequal';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,20 @@ export class GroupService {
   private groupsSub: Subscription;
   public allGroupsSubject = new BehaviorSubject<any>({ loading: true });
 
-  constructor(private db: AngularFirestore, private auth: AuthService) {}
+  constructor(
+    private db: AngularFirestore,
+    private auth: AuthService,
+    private router: Router
+  ) {
+    // ugly way to keep in sync with the router from a service, activatedRoute doesn't work from here.
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((events: NavigationEnd) => {
+        const urlSegments = events.urlAfterRedirects.split('/');
+        const groupId = urlSegments[urlSegments.indexOf('groups') + 1];
+        this.setCurrentGroup(groupId);
+      });
+  }
 
   get currentGroupId() {
     return this.currentGroupSubject.value.id;
@@ -46,7 +61,10 @@ export class GroupService {
     }
     this.groupsSub = null;
     this.allGroupsSubject.next({ loading: true });
+    this.unSubFromCurrentGroup();
+  }
 
+  unSubFromCurrentGroup() {
     if (this.currentGroupSub && this.currentGroupSub.unsubscribe) {
       this.currentGroupSub.unsubscribe();
     }
@@ -55,15 +73,24 @@ export class GroupService {
   }
 
   setCurrentGroup(id: any) {
+    // just to be sure
     this.subscribeToUsersGroups();
-    this.currentGroupSub = this.allGroupsSubject
-      .pipe(takeUntil(this.auth.loggedOutSubject))
-      .subscribe(allGroups => {
-        if (!allGroups.loading) {
-          const matchingGroup = allGroups.filter(group => group.id === id)[0];
-          this.currentGroupSubject.next(matchingGroup);
-        }
-      });
+    // if no id 'i.e' nav-ing back to list groups. then do not clear the currentGroupSubject
+    // or it will be another db read and slow down coming back to the boards for the same group.
+    // if we're not changing groups just let it be.
+    if (id && id !== this.currentGroupId) {
+      this.currentGroupSub = this.allGroupsSubject
+        .pipe(takeUntil(this.auth.loggedOutSubject))
+        .subscribe(allGroups => {
+          if (!allGroups.loading) {
+            const matchingGroup = allGroups.filter(group => group.id === id)[0] || {};
+            // only emit a change if we actually have a different group.
+            if (!isEqual(this.currentGroupSubject.value, matchingGroup)) {
+              this.currentGroupSubject.next(matchingGroup);
+            }
+          }
+        });
+    }
   }
 
   /**
