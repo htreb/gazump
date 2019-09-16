@@ -111,7 +111,9 @@ function CSSTextGenerator(colors, fromStorage = false) {
     --ion-tab-bar-color: ${dark};
     --ion-item-color: ${contrast(light).hex()};
     --ion-item-background: ${light};
-    --ion-item-background-activated: ${contrast(light).hex()};
+    --ion-item-background-hover: ${contrast(light, tintRatio).hex()};
+    --ion-item-background-focused: ${contrast(light, tintRatio).hex()};
+    --ion-item-background-activated: ${light};
 
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${Color(primary).rgb().array()};
