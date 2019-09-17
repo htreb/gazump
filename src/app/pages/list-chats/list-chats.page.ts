@@ -22,11 +22,11 @@ export class ListChatsPage {
     console.log('you want to start a chat');
   }
 
-  async showChat(chat: any) {
+  async showChat(chatId: string) {
     const modal = await this.modalController.create({
       component: ChatComponent,
       componentProps: {
-        chat,
+        chatId,
       }
     });
     await modal.present();

@@ -1,102 +1,82 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Chat Name</ion-title>
-    <app-settings-icon slot='end'></app-settings-icon>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="chat$ | async as chat">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-button (click)="closePage()">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>{{ chat.title }}</ion-title>
+      <app-settings-icon slot='end'></app-settings-icon>
+    </ion-toolbar>
+  </ion-header>
+  <ng-template #noMessages>
+    <!-- TODO this message doesn't make sense here -->
+    <app-empty-list [listType]="'messages'"></app-empty-list>
+  </ng-template>
+  <ion-content
+    [scrollEvents]="true"
+    (ionScrollEnd)="scrollEnd($event)"
+  >
+    <ion-grid class="ion-padding">
+      <ng-container *ngIf="getMessages(chat) as messages; else noMessages">
+        <ion-row *ngFor="let message of messages; trackBy: messageTrackBy">
+          <ion-col
+            size="9"
+            size-md="6"
+            *ngIf="message.from !== currentUserId"
+            class="message other-message"
+          >
+            <div class='name'>{{ message.from }}</div>
+            <div class='message-text'>{{ message.message }}
+              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+            </div>
+          </ion-col>
 
-
-<ng-template #loading>
-  <app-loading></app-loading>
-</ng-template>
-
-<ng-template #noMessages>
-  <!-- TODO this message doesn't make sense here -->
-  <app-empty-list [listType]="'messages'"></app-empty-list>
-</ng-template>
-
-
-<ion-content>
-
-  <ion-grid class="ion-padding">
-
-
-    <ng-container *ngIf="messages$ | async as messages">
-      <ng-container *ngIf="!messages.loading; else loading">
-        <ng-container *ngIf="messages.length; else noMessages">
-
-          <ion-row *ngFor="let message of messages">
-
-            <ion-col
-              size="9"
-              size-md="6"
-              *ngIf="message.from !== currentUserId"
-              class="message other-message"
-            >
-              <div class='name'>{{ message.user }}</div>
-              <div class='message-text'>{{ message.msg }}
-                <ion-img *ngIf="message.file"  [src]="message.file"></ion-img>
-              </div>
-            </ion-col>
-
-
-            <ion-col
-              offset="3"
-              offset-md="6"
-              size="9"
-              size-md="6"
-              *ngIf="message.from === currentUserId"
-              class="message my-message"
-            >
-              <div class='name'>{{ message.user }}</div>
-              <div class='message-text'>{{ message.msg }}
-                <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
-              </div>
-            </ion-col>
-
-          </ion-row>
-
-
-        </ng-container>
+          <ion-col
+            offset="3"
+            offset-md="6"
+            size="9"
+            size-md="6"
+            *ngIf="message.from === currentUserId"
+            class="message my-message"
+          >
+            <div class='name'>{{ message.from }}</div>
+            <div class='message-text'>{{ message.message }}
+              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+            </div>
+          </ion-col>
+        </ion-row>
       </ng-container>
-    </ng-container>
+    </ion-grid>
+  </ion-content>
 
-
-
-  </ion-grid>
-
-  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="sendFile()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab> -->
-</ion-content>
-
-<ion-footer class="ion-padding">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button
-        (click)="linkSomething()"
+  <ion-footer>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button
+          (click)="linkSomething()"
+          color="primary"
+        >
+          <ion-icon slot="icon-only" name="link"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-textarea
+        (keyup.enter)="sendMessage()"
+        [(ngModel)]="message"
+        class="ion-no-margin"
+        autosize
       >
-        <ion-icon slot="icon-only" name="link"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-    <ion-textarea
-      (keyup.enter)="sendMessage()"
-      [(ngModel)]="message"
-      autosize
-    >
-    </ion-textarea>
-
-    <ion-buttons slot="end">
-      <ion-button
-        (click)="sendMessage()"
-        [disabled]='!message'
-      >
-        <ion-icon slot="icon-only" name="send"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-
-  </ion-toolbar>
-</ion-footer>
+      </ion-textarea>
+      <ion-buttons slot="end">
+        <ion-button
+          (click)="sendMessage()"
+          color="primary"
+          [disabled]='!message'
+        >
+          <ion-icon slot="icon-only" name="send"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</ng-container>

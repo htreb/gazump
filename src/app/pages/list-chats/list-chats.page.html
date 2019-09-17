@@ -22,7 +22,7 @@
         <ion-item
           *ngFor="let chat of chats"
           button
-          (click)="showChat(chat)"
+          (click)="showChat(chat.id)"
         >
           <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
           <!-- // TODO make my own pipe for below I use it a bunch -->
