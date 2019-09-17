@@ -7,55 +7,54 @@
         </ion-button>
       </ion-buttons>
       <ion-title>{{ chat.title }}</ion-title>
-      <app-settings-icon slot='end'></app-settings-icon>
+      <app-settings-icon slot="end"></app-settings-icon>
     </ion-toolbar>
   </ion-header>
   <ng-template #noMessages>
     <!-- TODO this message doesn't make sense here -->
     <app-empty-list [customMessage]="'No messages'"></app-empty-list>
   </ng-template>
-  <ion-content
-    [scrollEvents]="true"
-    (ionScrollEnd)="scrollEnd($event)"
-  >
-    <ion-grid *ngIf="getMessages(chat) as messages; else noMessages" class="ion-padding message-area">
-        <ion-row *ngFor="let message of messages; trackBy: messageTrackBy">
-          <ion-col
-            size="9"
-            size-md="6"
-            *ngIf="message.from !== currentUserId"
-            class="message other-message"
-          >
-            <div class='name'>{{ message.from }}</div>
-            <div class='message-text'>{{ message.message }}
-              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
-            </div>
-          </ion-col>
+  <ion-content [scrollEvents]="true" (ionScrollEnd)="scrollEnd($event)">
+    <ion-grid
+      *ngIf="getMessages(chat) as messages; else noMessages"
+      class="ion-padding message-area"
+    >
+      <ion-row *ngFor="let message of messages; trackBy: messageTrackBy">
+        <ion-col
+          size="9"
+          size-md="6"
+          *ngIf="message.from !== currentUserId"
+          class="message other-message"
+        >
+          <div class="name">{{ message.from }}</div>
+          <div class="message-text">
+            {{ message.message }}
+            <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+          </div>
+        </ion-col>
 
-          <ion-col
-            offset="3"
-            offset-md="6"
-            size="9"
-            size-md="6"
-            *ngIf="message.from === currentUserId"
-            class="message my-message"
-          >
-            <div class='name'>{{ message.from }}</div>
-            <div class='message-text'>{{ message.message }}
-              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
-            </div>
-          </ion-col>
-        </ion-row>
+        <ion-col
+          offset="3"
+          offset-md="6"
+          size="9"
+          size-md="6"
+          *ngIf="message.from === currentUserId"
+          class="message my-message"
+        >
+          <div class="name">{{ message.from }}</div>
+          <div class="message-text">
+            {{ message.message }}
+            <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+          </div>
+        </ion-col>
+      </ion-row>
     </ion-grid>
   </ion-content>
 
   <ion-footer>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-button
-          (click)="linkSomething()"
-          color="primary"
-        >
+        <ion-button (click)="linkSomething()" color="primary">
           <ion-icon slot="icon-only" name="link"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -70,7 +69,7 @@
         <ion-button
           (click)="sendMessage()"
           color="primary"
-          [disabled]='!message'
+          [disabled]="!message"
         >
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>
