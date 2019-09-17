@@ -12,14 +12,13 @@
   </ion-header>
   <ng-template #noMessages>
     <!-- TODO this message doesn't make sense here -->
-    <app-empty-list [listType]="'messages'"></app-empty-list>
+    <app-empty-list [customMessage]="'No messages'"></app-empty-list>
   </ng-template>
   <ion-content
     [scrollEvents]="true"
     (ionScrollEnd)="scrollEnd($event)"
   >
-    <ion-grid class="ion-padding">
-      <ng-container *ngIf="getMessages(chat) as messages; else noMessages">
+    <ion-grid *ngIf="getMessages(chat) as messages; else noMessages" class="ion-padding message-area">
         <ion-row *ngFor="let message of messages; trackBy: messageTrackBy">
           <ion-col
             size="9"
@@ -47,7 +46,6 @@
             </div>
           </ion-col>
         </ion-row>
-      </ng-container>
     </ion-grid>
   </ion-content>
 

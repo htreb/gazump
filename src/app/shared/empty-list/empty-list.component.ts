@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class EmptyListComponent implements OnInit {
 
   @Input() listType: string;
+  @Input() customMessage: string;
   public message = 'Empty List';
 
   constructor() { }
@@ -15,6 +16,9 @@ export class EmptyListComponent implements OnInit {
   ngOnInit() {
     if (this.listType) {
       this.message = `You are not in any ${this.listType}.`;
+    }
+    if (this.customMessage) {
+      this.message = this.customMessage;
     }
   }
 

@@ -43,7 +43,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     const messages = Object.entries(chat.messages).map(([key, value]) => ({id: key, ...value}));
     // TODO - I need a sort function here to order the messages by
 
-    return false;
     return messages.length ? messages : false;
   }
 
