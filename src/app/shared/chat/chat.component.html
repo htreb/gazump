@@ -51,10 +51,10 @@
                 [ngClass]="{ show: message.createdAt }"
                 class="time-stamp"
                 >{{
-                  message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
+                  message.createdAt?.seconds * 1000 | date: 'h:mma' | lowercase
                 }}</ion-note
               >
-              <ion-text class="name">{{ message.from }}</ion-text>
+              <ion-text class="name">{{ message.senderName }}</ion-text>
             </div>
             <div class="ion-padding text">
               {{ message.message }}
@@ -76,7 +76,7 @@
                 [ngClass]="{ show: message.createdAt }"
                 class="time-stamp"
                 >{{
-                  message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
+                  message.createdAt?.seconds * 1000 | date: 'h:mma' | lowercase
                 }}</ion-note
               >
             </div>

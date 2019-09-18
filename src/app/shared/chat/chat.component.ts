@@ -1,4 +1,10 @@
-import { Component, OnInit, ViewChild, Input, AfterViewChecked } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  Input,
+  AfterViewChecked
+} from '@angular/core';
 import { IonContent, ModalController } from '@ionic/angular';
 import { ChatService } from 'src/app/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -7,10 +13,9 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss'],
+  styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
-
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @Input() chatId;
 
@@ -22,8 +27,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   constructor(
     private auth: AuthService,
     private chatService: ChatService,
-    private modalCtrl: ModalController,
-  ) { }
+    private modalCtrl: ModalController
+  ) {}
 
   ngOnInit() {
     this.chat$ = this.chatService.subToOneChat(this.chatId);
@@ -43,7 +48,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     if (!chat.messages) {
       return false;
     }
-    const messages = Object.entries(chat.messages).map(([key, value]) => ({id: key, ...value}));
+
+    function getSenderName(senderId: string) {
+      return (
+        (chat &&
+          chat.members &&
+          chat.members[senderId] &&
+          chat.members[senderId].name) ||
+        'Unknown'
+      );
+    }
+    const messages = Object.entries(chat.messages).map(([key, value]: any) => ({
+      ...value,
+      id: key,
+      senderName: getSenderName(value.from)
+    }));
     messages.sort((a: any, b: any) => {
       if (!a.createdAt) {
         return 1; // if no createdAt yet then message must be very new.
@@ -67,7 +86,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     // set to false now or it will have already snapped to the bottom before async gets the scrollEl.
     this.atBottom = false;
     const scrollEl = await this.content.getScrollElement();
-    this.atBottom  = scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.offsetHeight <= 0;
+    this.atBottom =
+      scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.offsetHeight <= 0;
   }
 
   scrollToBottom(duration = 0) {
