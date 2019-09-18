@@ -1,0 +1,14 @@
+<div class='ticket-picker'>
+  <ion-searchbar (ionChange)="handleInput($event)" class='search-bar'></ion-searchbar>
+  <ion-list class='ion-no-margin ticket-list'>
+    <ion-item *ngFor="let ticket of tickets" [ngClass]="{'hide': ticket.hide}">
+      <ion-label>{{ticket.title}}</ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="ticket.checked"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+  <ion-footer class='submit-footer'>
+    <ion-button expand="full" (click)="submit()">
+      Select
+    </ion-button>
+  </ion-footer>
+</div>

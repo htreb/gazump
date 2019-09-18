@@ -5,10 +5,11 @@ import {
   Input,
   AfterViewChecked
 } from '@angular/core';
-import { IonContent, ModalController } from '@ionic/angular';
+import { IonContent, ModalController, PopoverController } from '@ionic/angular';
 import { ChatService } from 'src/app/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
+import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component';
 
 @Component({
   selector: 'app-chat',
@@ -27,7 +28,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   constructor(
     private auth: AuthService,
     private chatService: ChatService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private popoverController: PopoverController,
   ) {}
 
   ngOnInit() {
@@ -111,7 +113,13 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  linkSomething() {
-    console.log(`link something`);
+
+  async linkSomething(ev: any) {
+    const popover = await this.popoverController.create({
+      component: TicketPickerComponent,
+      event: ev,
+    });
+    return await popover.present();
   }
+
 }

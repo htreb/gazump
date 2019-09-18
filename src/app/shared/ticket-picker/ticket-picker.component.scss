@@ -1,0 +1,14 @@
+.hide {
+    display: none;
+}
+
+.ticket-picker {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+
+    .ticket-list {
+        overflow: scroll;
+        flex: 1;
+    }
+}
