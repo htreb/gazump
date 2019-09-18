@@ -3,6 +3,7 @@ $textBorderRadius: 16px;
 .time-stamp, .date-divider {
     opacity: 0;
     transition: opacity 0.3s ease-out;
+    color: var(--ion-color-light-contrast);
     &.show {
         opacity: 1;
     }
@@ -19,6 +20,7 @@ $textBorderRadius: 16px;
     }
     .text {
         background: var(--ion-color-primary);
+        color: var(--ion-color-primary-contrast);
         border-radius: 0px $textBorderRadius $textBorderRadius $textBorderRadius;
     }
 }
@@ -32,6 +34,7 @@ $textBorderRadius: 16px;
     }
     .text {
         background: var(--ion-color-medium);
+        color: var(--ion-color-medium-contrast);
         border-radius: $textBorderRadius 0px $textBorderRadius $textBorderRadius;
     }
 }

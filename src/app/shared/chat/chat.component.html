@@ -18,20 +18,24 @@
       *ngIf="getMessages(chat) as messages; else noMessages"
       class="message-area ion-no-padding"
     >
-      <ng-container *ngFor="let message of messages; let i = index; trackBy: messageTrackBy">
-
+      <ng-container
+        *ngFor="let message of messages; let i = index; trackBy: messageTrackBy"
+      >
         <ion-item-divider
-          *ngIf="i === 0 ||
-          (message.createdAt && messages[i-1].createdAt) &&
-          ((message.createdAt.seconds * 1000 | date: 'd MMMM y') !==
-          (messages[i-1].createdAt.seconds * 1000 | date: 'd MMMM y'))"
-          sticky= true;
-          class='date-divider'
-          [ngClass]="{ 'show': message.createdAt }"
+          *ngIf="
+            i === 0 ||
+            (message.createdAt &&
+              messages[i - 1].createdAt &&
+              (message.createdAt.seconds * 1000 | date: 'd MMMM y') !==
+                (messages[i - 1].createdAt.seconds * 1000 | date: 'd MMMM y'))
+          "
+          sticky="true;"
+          class="date-divider"
+          [ngClass]="{ show: message.createdAt }"
         >
-            <ion-label>
-              {{ message.createdAt?.seconds * 1000 | date: 'd MMMM y' }}
-            </ion-label>
+          <ion-label>
+            {{ message.createdAt?.seconds * 1000 | date: 'd MMMM y' }}
+          </ion-label>
         </ion-item-divider>
 
         <ion-row class="ion-padding-horizontal">
