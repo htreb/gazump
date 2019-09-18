@@ -40,8 +40,19 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   getMessages(chat: any) {
+    if (!chat.messages) {
+      return false;
+    }
     const messages = Object.entries(chat.messages).map(([key, value]) => ({id: key, ...value}));
-    // TODO - I need a sort function here to order the messages by
+    messages.sort((a: any, b: any) => {
+      if (!a.createdAt) {
+        return 1; // if no createdAt yet then message must be very new.
+      }
+      if (!b.createdAt) {
+        return -1;
+      }
+      return a.createdAt.seconds - b.createdAt.seconds;
+    });
 
     return messages.length ? messages : false;
   }
@@ -67,6 +78,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   async sendMessage() {
     const msg = this.message; // save the message so can reload it if it fails to send
+    if (!this.message.trim()) {
+      // if no message don't try to send it
+      return;
+    }
     this.message = ''; // clear message straight away to keep app responsive
     try {
       await this.chatService.addChatMessage(this.chatId, msg);

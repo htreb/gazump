@@ -11,7 +11,6 @@
     </ion-toolbar>
   </ion-header>
   <ng-template #noMessages>
-    <!-- TODO this message doesn't make sense here -->
     <app-empty-list [customMessage]="'No messages'"></app-empty-list>
   </ng-template>
   <ion-content [scrollEvents]="true" (ionScrollEnd)="scrollEnd($event)">
@@ -25,24 +24,31 @@
           size-md="6"
           *ngIf="message.from !== currentUserId"
           class="message other-message"
+          [id]="message.id"
         >
-          <div class="name">{{ message.from }}</div>
-          <div class="message-text">
+          <div class="details">
+            <ion-note [ngClass]="{'show': message.createdAt}" class="time-stamp">{{ message.createdAt?.seconds * 1000 | date:'h:mmaa' | lowercase }}</ion-note>
+            <ion-text class="name">{{ message.from }}</ion-text>
+          </div>
+            <div class="ion-padding text">
             {{ message.message }}
             <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
           </div>
         </ion-col>
-
+        
         <ion-col
-          offset="3"
-          offset-md="6"
-          size="9"
-          size-md="6"
-          *ngIf="message.from === currentUserId"
-          class="message my-message"
+        offset="3"
+        offset-md="6"
+        size="9"
+        size-md="6"
+        *ngIf="message.from === currentUserId"
+        class="message my-message"
+        [id]="message.id"
         >
-          <div class="name">{{ message.from }}</div>
-          <div class="message-text">
+          <div class="details">
+            <ion-note [ngClass]="{'show': message.createdAt}" class="time-stamp">{{ message.createdAt?.seconds * 1000 | date:'h:mmaa' | lowercase }}</ion-note>
+          </div>
+            <div class="ion-padding text">
             {{ message.message }}
             <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
           </div>
@@ -59,9 +65,8 @@
         </ion-button>
       </ion-buttons>
       <ion-textarea
-        (keyup.enter)="sendMessage()"
         [(ngModel)]="message"
-        class="ion-no-margin"
+        class="ion-no-margin type-message-area"
         autosize
       >
       </ion-textarea>
@@ -69,7 +74,7 @@
         <ion-button
           (click)="sendMessage()"
           color="primary"
-          [disabled]="!message"
+          [disabled]="!message.trim()"
         >
           <ion-icon slot="icon-only" name="send"></ion-icon>
         </ion-button>

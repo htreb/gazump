@@ -1,0 +1,42 @@
+$textBorderRadius: 16px;
+
+.time-stamp {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    &.show {
+        opacity: 1;
+    }
+}
+.text {
+    white-space: pre;
+}
+.other-message {
+    .details {
+        text-align: left;
+        .name {
+            margin-left: 16px;
+        }
+    }
+    .text {
+        background: var(--ion-color-primary);
+        border-radius: 0px $textBorderRadius $textBorderRadius $textBorderRadius;
+    }
+}
+
+.my-message {
+    .details {
+        text-align: right;
+        .time-stamp {
+            margin-left: 16px;
+        }
+    }
+    .text {
+        background: var(--ion-color-medium);
+        border-radius: $textBorderRadius 0px $textBorderRadius $textBorderRadius;
+    }
+}
+
+.type-message-area {
+    max-height: 50vh;
+    overflow: scroll;
+}
