@@ -33,7 +33,7 @@
           class="date-divider"
           [ngClass]="{ show: message.createdAt }"
         >
-          <ion-label>
+          <ion-label class="date-label">
             {{ message.createdAt?.seconds * 1000 | date: 'd MMMM y' }}
           </ion-label>
         </ion-item-divider>
