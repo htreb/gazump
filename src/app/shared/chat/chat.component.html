@@ -16,56 +16,73 @@
   <ion-content [scrollEvents]="true" (ionScrollEnd)="scrollEnd($event)">
     <ion-grid
       *ngIf="getMessages(chat) as messages; else noMessages"
-      class="ion-padding message-area"
+      class="message-area ion-no-padding"
     >
-      <ion-row *ngFor="let message of messages; trackBy: messageTrackBy">
-        <ion-col
-          size="9"
-          size-md="6"
-          *ngIf="message.from !== currentUserId"
-          class="message other-message"
-          [id]="message.id"
-        >
-          <div class="details">
-            <ion-note
-              [ngClass]="{ show: message.createdAt }"
-              class="time-stamp"
-              >{{
-                message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
-              }}</ion-note
-            >
-            <ion-text class="name">{{ message.from }}</ion-text>
-          </div>
-          <div class="ion-padding text">
-            {{ message.message }}
-            <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
-          </div>
-        </ion-col>
+      <ng-container *ngFor="let message of messages; let i = index; trackBy: messageTrackBy">
 
-        <ion-col
-          offset="3"
-          offset-md="6"
-          size="9"
-          size-md="6"
-          *ngIf="message.from === currentUserId"
-          class="message my-message"
-          [id]="message.id"
+        <ion-item-divider
+          *ngIf="i === 0 ||
+          (message.createdAt && messages[i-1].createdAt) &&
+          ((message.createdAt.seconds * 1000 | date: 'd MMMM y') !==
+          (messages[i-1].createdAt.seconds * 1000 | date: 'd MMMM y'))"
+          sticky= true;
+          class='date-divider'
+          [ngClass]="{ 'show': message.createdAt }"
         >
-          <div class="details">
-            <ion-note
-              [ngClass]="{ show: message.createdAt }"
-              class="time-stamp"
-              >{{
-                message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
-              }}</ion-note
-            >
-          </div>
-          <div class="ion-padding text">
-            {{ message.message }}
-            <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
-          </div>
-        </ion-col>
-      </ion-row>
+            <ion-label>
+              {{ message.createdAt?.seconds * 1000 | date: 'd MMMM y' }}
+            </ion-label>
+        </ion-item-divider>
+
+        <ion-row class="ion-padding-horizontal">
+          <ion-col
+            size="9"
+            size-md="6"
+            *ngIf="message.from !== currentUserId"
+            class="message other-message"
+            [id]="message.id"
+          >
+            <div class="details">
+              <ion-note
+                [ngClass]="{ show: message.createdAt }"
+                class="time-stamp"
+                >{{
+                  message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
+                }}</ion-note
+              >
+              <ion-text class="name">{{ message.from }}</ion-text>
+            </div>
+            <div class="ion-padding text">
+              {{ message.message }}
+              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+            </div>
+          </ion-col>
+
+          <ion-col
+            offset="3"
+            offset-md="6"
+            size="9"
+            size-md="6"
+            *ngIf="message.from === currentUserId"
+            class="message my-message"
+            [id]="message.id"
+          >
+            <div class="details">
+              <ion-note
+                [ngClass]="{ show: message.createdAt }"
+                class="time-stamp"
+                >{{
+                  message.createdAt?.seconds * 1000 | date: 'h:mmaa' | lowercase
+                }}</ion-note
+              >
+            </div>
+            <div class="ion-padding text">
+              {{ message.message }}
+              <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ng-container>
     </ion-grid>
   </ion-content>
 

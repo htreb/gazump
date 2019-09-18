@@ -1,6 +1,6 @@
 $textBorderRadius: 16px;
 
-.time-stamp {
+.time-stamp, .date-divider {
     opacity: 0;
     transition: opacity 0.3s ease-out;
     &.show {
@@ -8,7 +8,7 @@ $textBorderRadius: 16px;
     }
 }
 .text {
-    white-space: pre;
+    white-space: pre-wrap;
 }
 .other-message {
     .details {
