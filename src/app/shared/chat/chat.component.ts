@@ -118,6 +118,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     const popover = await this.popoverController.create({
       component: TicketPickerComponent,
       event: ev,
+      cssClass: 'ticket-picker',
     });
     await popover.present();
     const { data } = await popover.onWillDismiss();
