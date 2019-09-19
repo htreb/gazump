@@ -28,6 +28,12 @@ export class GroupService {
         const groupId = urlSegments[urlSegments.indexOf('groups') + 1];
         this.setCurrentGroup(groupId);
       });
+
+    // sometimes get need a group before nav-ing anywhere (filtering tickets on chat page)
+    // so set initial group here.
+    const initialUrlSegments = this.router.url.split('/');
+    const initialGroupId = initialUrlSegments[initialUrlSegments.indexOf('groups') + 1];
+    this.setCurrentGroup(initialGroupId);
   }
 
   get currentGroupId() {
