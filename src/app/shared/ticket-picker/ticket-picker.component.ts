@@ -1,5 +1,8 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+import { BoardService } from 'src/app/services/board.service';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ticket-picker',
@@ -7,66 +10,74 @@ import { PopoverController } from '@ionic/angular';
   styleUrls: ['./ticket-picker.component.scss']
 })
 export class TicketPickerComponent implements OnInit {
-  tickets = [
-    { title: 'Amsterdam', checked: false, hide: false },
-    { title: 'Bogota', checked: false, hide: false },
-    { title: 'Buenos Aires', checked: false, hide: false },
-    { title: 'Cairo', checked: false, hide: false },
-    { title: 'Dhaka', checked: false, hide: false },
-    { title: 'Edinburgh', checked: false, hide: false },
-    { title: 'Geneva', checked: false, hide: false },
-    { title: 'Genoa', checked: false, hide: false },
-    { title: 'Glasglow', checked: false, hide: false },
-    { title: 'Hanoi', checked: false, hide: false },
-    { title: 'Hong Kong', checked: false, hide: false },
-    { title: 'Islamabad', checked: false, hide: false },
-    { title: 'Istanbul', checked: false, hide: false },
-    { title: 'Jakarta', checked: false, hide: false },
-    { title: 'Kiel', checked: false, hide: false },
-    { title: 'Kyoto', checked: false, hide: false },
-    { title: 'Le Havre', checked: false, hide: false },
-    { title: 'Lebanon', checked: false, hide: false },
-    { title: 'Lhasa', checked: false, hide: false },
-    { title: 'Lima', checked: false, hide: false },
-    { title: 'London', checked: false, hide: false },
-    { title: 'Los Angeles', checked: false, hide: false },
-    { title: 'Madrid', checked: false, hide: false },
-    { title: 'Manila', checked: false, hide: false },
-    { title: 'New York', checked: false, hide: false },
-    { title: 'Olympia', checked: false, hide: false },
-    { title: 'Oslo', checked: false, hide: false },
-    { title: 'Panama City', checked: false, hide: false },
-    { title: 'Peking', checked: false, hide: false },
-    { title: 'Philadelphia', checked: false, hide: false },
-    { title: 'San Francisco', checked: false, hide: false },
-    { title: 'Seoul', checked: false, hide: false },
-    { title: 'Taipeh', checked: false, hide: false },
-    { title: 'Tel Aviv', checked: false, hide: false },
-    { title: 'Tokio', checked: false, hide: false },
-    { title: 'Uelzen', checked: false, hide: false },
-    { title: 'Washington', checked: false, hide: false }
-  ];
+  filteredBoards$;
+  searchTerm$ = new BehaviorSubject<string>('');
+  selectedTickets: string[] = [];
 
-  constructor(private popover: PopoverController) {}
+  constructor(
+    private popover: PopoverController,
+    private boardService: BoardService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.filteredBoards$ = combineLatest([
+      this.boardService.allBoardsSubject,
+      this.searchTerm$
+    ]).pipe(
+      map(([allBoards, searchTerm]) => {
+        return this.filterShowingTickets(allBoards, searchTerm);
+      })
+    );
+  }
+
+  updateSearchTerm(searchTerm: string) {
+    this.searchTerm$.next(searchTerm);
+  }
+
+  /**
+   * copies all the current boards
+   * filters to find the tickets which match the search term
+   * if no tickets match in a state, removes the state too,
+   * if no states left, then removes the board as well.
+   * (on a board tickets is an object, states is an array)
+   * @param allBoards from the allBoardsSubject
+   * @param searchTerm from the searchTerm input
+   */
+  filterShowingTickets(allBoards: any, searchTerm: string) {
+    if (allBoards.loading) {
+      return allBoards;
+    }
+    searchTerm = searchTerm.toLowerCase();
+    const boards = JSON.parse(JSON.stringify(allBoards));
+    boards.forEach((board: any) =>
+      Object.keys(board.tickets).forEach((state: string) => {
+        board.tickets[state] = board.tickets[state].filter(
+          (ticket: any) => ticket.title.toLowerCase().indexOf(searchTerm) > -1
+        );
+        if (!board.tickets[state].length) {
+          delete board.tickets[state];
+          board.states = board.states.filter(s => s.id !== state);
+        }
+      })
+    );
+    return boards.filter(b => b.states.length);
+  }
 
   @HostListener('window:resize', ['$event'])
-  closeSettings(ev: any) {
+  closeTicketPicker(ev: any = null, attachTickets = false) {
     if (this.popover) {
-      this.popover.dismiss();
+      this.popover.dismiss({
+        tickets: attachTickets && this.selectedTickets
+      });
     }
   }
 
-  handleInput(event) {
-    const query = event.target.value.toLowerCase();
-    this.tickets.forEach(ticket => {
-      ticket.hide = ticket.title.toLowerCase().indexOf(query) === -1;
-    });
-  }
-
-  submit() {
-    const selected = this.tickets.filter(t => t.checked);
-    console.log('you have finished picking tickets and you chose', selected);
+  ticketSelected(ev, ticket) {
+    if (ev.detail.checked) {
+      this.selectedTickets.push(ticket.id);
+      // remove any duplicates
+      return (this.selectedTickets = [...new Set(this.selectedTickets)]);
+    }
+    this.selectedTickets = this.selectedTickets.filter(t => t !== ticket.id);
   }
 }

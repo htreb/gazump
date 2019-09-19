@@ -1,13 +1,48 @@
-<div class='ticket-picker'>
-  <ion-searchbar (ionChange)="handleInput($event)" class='search-bar'></ion-searchbar>
-  <ion-list class='ion-no-margin ticket-list'>
-    <ion-item *ngFor="let ticket of tickets" [ngClass]="{'hide': ticket.hide}">
-      <ion-label>{{ticket.title}}</ion-label>
-      <ion-checkbox slot="end" [(ngModel)]="ticket.checked"></ion-checkbox>
-    </ion-item>
-  </ion-list>
-  <ion-footer class='submit-footer'>
-    <ion-button expand="full" (click)="submit()">
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+<ng-template #noTickets>
+  <app-empty-list [customMessage]="'No tickets found'"></app-empty-list>
+</ng-template>
+
+<div class="ticket-picker">
+  <ion-searchbar
+    #searchBar
+    (ionChange)="updateSearchTerm(searchBar.value)"
+  ></ion-searchbar>
+
+  <ng-container *ngIf="filteredBoards$ | async as filteredBoards">
+    <ng-container *ngIf="!filteredBoards.loading; else loading">
+      <ion-list
+        *ngIf="filteredBoards.length; else noTickets"
+        class="ion-no-margin ion-no-padding ticket-list"
+      >
+        <ng-container *ngFor="let board of filteredBoards">
+          <ion-item-divider color="medium" sticky="true" class="ion-no-padding">
+            <ion-label class="board-title">{{ board.title }}</ion-label>
+          </ion-item-divider>
+          <ion-list *ngFor="let state of board.states">
+            <ion-item-divider>
+              <ion-label>{{ state.title }}</ion-label>
+            </ion-item-divider>
+            <ion-item *ngFor="let ticket of board.tickets[state.id]">
+              <ion-label>{{ ticket.title }}</ion-label>
+              <ion-checkbox
+                slot="end"
+                (ionChange)="ticketSelected($event, ticket)"
+                [checked]="selectedTickets.indexOf(ticket.id) > -1"
+              >
+              </ion-checkbox>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+      </ion-list>
+    </ng-container>
+  </ng-container>
+
+  <ion-footer class="submit-footer">
+    <ion-button expand="block" (click)="closeTicketPicker($event, true)">
       Select
     </ion-button>
   </ion-footer>
