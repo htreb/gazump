@@ -98,7 +98,7 @@ export class BoardService {
     const matchingBoard = this.allBoardsSubject.value.filter(
       board => board.id === boardId
     )[0];
-    const allTickets = Object.assign({}, matchingBoard.tickets);
+    const allTickets = JSON.parse(JSON.stringify(matchingBoard.tickets));
 
     // loop all ticket states to find matching ticket id and save its state and index
     let currentStateId;
