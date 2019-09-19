@@ -23,6 +23,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   public chat$: Observable<any>;
   public currentUserId = this.auth.currentUser.value.id;
   public message = '';
+  linkedTickets = [];
   private atBottom = true;
 
   constructor(
@@ -99,17 +100,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   async sendMessage() {
-    const msg = this.message; // save the message so can reload it if it fails to send
     if (!this.message.trim()) {
       // if no message don't try to send it
       return;
     }
-    this.message = ''; // clear message straight away to keep app responsive
+    // clear message and tickets straight away to keep app responsive
+    const msg = this.message;
+    const tickets = JSON.parse(JSON.stringify(this.linkedTickets));
+    this.message = '';
+    this.linkedTickets = [];
     try {
-      await this.chatService.addChatMessage(this.chatId, msg);
+      await this.chatService.addChatMessage(this.chatId, msg, tickets);
     } catch (err) {
       console.log('failed to send chat message', err);
       this.message = msg;
+      this.linkedTickets = tickets;
     }
   }
 
@@ -125,6 +130,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     if (data && data.tickets && data.tickets.length) {
       console.log(`Attach these tickets`, data.tickets);
+      this.linkedTickets = data.tickets;
     }
   }
 

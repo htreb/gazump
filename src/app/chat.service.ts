@@ -58,16 +58,26 @@ export class ChatService {
     return `${new Date().getTime()}_${Math.floor(Math.random() * 1000000)}`;
   }
 
-  addChatMessage(chatId: string, message: any) {
+  addChatMessage(chatId: string, message: any, ticketIds: string[] = null) {
+    const messageId = this.getId();
+    const updateObject: any = {
+      [`messages.${messageId}`]: {
+        from: this.auth.currentUser.value.id,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        message
+      }
+    };
+    if (ticketIds) {
+      ticketIds.forEach(ticketId => {
+        updateObject[`linkedTickets.${ticketId}`] = firebase.firestore.FieldValue.arrayUnion({
+          message,
+          messageId
+        });
+      });
+    }
     return this.db
       .collection('chats')
       .doc(chatId)
-      .update({
-        [`messages.${this.getId()}`]: {
-          from: this.auth.currentUser.value.id,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          message
-        }
-      });
+      .update(updateObject);
   }
 }
