@@ -20,20 +20,24 @@ export class GroupService {
     private auth: AuthService,
     private router: Router
   ) {
+    const updateGroupFromUrl = (url: string) => {
+      const urlSegments = url.split('/');
+      const groupsIndex = urlSegments.indexOf('groups');
+      if (groupsIndex > -1) {
+        return this.setCurrentGroup(urlSegments[groupsIndex + 1]);
+      }
+    };
+
     // ugly way to keep in sync with the router from a service, activatedRoute doesn't work from here.
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((events: NavigationEnd) => {
-        const urlSegments = events.urlAfterRedirects.split('/');
-        const groupId = urlSegments[urlSegments.indexOf('groups') + 1];
-        this.setCurrentGroup(groupId);
+        updateGroupFromUrl(events.urlAfterRedirects);
       });
 
-    // sometimes get need a group before nav-ing anywhere (filtering tickets on chat page)
+    // sometimes get need a group before any navigationEnd events (filtering tickets on chat page)
     // so set initial group here.
-    const initialUrlSegments = this.router.url.split('/');
-    const initialGroupId = initialUrlSegments[initialUrlSegments.indexOf('groups') + 1];
-    this.setCurrentGroup(initialGroupId);
+    updateGroupFromUrl(this.router.url);
   }
 
   get currentGroupId() {
@@ -89,7 +93,8 @@ export class GroupService {
         .pipe(takeUntil(this.auth.loggedOutSubject))
         .subscribe(allGroups => {
           if (!allGroups.loading) {
-            const matchingGroup = allGroups.filter(group => group.id === id)[0] || {};
+            const matchingGroup =
+              allGroups.filter(group => group.id === id)[0] || {};
             // only emit a change if we actually have a different group.
             if (!isEqual(this.currentGroupSubject.value, matchingGroup)) {
               this.currentGroupSubject.next(matchingGroup);
