@@ -3,6 +3,7 @@ import { ChatService } from 'src/app/chat.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { ChatComponent } from 'src/app/shared/chat/chat.component';
+import { StartChatComponent } from 'src/app/shared/start-chat/start-chat.component';
 
 @Component({
   selector: 'app-list-chats',
@@ -18,18 +19,23 @@ export class ListChatsPage {
     private modalController: ModalController,
     ) { }
 
-  startChat() {
-    console.log('you want to start a chat');
-  }
-
   async showChat(chatId: string) {
-    const modal = await this.modalController.create({
+    const chatModal = await this.modalController.create({
       component: ChatComponent,
       componentProps: {
         chatId,
       }
     });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
+    await chatModal.present();
+    const { data } = await chatModal.onWillDismiss();
+  }
+
+  async startChat() {
+    const startChatModal = await this.modalController.create({
+      component: StartChatComponent,
+      componentProps: {}
+    });
+    await startChatModal.present();
+    const { data } = await startChatModal.onWillDismiss();
   }
 }

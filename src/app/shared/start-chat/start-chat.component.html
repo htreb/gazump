@@ -1,0 +1,75 @@
+<ng-template #loadingContacts>
+  <app-loading></app-loading>
+</ng-template>
+<ng-template #noContacts>
+  <app-empty-list [customMessage]="'You don\'t have any contacts'"></app-empty-list>
+</ng-template>
+
+
+<ng-container class='ion-margin'>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-button (click)="closePage()">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>New chat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class='ion-padding'>
+    <ion-input
+      [(ngModel)]="chatName"
+      placeholder="Chat name"
+    >
+    </ion-input>
+
+    
+    <ng-container *ngIf="contacts$ | async as contacts">
+      <ng-container *ngIf="!contacts.loading; else loadingContacts">
+        <ion-list *ngIf="contacts.length; else noContacts">
+          <ion-list-header>
+            Pick contacts
+          </ion-list-header>
+          <ion-item *ngFor="let contact of contacts">
+            <ion-label>{{ contact.name }}</ion-label>
+            <ion-checkbox
+              slot="end"
+              (ionChange)="contactSelected($event, contact)"
+              [checked]="selectedContacts.indexOf(contact.id) > -1"
+            >
+            </ion-checkbox>
+          </ion-item>
+
+        </ion-list>
+      </ng-container>
+    </ng-container>
+  </ion-content>
+
+
+
+
+  <ion-footer no-border class="ion-padding footer-buttons">
+    <ion-button
+      (click)="closePage()"
+      class="footer-button"
+      expand="block"
+      fill="outline"
+      color="primary"
+      strong="true"
+    >
+      Cancel
+    </ion-button>
+    <ion-button
+      (click)="closePage(true)"
+      class="footer-button"
+      expand="block"
+      fill="solid"
+      strong="true"
+      color="primary"
+    >
+      Start
+    </ion-button>
+  </ion-footer>
+</ng-container>

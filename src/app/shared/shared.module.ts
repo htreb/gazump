@@ -12,6 +12,7 @@ import { AutosizeModule } from 'ngx-autosize';
 import { ChatComponent } from './chat/chat.component';
 import { FormsModule } from '@angular/forms';
 import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
+import { StartChatComponent } from './start-chat/start-chat.component';
 
 
 
@@ -25,6 +26,7 @@ import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
     TextComponent,
     ChatComponent,
     TicketPickerComponent,
+    StartChatComponent,
   ],
   imports: [
     CommonModule,
@@ -40,7 +42,14 @@ import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
     TipComponent,
     TextComponent,
     ChatComponent,
+    StartChatComponent,
   ],
-  entryComponents: [SettingsListComponent, TextComponent, ChatComponent, TicketPickerComponent]
+  entryComponents: [
+    SettingsListComponent,
+    TextComponent,
+    ChatComponent,
+    TicketPickerComponent,
+    StartChatComponent,
+  ]
 })
 export class SharedModule { }
