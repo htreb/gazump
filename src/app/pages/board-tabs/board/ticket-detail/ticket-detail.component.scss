@@ -23,6 +23,12 @@
     }
 }
 
+.linked-chats {
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
 .footer-buttons {
     display: flex;
 

@@ -1,3 +1,12 @@
+<ng-template #loadingLinkedChats>
+  <app-loading></app-loading>
+</ng-template>
+<ng-template #noLinkedChats>
+  <app-empty-list [customMessage]="'No linked chats'"></app-empty-list>
+</ng-template>
+
+
+
 <ng-container [formGroup]="ticketForm">
   <ion-header no-border>
     <ion-toolbar mode="md">
@@ -77,14 +86,29 @@
       </div>
     </div>
 
-    <ion-list>
+    <ion-list class='ion-padding ion-margin linked-chats'>
       <ion-item lines="none">
         <ion-label>
           Linked chats
         </ion-label>
         <app-tip slot="end" [text]="linkedChatsTip"></app-tip>
       </ion-item>
+      <ng-container *ngIf="linkedChats$ | async as linkedChats">
+        <ng-container *ngIf="!linkedChats.loading; else loadingLinkedChats">
+          <ng-container *ngIf="linkedChats.length; else noLinkedChats">
+            <ion-list *ngFor="let chat of linkedChats">
+              <ion-item-divider sticky='true'>
+                <ion-label>{{ chat.title }}</ion-label>
+              </ion-item-divider>
+              <ion-item *ngFor="let message of chat.linkedTickets[currentTicketSnippet.id]">
+                {{ message.message }}
+              </ion-item>
+            </ion-list>
+          </ng-container>
+        </ng-container>
+      </ng-container>
     </ion-list>
+
   </ion-content>
 
   <ion-footer no-border class="ion-padding footer-buttons">

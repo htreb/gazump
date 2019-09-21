@@ -69,7 +69,9 @@ export class ChatService {
     };
     if (ticketIds) {
       ticketIds.forEach(ticketId => {
-        updateObject[`linkedTickets.${ticketId}`] = firebase.firestore.FieldValue.arrayUnion({
+        updateObject[
+          `linkedTickets.${ticketId}`
+        ] = firebase.firestore.FieldValue.arrayUnion({
           message,
           messageId
         });
@@ -79,5 +81,33 @@ export class ChatService {
       .collection('chats')
       .doc(chatId)
       .update(updateObject);
+  }
+
+  // NOT USED YET
+  // linkTicketsToMessage(chatId: string, message: string, ticketIds: string[]) {
+  //   const updateObject = {};
+  //   ticketIds.forEach(ticketId => {
+  //     updateObject[`linkedTickets.${ticketId}`] = firebase.firestore.FieldValue.arrayUnion({
+  //       message
+  //     });
+  //   });
+  //   return this.db
+  //   .collection('chats')
+  //   .doc(chatId)
+  //   .update(updateObject);
+  // }
+
+  findChatsWhichMentionTicket(ticketId: string) {
+    if (!ticketId) {
+      return [];
+    }
+    return this.allChatsSubject.pipe(
+      map(allChats => {
+        if (allChats.loading) {
+          return allChats;
+        }
+        return allChats.filter(chat => chat.linkedTickets[ticketId]);
+      })
+    );
   }
 }

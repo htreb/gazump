@@ -118,7 +118,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
-
   async linkSomething(ev: any) {
     const popover = await this.popoverController.create({
       component: TicketPickerComponent,
