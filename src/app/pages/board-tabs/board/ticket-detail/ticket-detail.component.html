@@ -97,7 +97,7 @@
         <ng-container *ngIf="!linkedChats.loading; else loadingLinkedChats">
           <ng-container *ngIf="linkedChats.length; else noLinkedChats">
             <ion-list *ngFor="let chat of linkedChats">
-              <ion-item-divider sticky='true' (click)="openChat(chat.id)">
+              <ion-item-divider sticky='true' (click)="openChat(chat.id, [])">
                 <ion-label>{{ chat.title }}</ion-label>
               </ion-item-divider>
               <ion-item

@@ -18,10 +18,10 @@ import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component'
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
-  @Input() chatId: string;
-  @Input() messageIds: string[];
+  @Input() chatId = '';
+  @Input() messageIds: string[] = [];
   @ViewChild(IonContent, { static: false }) content: IonContent;
-  @ViewChildren('chatMessage') messages: any;
+  @ViewChildren('chatMessage') messageElements: any;
 
   public chat$: Observable<any>;
   public currentUserId = this.auth.currentUser.value.id;
@@ -39,18 +39,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.chat$ = this.chatService.subToOneChat(this.chatId);
-    setTimeout( _ => {
-      this.messages.forEach(msg => {
-        if (this.messageIds.indexOf(msg.el.id) > -1) {
-          if (!this.scrolledToHighlightedMessage) {
-            this.scrolledToHighlightedMessage = true;
-            this.atBottom = false;
-            const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (this.content.el.offsetHeight / 2);
-            this.content.scrollToPoint(0, centeredMsgTop, 2000);
+
+    if (this.messageIds.length) {
+      setTimeout( _ => {
+        this.messageElements.forEach(msg => {
+          if (this.messageIds.indexOf(msg.el.id) > -1) {
+            if (!this.scrolledToHighlightedMessage) {
+              this.scrolledToHighlightedMessage = true;
+              this.atBottom = false;
+              const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (this.content.el.offsetHeight / 2);
+              this.content.scrollToPoint(0, centeredMsgTop, 1000);
+            }
           }
-        }
-        });
-    }, 200);
+          });
+      }, 500);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -97,6 +100,11 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   messageTrackBy(index, message) {
     return message.id;
+  }
+
+  newDay(message, messageIndex, messages) {
+    // console.log('newDay', message, messageIndex, messages);
+    return null;
   }
 
   // if user is at bottom then keep screen scrolled to bottom.
