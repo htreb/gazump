@@ -19,18 +19,18 @@
   </ion-header>
 
   <ion-content class='ion-padding'>
-    <ion-input
-      [(ngModel)]="chatName"
-      placeholder="Chat name"
-    >
+    <ion-item>
+      <ion-label position='floating'>Chat name</ion-label>
+      <ion-input [(ngModel)]="chatName">
     </ion-input>
+  </ion-item>
 
     
     <ng-container *ngIf="contacts$ | async as contacts">
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
         <ion-list *ngIf="contacts.length; else noContacts">
           <ion-list-header>
-            Pick contacts
+            members
           </ion-list-header>
           <ion-item *ngFor="let contact of contacts">
             <ion-label>{{ contact.name }}</ion-label>

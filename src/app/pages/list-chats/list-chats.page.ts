@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatService } from 'src/app/chat.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { ChatComponent } from 'src/app/shared/chat/chat.component';
@@ -37,5 +37,6 @@ export class ListChatsPage {
     });
     await startChatModal.present();
     const { data } = await startChatModal.onWillDismiss();
+    console.log('startChat data', data);
   }
 }

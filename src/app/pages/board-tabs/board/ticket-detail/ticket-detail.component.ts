@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ChatService } from 'src/app/chat.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { ChatComponent } from 'src/app/shared/chat/chat.component';
 
 @Component({

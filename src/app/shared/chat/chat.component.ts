@@ -7,7 +7,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import { IonContent, ModalController, PopoverController } from '@ionic/angular';
-import { ChatService } from 'src/app/chat.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
 import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component';
