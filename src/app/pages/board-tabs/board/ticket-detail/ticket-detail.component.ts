@@ -50,6 +50,8 @@ export class TicketDetailComponent implements OnInit {
   async openChat(chatId: string, messageIds?: string[]) {
     const modal = await this.modalCtrl.create({
       component: ChatComponent,
+      cssClass: 'full-screen',
+      showBackdrop: false,
       componentProps: {
         chatId,
         messageIds,

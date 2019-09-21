@@ -44,14 +44,19 @@ ion-popover.tip-popover {
   color: var(--ion-color-dark-contrast);
 }
 
+ion-popover.ticket-picker {
+  --width: 70vw;
+}
+
+ion-modal.full-screen {
+  --height: 100vh;
+  --width: 100vw;
+}
+
 .title { // title for ticket details modal
   textarea {
     --padding-top: 0;
     --padding-bottom: 0;
   }
-}
-
-ion-popover.ticket-picker {
-  --width: 70vw;
 }
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
