@@ -3,7 +3,8 @@ import {
   OnInit,
   ViewChild,
   Input,
-  AfterViewChecked
+  AfterViewChecked,
+  ViewChildren
 } from '@angular/core';
 import { IonContent, ModalController, PopoverController } from '@ionic/angular';
 import { ChatService } from 'src/app/chat.service';
@@ -17,14 +18,17 @@ import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component'
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
+  @Input() chatId: string;
+  @Input() messageIds: string[];
   @ViewChild(IonContent, { static: false }) content: IonContent;
-  @Input() chatId;
+  @ViewChildren('chatMessage') messages: any;
 
   public chat$: Observable<any>;
   public currentUserId = this.auth.currentUser.value.id;
   public message = '';
   linkedTickets = [];
   private atBottom = true;
+  private scrolledToHighlightedMessage = false;
 
   constructor(
     private auth: AuthService,
@@ -35,6 +39,18 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.chat$ = this.chatService.subToOneChat(this.chatId);
+    setTimeout( _ => {
+      this.messages.forEach(msg => {
+        if (this.messageIds.indexOf(msg.el.id) > -1) {
+          if (!this.scrolledToHighlightedMessage) {
+            this.scrolledToHighlightedMessage = true;
+            this.atBottom = false;
+            const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (this.content.el.offsetHeight / 2);
+            this.content.scrollToPoint(0, centeredMsgTop, 2000);
+          }
+        }
+        });
+    }, 200);
   }
 
   ngAfterViewChecked(): void {

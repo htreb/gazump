@@ -38,13 +38,12 @@
           </ion-label>
         </ion-item-divider>
 
-        <ion-row class="ion-padding-horizontal">
+        <ion-row class="ion-padding-horizontal" [id]="message.id" #chatMessage>
           <ion-col
             size="9"
             size-md="6"
             *ngIf="message.from !== currentUserId"
             class="message other-message"
-            [id]="message.id"
           >
             <div class="details">
               <ion-note
@@ -69,7 +68,6 @@
             size-md="6"
             *ngIf="message.from === currentUserId"
             class="message my-message"
-            [id]="message.id"
           >
             <div class="details">
               <ion-note

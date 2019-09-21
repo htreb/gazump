@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from 'src/app/chat.service';
+import { ChatComponent } from 'src/app/shared/chat/chat.component';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -44,6 +45,18 @@ export class TicketDetailComponent implements OnInit {
       saveTicket,
       ticketFormValue: this.ticketForm.value
     });
+  }
+
+  async openChat(chatId: string, messageIds?: string[]) {
+    const modal = await this.modalCtrl.create({
+      component: ChatComponent,
+      componentProps: {
+        chatId,
+        messageIds,
+      }
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
   }
 
   // TODO store these colors in an appropriate place on the db (map maybe with the completedBy);
