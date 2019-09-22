@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { of } from 'rxjs';
+import { ContactService } from 'src/app/services/contact.service';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-start-chat',
@@ -10,50 +12,38 @@ import { of } from 'rxjs';
 })
 export class StartChatComponent implements OnInit {
 
-  public chatName = '';
-  public selectedContacts: string[] = [];
+  @Input() closeStartChat;
+  @Input() showNewChat;
+  public chatTitle = '';
+  public selectedContacts: any = [];
   contacts$;
 
   constructor(
     private modalCtrl: ModalController,
+    private contactService: ContactService,
+    private chatService: ChatService,
   ) { }
 
   ngOnInit() {
-    this.contacts$ = of([
-      {
-        name: 'bob',
-        id: 'bob123',
-      },
-      {
-        name: 'colin',
-        id: 'colin123',
-      },
-      {
-        name: 'john',
-        id: 'john123',
-      },
-      {
-        name: 'pip',
-        id: 'pip123',
-      },
-    ]);
+    this.contacts$ = this.contactService.getUsersContacts();
   }
 
-  closePage(startChat = false) {
-    this.modalCtrl.dismiss({
-      startChat,
-      chatName: this.chatName,
-      contacts: this.selectedContacts,
-    });
+  async closePage(startChat = false) {
+    if (startChat) {
+      const newChat = await this.chatService.startChat(this.chatTitle, this.selectedContacts);
+      await this.showNewChat(newChat.id);
+      this.closeStartChat();
+    }
+    this.closeStartChat();
   }
 
   contactSelected(ev, contact) {
     if (ev.detail.checked) {
-      this.selectedContacts.push(contact.id);
+      this.selectedContacts.push(contact);
       // remove any duplicates
       return (this.selectedContacts = [...new Set(this.selectedContacts)]);
     }
-    this.selectedContacts = this.selectedContacts.filter(t => t !== contact.id);
+    this.selectedContacts = this.selectedContacts.filter(c => c.id !== contact.id);
   }
 
 }

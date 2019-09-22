@@ -20,20 +20,29 @@
 
   <ion-content class='ion-padding'>
     <ion-item>
-      <ion-label position='floating'>Chat name</ion-label>
-      <ion-input [(ngModel)]="chatName">
+      <ion-label position='floating'>Chat title</ion-label>
+      <ion-input [(ngModel)]="chatTitle">
     </ion-input>
   </ion-item>
 
-    
     <ng-container *ngIf="contacts$ | async as contacts">
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
         <ion-list *ngIf="contacts.length; else noContacts">
           <ion-list-header>
-            members
+            <ion-label class="members-title">
+              Members
+            </ion-label>
           </ion-list-header>
+
           <ion-item *ngFor="let contact of contacts">
-            <ion-label>{{ contact.name }}</ion-label>
+            <ion-label class="ion-text-wrap">
+              <ion-text>
+                <h2>{{ contact.userName }}</h2>
+              </ion-text>
+              <ion-text color="medium">
+                <p>{{ contact.email }}</p>
+              </ion-text>
+            </ion-label>
             <ion-checkbox
               slot="end"
               (ionChange)="contactSelected($event, contact)"
@@ -68,6 +77,7 @@
       fill="solid"
       strong="true"
       color="primary"
+      [disabled]='!chatTitle.trim() || !selectedContacts.length'
     >
       Start
     </ion-button>

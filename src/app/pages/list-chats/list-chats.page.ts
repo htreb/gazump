@@ -22,21 +22,27 @@ export class ListChatsPage {
   async showChat(chatId: string) {
     const chatModal = await this.modalController.create({
       component: ChatComponent,
+      cssClass: 'full-screen',
       componentProps: {
         chatId,
       }
     });
-    await chatModal.present();
-    const { data } = await chatModal.onWillDismiss();
+    return await chatModal.present();
   }
 
   async startChat() {
     const startChatModal = await this.modalController.create({
       component: StartChatComponent,
-      componentProps: {}
+      componentProps: {
+        closeStartChat,
+        showNewChat: (id) => this.showChat(id),
+      }
     });
-    await startChatModal.present();
-    const { data } = await startChatModal.onWillDismiss();
-    console.log('startChat data', data);
+
+    function closeStartChat() {
+      startChatModal.dismiss();
+    }
+
+    return await startChatModal.present();
   }
 }

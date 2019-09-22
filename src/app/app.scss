@@ -46,6 +46,8 @@ ion-popover.tip-popover {
 
 ion-popover.ticket-picker {
   --width: 70vw;
+  --max-width: 520px;
+  --max-height: 650px;
 }
 
 ion-modal.full-screen {

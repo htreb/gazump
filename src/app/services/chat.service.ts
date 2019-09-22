@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { ContactService } from './contact.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,11 @@ export class ChatService {
   private chatsSub: Subscription;
   public allChatsSubject = new BehaviorSubject<any>({ loading: true });
 
-  constructor(private db: AngularFirestore, private auth: AuthService) {
+  constructor(
+    private db: AngularFirestore,
+    private auth: AuthService,
+    private contactService: ContactService,
+    ) {
     this.subscribeToChats();
   }
 
@@ -56,6 +61,22 @@ export class ChatService {
 
   getId() {
     return `${new Date().getTime()}_${Math.floor(Math.random() * 1000000)}`;
+  }
+
+  startChat(title: string, membersArray: any) {
+    membersArray.push(this.contactService.getMe());
+    const membersMap = {};
+    membersArray.forEach(m => membersMap[m.id] = {
+      userName: m.userName,
+      email: m.email,
+      joined: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return this.db.collection('chats').add({
+      title,
+      members: membersMap,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
   }
 
   addChatMessage(chatId: string, message: any, ticketIds: string[] = null) {
