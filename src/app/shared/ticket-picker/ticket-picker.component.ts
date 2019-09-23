@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { BoardService } from 'src/app/services/board.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 export class TicketPickerComponent implements OnInit {
   filteredBoards$;
   searchTerm$ = new BehaviorSubject<string>('');
-  selectedTickets: string[] = [];
+  @Input() selectedTickets = [];
 
   constructor(
     private popover: PopoverController,
@@ -73,11 +73,21 @@ export class TicketPickerComponent implements OnInit {
   }
 
   ticketSelected(ev, ticket) {
-    if (ev.detail.checked) {
-      this.selectedTickets.push(ticket.id);
-      // remove any duplicates
-      return (this.selectedTickets = [...new Set(this.selectedTickets)]);
+    const idx = this.findTicket(ticket);
+    if (ev.detail.checked && idx === -1) {
+      this.selectedTickets.push(ticket);
+    } else if (!ev.detail.checked && idx > -1) {
+      this.selectedTickets.splice(idx, 1);
     }
-    this.selectedTickets = this.selectedTickets.filter(t => t !== ticket.id);
+  }
+
+  findTicket(ticket) {
+    let idx = -1;
+    this.selectedTickets.forEach((t, i) => {
+      if (t.id === ticket.id) {
+        idx = i;
+      }
+    });
+    return idx;
   }
 }

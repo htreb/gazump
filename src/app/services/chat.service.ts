@@ -79,7 +79,7 @@ export class ChatService {
     });
   }
 
-  addChatMessage(chatId: string, message: any, ticketIds: string[] = null) {
+  addChatMessage(chatId: string, message: any, tickets: any[] = null) {
     const messageId = this.getId();
     const updateObject: any = {
       [`messages.${messageId}`]: {
@@ -88,10 +88,10 @@ export class ChatService {
         message
       }
     };
-    if (ticketIds) {
-      ticketIds.forEach(ticketId => {
+    if (tickets) {
+      tickets.forEach(ticket => {
         updateObject[
-          `linkedTickets.${ticketId}`
+          `linkedTickets.${ticket.id}`
         ] = firebase.firestore.FieldValue.arrayUnion({
           message,
           messageId

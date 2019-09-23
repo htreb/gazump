@@ -101,6 +101,14 @@
         autosize
       >
       </ion-textarea>
+      <div
+        *ngIf="!!linkedTickets.length"
+        class='linked-tickets'
+      >
+        <ion-badge *ngFor="let ticket of linkedTickets" class="ticket-badge">
+          {{ ticket.title }}
+        </ion-badge>
+      </div>
       <ion-buttons slot="end">
         <ion-button
           (click)="sendMessage()"

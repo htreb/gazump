@@ -143,18 +143,23 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   async linkSomething(ev: any) {
+    const initialSelectedTickets = JSON.parse(JSON.stringify(this.linkedTickets));
     const popover = await this.popoverController.create({
       component: TicketPickerComponent,
+      componentProps: {
+        selectedTickets: this.linkedTickets
+      },
       event: ev,
       cssClass: 'ticket-picker',
     });
     await popover.present();
     const { data } = await popover.onWillDismiss();
-
-    if (data && data.tickets && data.tickets.length) {
-      console.log(`Attach these tickets`, data.tickets);
+    if (data && data.tickets) {
       this.linkedTickets = data.tickets;
+    } else {
+      this.linkedTickets = initialSelectedTickets;
     }
+
   }
 
 }
