@@ -76,6 +76,7 @@ export class ChatService {
       title,
       members: membersMap,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      linkedTickets: {},
     });
   }
 
