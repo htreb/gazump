@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { ContactService } from 'src/app/services/contact.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { BehaviorSubject, combineLatest } from 'rxjs';
@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 export class StartChatComponent implements OnInit {
   @Input() closeStartChat;
   @Input() showNewChat;
+  @ViewChild('chatTitleInput', { static: false }) chatTitleInput: any;
   public chatTitle = '';
   public selectedContacts: any = [];
   searchTerm$ = new BehaviorSubject<string>('');
@@ -32,6 +33,10 @@ export class StartChatComponent implements OnInit {
         return this.filterShowingContacts(allContacts, searchTerm);
       })
     );
+  }
+
+  ionViewDidEnter() {
+    this.chatTitleInput.setFocus();
   }
 
   updateSearchTerm(searchTerm: string) {

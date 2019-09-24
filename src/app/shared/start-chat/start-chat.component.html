@@ -19,8 +19,8 @@
 <ion-content class='ion-padding'>
   <div class='content'>
     <ion-item>
-      <ion-label position='floating'>Chat title</ion-label>
-      <ion-input [(ngModel)]="chatTitle"></ion-input>
+      <ion-label position='fixed'>Chat title</ion-label>
+      <ion-input #chatTitleInput [(ngModel)]="chatTitle"></ion-input>
     </ion-item>
     <ion-searchbar
       class='ion-padding-vertical'

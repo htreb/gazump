@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   @Input() messageIds: string[] = [];
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChildren('chatMessage') messageElements: any;
+  @ViewChild('typeMessageArea', { static: false }) typeMessageArea: any;
 
   public chat$: Observable<any>;
   public currentUserId = this.auth.currentUser.value.id;
@@ -55,6 +56,10 @@ export class ChatComponent implements OnInit, AfterViewChecked {
           });
       }, 500);
     }
+  }
+
+  ionViewDidEnter() {
+    this.typeMessageArea.setFocus();
   }
 
   ngAfterViewChecked(): void {
