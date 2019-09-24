@@ -39,6 +39,11 @@
 
 
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
+.split-pane-visible >.split-pane-side {
+  min-width: 175px !important;
+  max-width: 175px !important;
+}
+
 ion-popover.tip-popover {
   --background: var(--ion-color-dark);
   color: var(--ion-color-dark-contrast);
