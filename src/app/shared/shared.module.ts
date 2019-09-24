@@ -13,6 +13,7 @@ import { ChatComponent } from './chat/chat.component';
 import { FormsModule } from '@angular/forms';
 import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
 import { StartChatComponent } from './start-chat/start-chat.component';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 
 
@@ -27,6 +28,7 @@ import { StartChatComponent } from './start-chat/start-chat.component';
     ChatComponent,
     TicketPickerComponent,
     StartChatComponent,
+    TruncatePipe,
   ],
   imports: [
     CommonModule,
