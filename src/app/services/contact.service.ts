@@ -19,11 +19,14 @@ export class ContactService {
   getUsersContacts() {
     return this.auth.currentUser.pipe(
       map(userDoc => {
-        return Object.keys(userDoc.connections).map(id => {
+        const users = Object.keys(userDoc.connections).map(id => {
           return {
             id,
             ...userDoc.connections[id]
           };
+        });
+        return users.sort((a, b) => {
+          return a.userName < b.userName ? -1 : 1;
         });
       })
     );

@@ -2,38 +2,35 @@
   <app-loading></app-loading>
 </ng-template>
 <ng-template #noContacts>
-  <app-empty-list [customMessage]="'You don\'t have any contacts'"></app-empty-list>
+  <app-empty-list [customMessage]="'No matching contacts'"></app-empty-list>
 </ng-template>
 
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closePage()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>New chat</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ng-container class='ion-margin'>
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-button (click)="closePage()">
-          <ion-icon slot="icon-only" name="close"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-title>New chat</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content class='ion-padding'>
+<ion-content class='ion-padding'>
+  <div class='content'>
     <ion-item>
       <ion-label position='floating'>Chat title</ion-label>
-      <ion-input [(ngModel)]="chatTitle">
-    </ion-input>
-  </ion-item>
+      <ion-input [(ngModel)]="chatTitle"></ion-input>
+    </ion-item>
+    <ion-searchbar
+      class='ion-padding-vertical'
+      #searchBar
+      (ionChange)="updateSearchTerm(searchBar.value)">
+    </ion-searchbar>
 
-    <ng-container *ngIf="contacts$ | async as contacts">
+    <ng-container *ngIf="filteredContacts$ | async as contacts">
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
-        <ion-list *ngIf="contacts.length; else noContacts">
-          <ion-list-header>
-            <ion-label class="members-title">
-              Members
-            </ion-label>
-          </ion-list-header>
-
+        <ion-list *ngIf="contacts.length; else noContacts" class='contact-list'>
           <ion-item *ngFor="let contact of contacts">
             <ion-label class="ion-text-wrap">
               <ion-text>
@@ -54,32 +51,29 @@
         </ion-list>
       </ng-container>
     </ng-container>
-  </ion-content>
+  </div>
+</ion-content>
 
-
-
-
-  <ion-footer no-border class="ion-padding footer-buttons">
-    <ion-button
-      (click)="closePage()"
-      class="footer-button"
-      expand="block"
-      fill="outline"
-      color="primary"
-      strong="true"
-    >
-      Cancel
-    </ion-button>
-    <ion-button
-      (click)="closePage(true)"
-      class="footer-button"
-      expand="block"
-      fill="solid"
-      strong="true"
-      color="primary"
-      [disabled]='!chatTitle.trim() || !selectedContacts.length'
-    >
-      Start
-    </ion-button>
-  </ion-footer>
-</ng-container>
+<ion-footer no-border class="ion-padding footer-buttons">
+  <ion-button
+    (click)="closePage()"
+    class="footer-button"
+    expand="block"
+    fill="outline"
+    color="primary"
+    strong="true"
+  >
+    Cancel
+  </ion-button>
+  <ion-button
+    (click)="closePage(true)"
+    class="footer-button"
+    expand="block"
+    fill="solid"
+    strong="true"
+    color="primary"
+    [disabled]='!chatTitle.trim() || !selectedContacts.length'
+  >
+    Start
+  </ion-button>
+</ion-footer>

@@ -1,36 +1,63 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
-import { of } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { ChatService } from 'src/app/services/chat.service';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-start-chat',
   templateUrl: './start-chat.component.html',
-  styleUrls: ['./start-chat.component.scss'],
+  styleUrls: ['./start-chat.component.scss']
 })
 export class StartChatComponent implements OnInit {
-
   @Input() closeStartChat;
   @Input() showNewChat;
   public chatTitle = '';
   public selectedContacts: any = [];
-  contacts$;
+  searchTerm$ = new BehaviorSubject<string>('');
+  filteredContacts$;
 
   constructor(
-    private modalCtrl: ModalController,
     private contactService: ContactService,
-    private chatService: ChatService,
-  ) { }
+    private chatService: ChatService
+  ) {}
 
   ngOnInit() {
-    this.contacts$ = this.contactService.getUsersContacts();
+    this.filteredContacts$ = combineLatest([
+      // TODO should this be a behaviour subject to hold all the contacts?
+      this.contactService.getUsersContacts(),
+      this.searchTerm$
+    ]).pipe(
+      map(([allContacts, searchTerm]) => {
+        return this.filterShowingContacts(allContacts, searchTerm);
+      })
+    );
+  }
+
+  updateSearchTerm(searchTerm: string) {
+    this.searchTerm$.next(searchTerm);
+  }
+
+  filterShowingContacts(allContacts: any, searchTerm: string) {
+    if (allContacts.loading) {
+      return allContacts;
+    }
+    searchTerm = searchTerm.toLowerCase();
+    const contacts = JSON.parse(JSON.stringify(allContacts));
+    return contacts.filter((contact: any) => {
+      return (
+        contact.userName.toLowerCase().indexOf(searchTerm) > -1 ||
+        contact.email.toLowerCase().indexOf(searchTerm) > -1
+      );
+    });
   }
 
   async closePage(startChat = false) {
     if (startChat) {
-      const newChat = await this.chatService.startChat(this.chatTitle, this.selectedContacts);
+      const newChat = await this.chatService.startChat(
+        this.chatTitle,
+        this.selectedContacts
+      );
       await this.showNewChat(newChat.id);
       this.closeStartChat();
     }
@@ -43,7 +70,8 @@ export class StartChatComponent implements OnInit {
       // remove any duplicates
       return (this.selectedContacts = [...new Set(this.selectedContacts)]);
     }
-    this.selectedContacts = this.selectedContacts.filter(c => c.id !== contact.id);
+    this.selectedContacts = this.selectedContacts.filter(
+      c => c.id !== contact.id
+    );
   }
-
 }
