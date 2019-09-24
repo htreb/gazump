@@ -42,12 +42,13 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
     if (this.messageIds.length) {
       setTimeout( _ => {
-        this.messageElements.forEach(msg => {
+        this.messageElements.forEach(async msg => {
           if (this.messageIds.indexOf(msg.el.id) > -1) {
             if (!this.scrolledToHighlightedMessage) {
               this.scrolledToHighlightedMessage = true;
               this.atBottom = false;
-              const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (this.content.el.offsetHeight / 2);
+              const scrollEl = await this.content.getScrollElement();
+              const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (scrollEl.offsetHeight / 2);
               this.content.scrollToPoint(0, centeredMsgTop, 1000);
             }
           }
