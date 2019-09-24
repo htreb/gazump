@@ -77,7 +77,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         (chat &&
           chat.members &&
           chat.members[senderId] &&
-          chat.members[senderId].name) ||
+          chat.members[senderId].userName) ||
         'Unknown'
       );
     }
