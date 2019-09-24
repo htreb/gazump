@@ -1,12 +1,13 @@
-<ion-menu contentId="content" swipe-gesture='false'>
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-split-pane>
 
-  <ion-content forceOverscroll='false'>
-    <ion-list>
+  <ion-menu class='menu-container' contentId="content" swipe-gesture='false'>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content forceOverscroll='false'>
       <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
         <ion-item
           routerLinkActive="active"
@@ -26,12 +27,13 @@
         routerLink="/login"
         routerDirection="root"
         (click)="logOut()"
+        class="menu-item"
       >
         <ion-icon name="log-out" slot="start"></ion-icon>
         Logout
       </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
+    </ion-content>
+  </ion-menu>
 
-<ion-router-outlet id="content" main [swipeGesture]="false"></ion-router-outlet>
+  <ion-router-outlet id="content" main [swipeGesture]="false"></ion-router-outlet>
+</ion-split-pane>
