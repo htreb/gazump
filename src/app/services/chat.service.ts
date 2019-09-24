@@ -86,7 +86,8 @@ export class ChatService {
       [`messages.${messageId}`]: {
         from: this.auth.currentUser.value.id,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        message
+        message,
+        tickets,
       }
     };
     if (tickets) {

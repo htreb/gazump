@@ -49,6 +49,11 @@ $textBorderRadius: 16px;
     overflow: scroll;
 }
 
+.linked-tickets {
+    max-height: 10vh;
+    overflow: scroll;
+}
+
 .ticket-badge {
     margin: 0 3px;
 }

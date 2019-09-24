@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TruncatePipe implements PipeTransform {
   transform(
     textToTruncate: string = '',
-    maxLength: number = 20,
+    maxLength: number = 30,
     trail: string = '...'
   ): string {
     return textToTruncate.length > maxLength
