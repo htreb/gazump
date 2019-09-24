@@ -26,7 +26,7 @@
         >
           <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
           <!-- // TODO make my own pipe for below I use it a bunch -->
-          <ion-note slot='end' color='primary'>{{ (chat.members | keyvalue).length }} members</ion-note>
+          <ion-note slot='end' color='primary'>{{ chat.members | membersDetail }}</ion-note>
         </ion-item>
       </ion-content>
     </ng-container><!-- check that we have some chats -->

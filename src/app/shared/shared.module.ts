@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
 import { StartChatComponent } from './start-chat/start-chat.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
+import { MembersDetailPipe } from './pipes/members-detail.pipe';
 
 
 
@@ -29,6 +30,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     TicketPickerComponent,
     StartChatComponent,
     TruncatePipe,
+    MembersDetailPipe,
   ],
   imports: [
     CommonModule,
@@ -45,6 +47,8 @@ import { TruncatePipe } from './pipes/truncate.pipe';
     TextComponent,
     ChatComponent,
     StartChatComponent,
+    TruncatePipe,
+    MembersDetailPipe,
   ],
   entryComponents: [
     SettingsListComponent,
