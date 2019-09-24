@@ -27,7 +27,7 @@
               <ion-label>{{ state.title }}</ion-label>
             </ion-item-divider>
             <ion-item *ngFor="let ticket of board.tickets[state.id]">
-              <ion-label>{{ ticket.title }}</ion-label>
+              <ion-label class="ion-text-wrap">{{ ticket.title }}</ion-label>
               <ion-checkbox
                 slot="end"
                 (ionChange)="ticketSelected($event, ticket)"

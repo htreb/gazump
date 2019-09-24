@@ -183,7 +183,7 @@ export class BoardService {
         newTickets[`tickets.${state.id}`] =
           newTickets[`tickets.${state.id}`] || [];
         newTickets[`tickets.${state.id}`].push({
-          title: `${j} ticket ${j}`,
+          title: `${j} ticket ${j}` + lorem.slice(0, Math.floor(Math.random() * 20) + 50),
           description: lorem.slice(0, Math.floor(Math.random() * 200) + 30),
           id: this.getId(),
           completedBy: ''
