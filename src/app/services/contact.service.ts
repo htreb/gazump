@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { map } from 'rxjs/operators';
+import { GroupService } from './group.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-  constructor(private auth: AuthService) {}
+  constructor(
+    private auth: AuthService,
+    private groupService: GroupService,
+    ) {}
 
   getMe() {
     return {
@@ -24,6 +28,22 @@ export class ContactService {
             id,
             ...userDoc.connections[id]
           };
+        });
+        return users.sort((a, b) => {
+          return a.userName < b.userName ? -1 : 1;
+        });
+      })
+    );
+  }
+
+  getGroupContacts() {
+    return this.groupService.currentGroupSubject.pipe(
+      map(currentGroup => {
+        const withoutMe = Object.keys(currentGroup.members).filter(id => id !== this.auth.currentUser.value.id);
+        const users = withoutMe.map(id => {
+          if (id !== this.auth.currentUser.value.id) {
+            return this.getDetailsFromId(id);
+          }
         });
         return users.sort((a, b) => {
           return a.userName < b.userName ? -1 : 1;

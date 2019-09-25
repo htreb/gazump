@@ -26,7 +26,7 @@ export class StartChatComponent implements OnInit {
   ngOnInit() {
     this.filteredContacts$ = combineLatest([
       // TODO should this be a behaviour subject to hold all the contacts?
-      this.contactService.getUsersContacts(),
+      this.contactService.getGroupContacts(),
       this.searchTerm$
     ]).pipe(
       map(([allContacts, searchTerm]) => {
