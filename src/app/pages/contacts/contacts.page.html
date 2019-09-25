@@ -1,0 +1,89 @@
+<ng-template #loadingContacts>
+  <app-loading></app-loading>
+</ng-template>
+<ng-template #noContacts>
+  <app-empty-list [customMessage]="'No contacts yet, add them above'"></app-empty-list>
+</ng-template>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Contacts</ion-title>
+    <app-settings-icon slot="end"></app-settings-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ng-container *ngIf="receivedRequests$ | async as receivedRequests">
+    <ion-list *ngIf="receivedRequests.length">
+      <h1>Requests</h1>
+      <ion-item *ngFor="let receivedRequest of receivedRequests">
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h2>{{ receivedRequest.userName }}</h2>
+          </ion-text>
+          <ion-text color="medium">
+            <p>{{ receivedRequest.email }}</p>
+          </ion-text>
+        </ion-label>
+        <div slot="end" class="ion-margin button-container">
+          <ion-button color="success" (click)="acceptContactRequest(receivedRequest)">
+            Accept
+          </ion-button>
+          <ion-button color="danger" fill="clear" (click)="declineContactRequest(receivedRequest)">
+            Decline
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <h1>Add Contacts</h1>
+  <ion-card>
+    <ion-item>
+      <ion-input placeholder="Email" [formControl]="addContactEmail"></ion-input>
+      <ion-button slot="end" color="primary" [disabled]='!addContactEmail.valid' (click)="sendContactRequest()">
+        Send request
+      </ion-button>
+    </ion-item>
+  </ion-card>
+
+  <ng-container *ngIf="sentRequests$ | async as sentRequests">
+    <ion-list *ngIf="sentRequests.length">
+      <ion-list-header>Sent requests</ion-list-header>
+      <ion-item *ngFor="let sentRequest of sentRequests">
+        <ion-label class="ion-text-wrap">
+          <ion-text color="medium">
+            <p>{{ sentRequest.email }}</p>
+          </ion-text>
+        </ion-label>
+        <div slot="end" class="ion-margin button-container">
+          <ion-button color="medium" (click)="cancelSentRequest(sentRequest)">
+            Cancel
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+
+  <ion-list>
+    <h1>All Contacts</h1>
+    <ng-container *ngIf="allContacts$ | async as contacts">
+      <ng-container *ngIf="!contacts.loading; else loadingContacts">
+        <ion-list *ngIf="contacts.length; else noContacts">
+          <ion-item *ngFor="let contact of contacts">
+            <ion-label class="ion-text-wrap">
+              <ion-text>
+                <h2>{{ contact.userName }}</h2>
+              </ion-text>
+              <ion-text color="medium">
+                <p>{{ contact.email }}</p>
+              </ion-text>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+    </ng-container>
+  </ion-list>
+
+</ion-content>

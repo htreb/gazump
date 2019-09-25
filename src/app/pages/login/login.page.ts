@@ -266,7 +266,7 @@ export class LoginPage implements OnInit {
   forgotPassword() {
     const emailControl = this.signInForm.get('email');
     if (emailControl.valid) {
-      // Show toast to confirm sending email
+      // Show alert to confirm sending email
       this.confirmResetPasswordEmail();
     } else {
       // hide password input and display warning for user to enter valid email

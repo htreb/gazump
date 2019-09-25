@@ -4,6 +4,12 @@ import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule) },
+  { path: 'contacts', loadChildren: () => import('./pages/contacts/contacts.module').then(m => m.ContactsPageModule),
+    canActivate: [AuthGuard],
+    data: {
+      roles: ['USER', 'ADMIN']
+    },
+  },
   { path: 'groups',
     loadChildren: () => import('./pages/list-groups/list-groups.module').then(m => m.ListGroupsPageModule),
     canActivate: [AuthGuard],
@@ -13,7 +19,7 @@ const routes: Routes = [
   },
   // if empty try to take them to the groups, if not signed in the auth guard will take them to login
   { path: '', redirectTo: 'groups', pathMatch: 'full' },
-  { path: '**', redirectTo: 'groups' } // 404 page? for now just take them to the groups page
+  { path: '**', redirectTo: 'groups' } // TODO 404 page? for now just take them to the groups page
 ];
 
 @NgModule({
