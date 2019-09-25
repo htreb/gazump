@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { Subscription, BehaviorSubject } from 'rxjs';
+import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { ContactService } from './contact.service';
+import { GroupService } from './group.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class ChatService {
     private db: AngularFirestore,
     private auth: AuthService,
     private contactService: ContactService,
-    ) {
+    private groupService: GroupService
+  ) {
     this.subscribeToChats();
   }
 
@@ -43,10 +45,17 @@ export class ChatService {
     this.chatsSub = null;
   }
 
-  allChatsUnderGroup(groupId: string) {
-    return this.allChatsSubject.pipe(
-      map(allChats => {
-        return allChats.filter(chat => chat.groupId === groupId);
+  allChatsUnderCurrentGroup() {
+    return combineLatest([
+      this.groupService.currentGroupSubject,
+      this.allChatsSubject
+    ]).pipe(
+      map(([currentGroup, allChats]) => {
+        return allChats.loading
+          ? allChats
+          : allChats.filter(
+              chat => currentGroup.id && currentGroup.id === chat.groupId
+            );
       })
     );
   }
@@ -66,17 +75,21 @@ export class ChatService {
   startChat(title: string, membersArray: any) {
     membersArray.push(this.contactService.getMe());
     const membersMap = {};
-    membersArray.forEach(m => membersMap[m.id] = {
-      userName: m.userName,
-      email: m.email,
-      joined: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    membersArray.forEach(
+      m =>
+        (membersMap[m.id] = {
+          userName: m.userName,
+          email: m.email,
+          joined: firebase.firestore.FieldValue.serverTimestamp()
+        })
+    );
 
     return this.db.collection('chats').add({
       title,
+      groupId: this.groupService.currentGroupId,
       members: membersMap,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      linkedTickets: {},
+      linkedTickets: {}
     });
   }
 
@@ -87,7 +100,7 @@ export class ChatService {
         from: this.auth.currentUser.value.id,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         message,
-        tickets,
+        tickets
       }
     };
     if (tickets) {

@@ -8,23 +8,23 @@ import { StartChatComponent } from 'src/app/shared/start-chat/start-chat.compone
 @Component({
   selector: 'app-list-chats',
   templateUrl: './list-chats.page.html',
-  styleUrls: ['./list-chats.page.scss'],
+  styleUrls: ['./list-chats.page.scss']
 })
 export class ListChatsPage {
+  public chats$: Observable<any> = this.chatService.allChatsUnderCurrentGroup();
 
-  public chats$: Observable<any> = this.chatService.allChatsSubject;
 
   constructor(
     private chatService: ChatService,
-    private modalController: ModalController,
-    ) { }
+    private modalController: ModalController
+  ) {}
 
   async showChat(chatId: string) {
     const chatModal = await this.modalController.create({
       component: ChatComponent,
       cssClass: 'full-screen',
       componentProps: {
-        chatId,
+        chatId
       }
     });
     return await chatModal.present();
@@ -35,7 +35,7 @@ export class ListChatsPage {
       component: StartChatComponent,
       componentProps: {
         closeStartChat,
-        showNewChat: (id) => this.showChat(id),
+        showNewChat: id => this.showChat(id)
       }
     });
 
