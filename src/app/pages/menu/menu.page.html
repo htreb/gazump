@@ -4,34 +4,75 @@
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Menu</ion-title>
+        <ion-buttons slot="end">
+          <ion-button
+            (click)="switchTheme()"
+          >
+            <ion-icon slot="icon-only" [name]="nextTheme?.icon"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content forceOverscroll='false'>
-      <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
-        <ion-item
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          [routerLink]="[page.url]"
-          [routerDirection]="page.routerDirection"
-          class="menu-item"
+      <div class='menu'>
+        <ion-text
+          class="ion-padding ion-text-wrap group-title"
+          lines="none"
         >
-          <ion-label>
-            {{ page.title }}
-          </ion-label>
-        </ion-item>
-      </ion-menu-toggle>
+          this is a very long named example of what a group name could be
+        </ion-text>
 
-      <ion-item
-        tappable
-        routerLink="/login"
-        routerDirection="root"
-        (click)="logOut()"
-        class="menu-item"
-      >
-        <ion-icon name="log-out" slot="start"></ion-icon>
-        Logout
-      </ion-item>
+        <ion-menu-toggle autoHide='false'>
+          <ion-item
+            routerLink="/groups"
+            routerDirection="root"
+            lines="full"
+            detail="false"
+          >
+            <ion-icon slot="start" name="arrow-back"></ion-icon>
+            <ion-label>All groups</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+        <ion-list class='ion-no-padding menu-items'>
+          <ion-menu-toggle autoHide='false'>
+            <ion-item
+              *ngFor="let page of pages"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              [routerLink]="[page.url]"
+              [routerDirection]="page.routerDirection"
+              lines="full"
+              detail="false"
+            >
+              <ion-icon slot='start' [name]='page.icon'></ion-icon>
+              <ion-label>{{ page.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+        <ion-list
+          class='ion-padding'
+        >
+          <ion-item
+            tappable
+            (click)="showSettings()"
+            lines="full"
+          >
+            <ion-label>Settings</ion-label>
+            <ion-icon slot="end" name="settings"></ion-icon>
+          </ion-item>
+          <ion-item
+            tappable
+            (click)="logOut()"
+            lines="full"
+          >
+            <ion-label>Logout</ion-label>
+            <ion-icon slot="end" name="log-out"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </div>
     </ion-content>
   </ion-menu>
 

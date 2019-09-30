@@ -1,6 +1,21 @@
-.menu-item {
-    border-left: 8px solid transparent;
+.menu {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .menu-items {
+        flex: 1;
+    }
+}
+
+.group-title {
+    font-size: 1.1em;
+}
+
+ion-item {
+    --background: transparent;
+
     &.active {
-        border-left: 8px solid var(--ion-color-primary);
+        background: var(--ion-color-medium);
     }
 }
