@@ -14,11 +14,6 @@ export class BoardTabsPage {
   public currentBoard;
   public settingsOptions: SettingsOption[] = [
     {
-      title: 'Edit Board',
-      icon: 'create',
-      func: this.editBoard,
-    },
-    {
       title: 'New Board',
       icon: 'add',
       func: this.newBoard,
@@ -29,21 +24,36 @@ export class BoardTabsPage {
     private boardService: BoardService,
     ) { }
 
-  setCurrentBoard(allBoards) {
-    this.currentBoard = allBoards[0];
-    return false;
+  segmentButtonSelected(board) {
+    this.currentBoard = board;
+    this.updateSettingsOptions();
   }
 
-  segmentChanged(ev) {
-    this.currentBoard = ev.detail.value;
+  updateSettingsOptions() {
+    this.settingsOptions = [
+      {
+        title: 'New Board',
+        icon: 'add',
+        func: this.newBoard,
+      },
+    ];
+
+    if (this.currentBoard) {
+      this.settingsOptions.unshift({
+        title: `Edit ${this.currentBoard.title}`,
+        icon: 'create',
+        func: () => this.editBoard(this.currentBoard),
+      });
+    }
   }
+
 
   boardTrackBy(index, board) {
     return board.id;
   }
 
-  editBoard() {
-    console.log('you want to edit a board ey?');
+  editBoard(board) {
+    console.log('you want to edit a board ey?', board);
   }
 
   newBoard() {

@@ -16,7 +16,7 @@ export class ListChatsPage {
   public settingsOptions: SettingsOption[] = [
     {
       title: 'Start Chat',
-      icon: 'create',
+      icon: 'add',
       func: () => this.startChat(),
     }
   ];
