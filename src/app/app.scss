@@ -73,4 +73,12 @@ ion-modal.full-screen {
     --padding-bottom: 0;
   }
 }
+
+.footer-buttons {
+  display: flex;
+
+  .footer-button {
+      flex: 1;
+  }
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////

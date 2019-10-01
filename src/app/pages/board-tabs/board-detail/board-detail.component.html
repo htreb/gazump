@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="closePage()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ board ? 'Edit' : 'New'}} Board</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-padding' [formGroup]="boardForm">
+  <ion-item>
+    <ion-label position='fixed'>Title</ion-label>
+    <ion-input formControlName="title"></ion-input>
+  </ion-item>
+
+  <!-- <ion-item lines="none">
+    <ion-label>Icon</ion-label>
+    <ion-select
+      selectedText=" "
+      formControlName="icon"
+      interface="popover"
+    >
+      <ion-select-option
+        *ngFor="let icon of icons"
+        [value]="icon"
+      >
+        <ion-item>
+          <ion-label>{{icon}}</ion-label>
+        </ion-item>
+      </ion-select-option
+      >
+    </ion-select>
+  </ion-item> -->
+
+  <div class="states">
+    <ion-item>
+      <ion-input
+        [(ngModel)]="newStateName"
+        [ngModelOptions]="{standalone: true}"
+        (keyup.enter)="addState()"
+        placeholder="State name"
+      >
+      </ion-input>
+      <ion-button slot="end" (click)="addState()" [disabled]="!newStateName.trim()">
+        Add State
+      </ion-button>
+    </ion-item>
+
+    <ion-reorder-group (ionItemReorder)="reorderStates($event)" disabled="false">
+      <ion-item *ngFor="let state of states">
+        <ion-label>
+          {{ state }}
+        </ion-label>
+        <ion-button slot="end"  fill="clear" (click)="removeState(state)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+    </ion-reorder-group>
+  </div>
+
+
+<!--   
+  <ion-searchbar
+    class='ion-padding-vertical'
+    #searchBar
+    (ionChange)="updateSearchTerm(searchBar.value)">
+  </ion-searchbar> -->
+
+</ion-content>
+
+<ion-footer no-border class="ion-padding footer-buttons">
+  <ion-button
+    (click)="closePage()"
+    class="footer-button"
+    expand="block"
+    fill="outline"
+    color="primary"
+    strong="true"
+  >
+    Cancel
+  </ion-button>
+  <ion-button
+    (click)="closePage(true)"
+    class="footer-button"
+    expand="block"
+    fill="solid"
+    strong="true"
+    color="primary"
+    [disabled]='false'
+  >
+    Save
+  </ion-button>
+</ion-footer>

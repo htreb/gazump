@@ -72,7 +72,7 @@ export class StartChatComponent implements OnInit {
   contactSelected(ev, contact) {
     if (ev.detail.checked) {
       this.selectedContacts.push(contact);
-      // remove any duplicates
+      // TODO THIS IS NOT WORKING IT ISN'T remove any duplicates
       return (this.selectedContacts = [...new Set(this.selectedContacts)]);
     }
     this.selectedContacts = this.selectedContacts.filter(

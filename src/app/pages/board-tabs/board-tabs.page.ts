@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
+import { ModalController } from '@ionic/angular';
+import { BoardDetailComponent } from './board-detail/board-detail.component';
 
 @Component({
   selector: 'app-board-tabs',
@@ -16,12 +18,13 @@ export class BoardTabsPage {
     {
       title: 'New Board',
       icon: 'add',
-      func: this.newBoard,
+      func: () => this.openBoardDetail(),
     },
   ];
 
   constructor(
     private boardService: BoardService,
+    private modalController: ModalController,
     ) { }
 
   segmentButtonSelected(board) {
@@ -34,7 +37,7 @@ export class BoardTabsPage {
       {
         title: 'New Board',
         icon: 'add',
-        func: this.newBoard,
+        func: () => this.openBoardDetail(),
       },
     ];
 
@@ -42,7 +45,7 @@ export class BoardTabsPage {
       this.settingsOptions.unshift({
         title: `Edit ${this.currentBoard.title}`,
         icon: 'create',
-        func: () => this.editBoard(this.currentBoard),
+        func: () => this.openBoardDetail(this.currentBoard),
       });
     }
   }
@@ -52,11 +55,21 @@ export class BoardTabsPage {
     return board.id;
   }
 
-  editBoard(board) {
-    console.log('you want to edit a board ey?', board);
+  async openBoardDetail(board?: any) {
+    const modal = await this.modalController.create({
+      component: BoardDetailComponent,
+      componentProps: {
+        board,
+        closeBoardDetail,
+      }
+    });
+
+    function closeBoardDetail() {
+      modal.dismiss();
+    }
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
   }
 
-  newBoard() {
-    console.log('you want to make a new board');
-  }
 }

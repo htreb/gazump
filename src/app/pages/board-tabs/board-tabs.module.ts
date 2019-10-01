@@ -9,6 +9,7 @@ import { BoardPage } from './board/board.page';
 import { TicketDetailComponent } from './board/ticket-detail/ticket-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AutosizeModule } from 'ngx-autosize';
+import { BoardDetailComponent } from './board-detail/board-detail.component';
 
 const routes: Routes = [
   {
@@ -28,8 +29,17 @@ const routes: Routes = [
     ReactiveFormsModule,
     AutosizeModule
   ],
-  declarations: [BoardTabsPage, BoardPage, TicketDetailComponent],
-  entryComponents: [TicketDetailComponent] // since the ticket is loaded dynamically it needs to be here too
+  declarations: [
+    BoardTabsPage,
+    BoardPage,
+    TicketDetailComponent,
+    BoardDetailComponent
+  ],
+  entryComponents: [
+    // since these are loaded dynamically without the router they need to be here too
+    TicketDetailComponent,
+    BoardDetailComponent
+  ]
 
 })
 export class BoardTabsPageModule {}
