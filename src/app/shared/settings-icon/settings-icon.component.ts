@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { SettingsListComponent } from '../settings-list/settings-list.component';
 
@@ -9,7 +9,9 @@ import { SettingsListComponent } from '../settings-list/settings-list.component'
 })
 export class SettingsIconComponent {
 
+  @Input() settingsOptions;
   private popover: HTMLIonPopoverElement;
+
   constructor(
     private popoverController: PopoverController,
   ) { }
@@ -20,6 +22,7 @@ export class SettingsIconComponent {
       event: ev,
       componentProps: {
         closePopover: this.closeSettings,
+        settingsOptions: this.settingsOptions,
       }
     });
     return await this.popover.present();

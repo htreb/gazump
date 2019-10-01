@@ -1,30 +1,12 @@
-<ion-list class='settings-list'>
+<ion-list class='ion-no-margin ion-no-padding'>
   <ion-item
+    *ngFor="let setting of settingsOptions"
+    (click)="onSettingClicked($event, setting)"
     tappable
     detail='false'
-    (click)="switchTheme()"
     lines='full'
   >
-    {{ nextTheme?.name || "Switch" }} Theme
-    <ion-icon [name]="nextTheme?.icon" slot="end"></ion-icon>
-  </ion-item>
-  <ion-item
-    tappable
-    detail='false'
-    (click)="closePopover()"
-    [routerLink]="['/','profile']"
-    lines='full'
-  >
-    Settings
-    <ion-icon name='settings' slot="end"></ion-icon>
-  </ion-item>
-  <ion-item
-    tappable
-    detail='false'
-    (click)="logOut()"
-    lines='none'
-  >
-    Logout
-    <ion-icon name="log-out" slot="end"></ion-icon>
+    {{ setting.title }}
+    <ion-icon [name]="setting.icon" slot="end"></ion-icon>
   </ion-item>
 </ion-list>

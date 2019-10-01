@@ -1,36 +1,29 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { AuthService } from 'src/app/services/auth.service';
-import { ThemeService } from 'src/app/services/theme.service';
+import { Component, Input } from '@angular/core';
+
+export interface SettingsOption {
+  title: string;
+  icon: string;
+  func(): any;
+}
 
 @Component({
   selector: 'app-settings-list',
   templateUrl: './settings-list.component.html',
   styleUrls: ['./settings-list.component.scss'],
 })
-export class SettingsListComponent implements OnInit {
+export class SettingsListComponent {
 
-  public nextTheme: any;
-  @Input() closePopover: () => {};
+  @Input() closePopover;
+  @Input() settingsOptions;
 
-  constructor(
-    private auth: AuthService,
-    private themeService: ThemeService,
-  ) { }
+  constructor() {}
 
-  ngOnInit(): void {
-    this.getNextTheme();
-  }
-
-  getNextTheme(): void {
-    this.themeService.getNextTheme().then(t => this.nextTheme = t);
-  }
-
-  switchTheme(): void {
-    this.themeService.toggleThemes().then( _ => this.getNextTheme() );
-  }
-
-  logOut(): void {
-    this.closePopover();
-    this.auth.logOut();
+  onSettingClicked(setting) {
+    if (typeof this.closePopover === 'function') {
+      this.closePopover();
+    }
+    if (typeof setting.func === 'function') {
+      setting.func();
+    }
   }
 }

@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>{{ currentBoard?.title || "Boards" }}</ion-title>
-    <app-settings-icon slot="end"></app-settings-icon>
+    <app-settings-icon slot="end" [settingsOptions]="settingsOptions"></app-settings-icon>
   </ion-toolbar>
 </ion-header>
 

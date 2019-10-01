@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
+import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
 
 @Component({
   selector: 'app-board-tabs',
@@ -9,8 +10,20 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class BoardTabsPage {
 
-  public currentBoard;
   public allBoards$: Observable<any> = this.boardService.allBoardsSubject;
+  public currentBoard;
+  public settingsOptions: SettingsOption[] = [
+    {
+      title: 'Edit Board',
+      icon: 'create',
+      func: this.editBoard,
+    },
+    {
+      title: 'New Board',
+      icon: 'add',
+      func: this.newBoard,
+    },
+  ];
 
   constructor(
     private boardService: BoardService,
@@ -27,5 +40,13 @@ export class BoardTabsPage {
 
   boardTrackBy(index, board) {
     return board.id;
+  }
+
+  editBoard() {
+    console.log('you want to edit a board ey?');
+  }
+
+  newBoard() {
+    console.log('you want to make a new board');
   }
 }
