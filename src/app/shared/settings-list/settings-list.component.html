@@ -1,7 +1,7 @@
 <ion-list class='ion-no-margin ion-no-padding'>
   <ion-item
     *ngFor="let setting of settingsOptions"
-    (click)="onSettingClicked($event, setting)"
+    (click)="onSettingClicked(setting)"
     tappable
     detail='false'
     lines='full'
