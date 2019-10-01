@@ -1,32 +1,31 @@
 <ion-split-pane>
-
-  <ion-menu class='menu-container' contentId="content" swipe-gesture='false'>
+  <ion-menu class="menu-container" contentId="content" swipe-gesture="false">
     <ion-header>
       <ion-toolbar color="primary">
         <ion-title>Menu</ion-title>
         <ion-buttons slot="end">
-          <ion-button
-            (click)="switchTheme()"
-          >
+          <ion-button (click)="switchTheme()">
             <ion-icon slot="icon-only" [name]="nextTheme?.icon"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content forceOverscroll='false'>
-      <div class='menu'>
-
+    <ion-content forceOverscroll="false" color="medium">
+      <div class="menu">
         <ng-container *ngIf="currentGroup$ | async as currentGroup">
-          <ng-container *ngIf="!currentGroup.loading && groupService.showGroupMenuItems">
-            <ion-text
-              class="ion-padding ion-text-wrap group-title"
-              lines="none"
-            >
-              {{ currentGroup.title }}
-            </ion-text>
+          <ng-container
+            *ngIf="!currentGroup.loading && groupService.showGroupMenuItems"
+          >
+            <ion-header>
+              <ion-toolbar class="group-title" color="primary">
+                <ion-item class="ion-text-wrap" lines="none" color="primary">{{
+                  currentGroup.title
+                }}</ion-item>
+              </ion-toolbar>
+            </ion-header>
 
-            <ion-menu-toggle autoHide='false'>
+            <ion-menu-toggle autoHide="false">
               <ion-item
                 routerLink="/"
                 routerDirection="root"
@@ -38,8 +37,8 @@
               </ion-item>
             </ion-menu-toggle>
 
-            <ion-list class='ion-no-padding menu-items'>
-              <ion-menu-toggle autoHide='false'>
+            <ion-list class="ion-no-padding menu-items">
+              <ion-menu-toggle autoHide="false">
                 <ion-item
                   *ngFor="let page of pages"
                   routerLinkActive="active"
@@ -49,7 +48,11 @@
                   lines="full"
                   detail="false"
                 >
-                  <ion-icon slot='start' [name]='page.icon'></ion-icon>
+                  <ion-icon
+                    slot="start"
+                    [name]="page.icon"
+                    class="menu-icon"
+                  ></ion-icon>
                   <ion-label>{{ page.title }}</ion-label>
                 </ion-item>
               </ion-menu-toggle>
@@ -57,22 +60,12 @@
           </ng-container>
         </ng-container>
 
-        <ion-list
-          class='ion-no-padding'
-        >
-          <ion-item
-            tappable
-            (click)="showSettings()"
-            lines="full"
-          >
+        <ion-list class="ion-no-padding settings-items">
+          <ion-item tappable (click)="showSettings()" lines="full">
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>
           </ion-item>
-          <ion-item
-            tappable
-            (click)="logOut()"
-            lines="full"
-          >
+          <ion-item tappable (click)="logOut()" lines="full">
             <ion-label>Logout</ion-label>
             <ion-icon slot="end" name="log-out"></ion-icon>
           </ion-item>
@@ -81,5 +74,9 @@
     </ion-content>
   </ion-menu>
 
-  <ion-router-outlet id="content" main [swipeGesture]="false"></ion-router-outlet>
+  <ion-router-outlet
+    id="content"
+    main
+    [swipeGesture]="false"
+  ></ion-router-outlet>
 </ion-split-pane>

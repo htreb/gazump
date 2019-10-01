@@ -9,14 +9,19 @@
     }
 }
 
-.group-title {
-    font-size: 1.1em;
+.menu-items, .settings-items {
+    background: transparent;
 }
 
 ion-item {
     --background: transparent;
 
     &.active {
-        background: var(--ion-color-medium);
+        background: var(--ion-color-primary);
+        --color: var(--ion-color-primary-contrast);
+
+        .menu-icon {
+            color: var(--ion-color-primary-contrast);
+        }
     }
 }
