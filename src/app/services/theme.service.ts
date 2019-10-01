@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import * as Color from 'color';
 import { Storage } from '@ionic/storage';
+import { BehaviorSubject } from 'rxjs';
 
 const transition = 'background-color 0ms';
 
@@ -181,6 +182,8 @@ function contrast(color, ratio = 3) {
 })
 export class ThemeService {
 
+  public nextTheme$ = new BehaviorSubject<any>({ loading: true });
+
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private storage: Storage
@@ -188,6 +191,7 @@ export class ThemeService {
     this.storedTheme.then(theme => {
       this.setTheme(theme, true);
     });
+    this.getNextTheme();
   }
 
   // Override all global variables with a new theme
@@ -195,7 +199,7 @@ export class ThemeService {
     const cssText = CSSTextGenerator(theme, fromStorage);
     this.setGlobalCSS(cssText);
     if (!fromStorage) {
-      return this.storage.set('theme', theme);
+      return this.storedTheme = theme;
     }
     return Promise.resolve();
   }
@@ -213,6 +217,10 @@ export class ThemeService {
     return this.storage.get('theme');
   }
 
+  set storedTheme(theme) {
+    this.storage.set('theme', theme).then(() => this.getNextTheme);
+  }
+
   getNextTheme() {
     return this.storedTheme.then(currentTheme => {
       let currentIndex = -1;
@@ -220,6 +228,7 @@ export class ThemeService {
         currentIndex = themes.findIndex(t => t.name === currentTheme.name);
       }
       const nextIndex = currentIndex + 1 >= themes.length ? 0 : currentIndex + 1 ;
+      this.nextTheme$.next(themes[nextIndex]);
       return themes[nextIndex];
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { GroupService } from 'src/app/services/group.service';
@@ -15,7 +15,7 @@ export interface Page {
   templateUrl: './menu.page.html',
   styleUrls: ['./menu.page.scss'],
 })
-export class MenuPage implements OnInit {
+export class MenuPage {
 
   public pages: Page[] = [
     {
@@ -31,27 +31,14 @@ export class MenuPage implements OnInit {
       routerDirection: 'forward',
     }
   ];
-  public nextTheme: any;
+
   public currentGroup$ = this.groupService.currentGroupSubject;
 
   constructor(
     private auth: AuthService,
-    private themeService: ThemeService,
-    private groupService: GroupService,
+    public themeService: ThemeService,
+    public groupService: GroupService,
     ) {}
-
-
-  ngOnInit() {
-    this.getNextTheme();
-  }
-
-  getNextTheme(): void {
-    this.themeService.getNextTheme().then(t => this.nextTheme = t);
-  }
-
-  switchTheme(): void {
-    this.themeService.toggleThemes().then( _ => this.getNextTheme() );
-  }
 
   showSettings() {
     console.log('show settings');

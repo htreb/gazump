@@ -4,8 +4,8 @@
       <ion-toolbar color="primary">
         <ion-title>Menu</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="switchTheme()">
-            <ion-icon slot="icon-only" [name]="nextTheme?.icon"></ion-icon>
+          <ion-button (click)="themeService.toggleThemes()">
+            <ion-icon slot="icon-only" [name]="(themeService.nextTheme$ | async)?.icon"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
