@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Chats</ion-title>
-    <app-settings-icon slot='end'></app-settings-icon>
+    <app-settings-icon slot='end' [settingsOptions]="settingsOptions"></app-settings-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -16,23 +16,17 @@
   <app-empty-list [listType]="'chats'"></app-empty-list>
 </ng-template>
 
-  <ng-container *ngIf="chats$ | async as chats">
-    <ng-container *ngIf="!chats.loading; else loading">
-      <ion-content *ngIf="chats.length; else noChats">
-        <ion-item
-          *ngFor="let chat of chats"
-          button
-          (click)="showChat(chat.id)"
-        >
-          <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
-          <ion-note slot='end' color='primary'>{{ chat.members | membersDetail }}</ion-note>
-        </ion-item>
-      </ion-content>
-    </ng-container><!-- check that we have some chats -->
-  </ng-container><!-- fetching all chats -->
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="startChat()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+<ng-container *ngIf="chats$ | async as chats">
+  <ng-container *ngIf="!chats.loading; else loading">
+    <ion-content *ngIf="chats.length; else noChats">
+      <ion-item
+        *ngFor="let chat of chats"
+        button
+        (click)="showChat(chat.id)"
+      >
+        <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
+        <ion-note slot='end' color='primary'>{{ chat.members | membersDetail }}</ion-note>
+      </ion-item>
+    </ion-content>
+  </ng-container><!-- check that we have some chats -->
+</ng-container><!-- fetching all chats -->
