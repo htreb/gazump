@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Groups</ion-title>
-    <app-settings-icon slot='end'></app-settings-icon>
+    <app-settings-icon slot='end' [settingsOptions]="settingsOptions"></app-settings-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -31,9 +31,3 @@
     </ion-content><!-- check that we have some groups -->
   </ng-container><!-- check we are not loading them still -->
 </ng-container><!-- fetching all groups -->
-
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button [routerLink]="['create']">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
