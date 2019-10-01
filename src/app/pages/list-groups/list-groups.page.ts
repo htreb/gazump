@@ -18,4 +18,12 @@ export class ListGroupsPage implements OnInit {
   ngOnInit() {
     this.groupService.subscribeToUsersGroups();
   }
+
+  ionViewDidEnter() {
+    this.groupService.showGroupMenuItems = false;
+  }
+
+  ionViewWillLeave() {
+    this.groupService.showGroupMenuItems = true;
+  }
 }

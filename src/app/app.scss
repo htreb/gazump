@@ -1,3 +1,6 @@
+$splitPaneMenuWidth: 200px;
+
+
 /////////////////////////////////////////////   Themes   /////////////////////////////////////////////
 .theme-background {
   background: var(--ion-color-secondary);  /* fallback for old browsers */
@@ -40,8 +43,8 @@
 
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
 .split-pane-visible >.split-pane-side {
-  min-width: 200px !important;
-  max-width: 200px !important;
+  min-width: $splitPaneMenuWidth !important;
+  max-width: $splitPaneMenuWidth !important;
 }
 
 ion-popover.tip-popover {
@@ -58,6 +61,10 @@ ion-popover.ticket-picker {
 ion-modal.full-screen {
   --height: 100vh;
   --width: 100vw;
+
+  @media (min-width: 992px) {
+    left: $splitPaneMenuWidth;
+  }
 }
 
 .title { // title for ticket details modal

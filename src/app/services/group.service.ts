@@ -14,6 +14,7 @@ export class GroupService {
   public currentGroupSubject = new BehaviorSubject<any>({ loading: true });
   private groupsSub: Subscription;
   public allGroupsSubject = new BehaviorSubject<any>({ loading: true });
+  public showGroupMenuItems = true;
 
   constructor(
     private db: AngularFirestore,
@@ -22,9 +23,9 @@ export class GroupService {
   ) {
     const updateGroupFromUrl = (url: string) => {
       const urlSegments = url.split('/');
-      const groupsIndex = urlSegments.indexOf('groups');
-      if (groupsIndex > -1) {
-        return this.setCurrentGroup(urlSegments[groupsIndex + 1]);
+      const groupIndex = urlSegments.indexOf('group');
+      if (groupIndex > -1) {
+        return this.setCurrentGroup(urlSegments[groupIndex + 1]);
       }
     };
 

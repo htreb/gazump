@@ -16,44 +16,49 @@
 
     <ion-content forceOverscroll='false'>
       <div class='menu'>
-        <ion-text
-          class="ion-padding ion-text-wrap group-title"
-          lines="none"
-        >
-          this is a very long named example of what a group name could be
-        </ion-text>
 
-        <ion-menu-toggle autoHide='false'>
-          <ion-item
-            routerLink="/groups"
-            routerDirection="root"
-            lines="full"
-            detail="false"
-          >
-            <ion-icon slot="start" name="arrow-back"></ion-icon>
-            <ion-label>All groups</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-
-        <ion-list class='ion-no-padding menu-items'>
-          <ion-menu-toggle autoHide='false'>
-            <ion-item
-              *ngFor="let page of pages"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
-              [routerLink]="[page.url]"
-              [routerDirection]="page.routerDirection"
-              lines="full"
-              detail="false"
+        <ng-container *ngIf="currentGroup$ | async as currentGroup">
+          <ng-container *ngIf="!currentGroup.loading && groupService.showGroupMenuItems">
+            <ion-text
+              class="ion-padding ion-text-wrap group-title"
+              lines="none"
             >
-              <ion-icon slot='start' [name]='page.icon'></ion-icon>
-              <ion-label>{{ page.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
+              {{ currentGroup.title }}
+            </ion-text>
+
+            <ion-menu-toggle autoHide='false'>
+              <ion-item
+                routerLink="/"
+                routerDirection="root"
+                lines="full"
+                detail="false"
+              >
+                <ion-icon slot="start" name="arrow-back"></ion-icon>
+                <ion-label>All groups</ion-label>
+              </ion-item>
+            </ion-menu-toggle>
+
+            <ion-list class='ion-no-padding menu-items'>
+              <ion-menu-toggle autoHide='false'>
+                <ion-item
+                  *ngFor="let page of pages"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  [routerLink]="['/', 'group', currentGroup.id, page.url]"
+                  [routerDirection]="page.routerDirection"
+                  lines="full"
+                  detail="false"
+                >
+                  <ion-icon slot='start' [name]='page.icon'></ion-icon>
+                  <ion-label>{{ page.title }}</ion-label>
+                </ion-item>
+              </ion-menu-toggle>
+            </ion-list>
+          </ng-container>
+        </ng-container>
 
         <ion-list
-          class='ion-padding'
+          class='ion-no-padding'
         >
           <ion-item
             tappable

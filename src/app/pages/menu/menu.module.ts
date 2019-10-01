@@ -14,16 +14,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        loadChildren: () => import('../list-groups/list-groups.module').then(m => m.ListGroupsPageModule)
+      },
+      {
+        path: 'group/:groupId/boards',
         loadChildren: () => import('../board-tabs/board-tabs.module').then(m => m.BoardTabsPageModule)
       },
       {
-        path: 'chats',
+        path: 'group/:groupId/chats',
         loadChildren: () => import('../list-chats/list-chats.module').then(m => m.ListChatsPageModule)
       },
-      {
-        path: 'profile',
-        loadChildren: () => import('../profile/profile.module').then(m => m.ProfilePageModule)
-      },
+      { path: 'group/:groupId', redirectTo: 'group/:groupId/boards', pathMatch: 'full' },
     ]
   }
 ];
