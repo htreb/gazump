@@ -13,7 +13,7 @@ export class ContactPickerComponent implements OnInit {
 
   @Input() allContacts = false;
   @Input() dismissPopover;
-  public selectedContacts: any = [];
+  @Input() selectedContacts: any = [];
   searchTerm$ = new BehaviorSubject<string>('');
   filteredContacts$;
 

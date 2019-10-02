@@ -156,7 +156,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
         selectedTickets: this.linkedTickets
       },
       event: ev,
-      cssClass: 'ticket-picker',
+      cssClass: 'picker',
     });
     await popover.present();
     const { data } = await popover.onWillDismiss();

@@ -13,9 +13,9 @@ export class BoardDetailComponent implements OnInit {
 
   @Input() board;
   @Input() closeBoardDetail;
-  title = '';
+  title = 'Board Title';
   icons = icons;
-  contacts;
+  contacts = [this.contactService.getDetailsFromId('', true)];
   newStateName = '';
   states = [
     {color: 'medium', id: this.getId(), title: 'To Do'},
@@ -44,7 +44,9 @@ export class BoardDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.parseBoardDataToModel(this.board);
+    if (this.board) {
+      this.parseBoardDataToModel(this.board);
+    }
   }
 
   parseBoardDataToModel(boardData) {
@@ -57,7 +59,6 @@ export class BoardDetailComponent implements OnInit {
   parseModelToBoardData() {
     const members = {};
     this.contacts.map(c => members[c.id] = 'USER');
-
     return {
       members,
       title: this.title,
@@ -105,9 +106,10 @@ export class BoardDetailComponent implements OnInit {
     const popover = await this.popoverController.create({
       component: ContactPickerComponent,
       componentProps: {
+        selectedContacts: JSON.parse(JSON.stringify(this.contacts)),
         dismissPopover,
       },
-      cssClass: 'contact-picker',
+      cssClass: 'picker',
     });
 
     function dismissPopover(args) {

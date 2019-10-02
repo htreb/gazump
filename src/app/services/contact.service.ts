@@ -42,32 +42,31 @@ export class ContactService {
   getGroupContacts() {
     return this.groupService.currentGroupSubject.pipe(
       map(currentGroup => {
-        // TODO I'm filtering myself twice here - also shouln't return 'unknown' not useful
-        const withoutMe = Object.keys(currentGroup.members).filter(
-          id => id !== this.auth.currentUser.value.id
+        const allUsers = Object.keys(currentGroup.members).map(
+          contactId => this.getDetailsFromId(contactId)
         );
-        const users = withoutMe.map(id => {
-          if (id !== this.auth.currentUser.value.id) {
-            return this.getDetailsFromId(id);
-          }
-        });
-        return users.sort((a, b) => {
+
+        const filteredUsers = allUsers.filter(
+          user => user.id && user.id !== this.auth.currentUser.value.id
+        );
+
+        return filteredUsers.sort((a, b) => {
           return a.userName < b.userName ? -1 : 1;
         });
       })
     );
   }
 
-  getDetailsFromId(id: string) {
+  getDetailsFromId(id: string, getMe = false) {
     if (
       this.auth.currentUser.value &&
       this.auth.currentUser.value.connections &&
       this.auth.currentUser.value.connections[id]
     ) {
       return { id, ...this.auth.currentUser.value.connections[id] };
-    } else if (id === this.auth.currentUser.value.id) {
+    } else if (id === this.auth.currentUser.value.id || getMe) {
       return {
-        id,
+        id: this.auth.currentUser.value.id,
         userName: 'You',
         email: this.auth.currentUser.value.email
       };
