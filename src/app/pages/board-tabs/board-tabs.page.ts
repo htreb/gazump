@@ -73,6 +73,10 @@ export class BoardTabsPage {
     if (data) {
       if (board && board.id) {
         this.boardService.updateBoard(board.id, data);
+        // If editing the current board then update is here
+        // it won't auto do it until a tab is changed
+        this.currentBoard = { ...this.currentBoard, ...data };
+        this.updateSettingsOptions();
       } else {
         this.boardService.createBoard(data);
       }
