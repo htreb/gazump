@@ -70,6 +70,13 @@ export class BoardTabsPage {
 
     await modal.present();
     const { data } = await modal.onWillDismiss();
+    if (data) {
+      if (board && board.id) {
+        this.boardService.updateBoard(board.id, data);
+      } else {
+        this.boardService.createBoard(data);
+      }
+    }
   }
 
 }

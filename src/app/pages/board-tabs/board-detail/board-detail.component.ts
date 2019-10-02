@@ -68,10 +68,7 @@ export class BoardDetailComponent implements OnInit {
   }
 
   async closePage(save = false) {
-    if (save) {
-      return console.log(this.parseModelToBoardData());
-    }
-    this.closeBoardDetail();
+    this.closeBoardDetail(save && this.parseModelToBoardData());
   }
 
   async addState() {

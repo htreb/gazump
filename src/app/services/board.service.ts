@@ -73,7 +73,7 @@ export class BoardService {
    * }
    */
   updateBoard(boardId: string, data: any): Promise<any> {
-    if (!Object.keys(data).length) {
+    if (!Object.keys(data).length || !boardId) {
       // no unnecessary db writes
       return Promise.resolve();
     }
@@ -83,6 +83,14 @@ export class BoardService {
       .collection('boards')
       .doc(boardId)
       .update(data);
+  }
+
+  createBoard(data: any) {
+    return this.db
+    .collection('groups')
+    .doc(this.groupService.currentGroupId)
+    .collection('boards')
+    .add(data);
   }
 
   // TODO this isn't being used right now
