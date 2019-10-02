@@ -15,6 +15,7 @@ import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
 import { StartChatComponent } from './start-chat/start-chat.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
+import { ContactPickerComponent } from './contact-picker/contact-picker.component';
 
 
 
@@ -31,6 +32,7 @@ import { MembersDetailPipe } from './pipes/members-detail.pipe';
     StartChatComponent,
     TruncatePipe,
     MembersDetailPipe,
+    ContactPickerComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +51,7 @@ import { MembersDetailPipe } from './pipes/members-detail.pipe';
     StartChatComponent,
     TruncatePipe,
     MembersDetailPipe,
+    ContactPickerComponent,
   ],
   entryComponents: [
     SettingsListComponent,
@@ -56,6 +59,7 @@ import { MembersDetailPipe } from './pipes/members-detail.pipe';
     ChatComponent,
     TicketPickerComponent,
     StartChatComponent,
+    ContactPickerComponent,
   ]
 })
 export class SharedModule { }

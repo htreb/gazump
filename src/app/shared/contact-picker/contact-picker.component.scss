@@ -1,0 +1,10 @@
+.contact-picker {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+
+    .contact-list {
+        overflow: scroll;
+        flex: 1;
+    }
+}

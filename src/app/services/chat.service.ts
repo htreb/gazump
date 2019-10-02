@@ -69,7 +69,7 @@ export class ChatService {
   }
 
   getId() {
-    return `${new Date().getTime()}_${Math.floor(Math.random() * 1000000)}`;
+    return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
   }
 
   startChat(title: string, membersArray: any) {

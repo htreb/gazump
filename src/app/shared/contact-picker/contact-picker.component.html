@@ -1,0 +1,43 @@
+<ng-template #loadingContacts>
+  <app-loading></app-loading>
+</ng-template>
+<ng-template #noContacts>
+  <app-empty-list [customMessage]="'No matching contacts'"></app-empty-list>
+</ng-template>
+
+<div class='contact-picker'>
+  <ion-searchbar
+    #searchBar
+    (ionChange)="updateSearchTerm(searchBar.value)">
+  </ion-searchbar>
+  <div class='contact-list'>
+    <ng-container *ngIf="filteredContacts$ | async as contacts">
+      <ng-container *ngIf="!contacts.loading; else loadingContacts">
+        <ion-list *ngIf="contacts.length; else noContacts">
+          <ion-item *ngFor="let contact of contacts">
+            <ion-label class="ion-text-wrap">
+              <ion-text>
+                <h2>{{ contact.userName }}</h2>
+              </ion-text>
+              <ion-text color="medium">
+                <p>{{ contact.email }}</p>
+              </ion-text>
+            </ion-label>
+            <ion-checkbox
+              slot="end"
+              (ionChange)="contactSelected($event, contact)"
+              [checked]="findContact(contact) > -1"
+            >
+            </ion-checkbox>
+          </ion-item>
+
+        </ion-list>
+      </ng-container>
+    </ng-container>
+  </div>
+  <ion-footer class="submit-footer">
+    <ion-button expand="block" (click)="closeContactPicker($event, true)">
+      Select
+    </ion-button>
+  </ion-footer>
+</div>

@@ -64,8 +64,8 @@ export class BoardTabsPage {
       }
     });
 
-    function closeBoardDetail() {
-      modal.dismiss();
+    function closeBoardDetail(args) {
+      return modal.dismiss(args);
     }
 
     await modal.present();

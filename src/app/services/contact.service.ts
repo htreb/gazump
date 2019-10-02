@@ -42,6 +42,7 @@ export class ContactService {
   getGroupContacts() {
     return this.groupService.currentGroupSubject.pipe(
       map(currentGroup => {
+        // TODO I'm filtering myself twice here - also shouln't return 'unknown' not useful
         const withoutMe = Object.keys(currentGroup.members).filter(
           id => id !== this.auth.currentUser.value.id
         );
@@ -63,9 +64,10 @@ export class ContactService {
       this.auth.currentUser.value.connections &&
       this.auth.currentUser.value.connections[id]
     ) {
-      return this.auth.currentUser.value.connections[id];
+      return { id, ...this.auth.currentUser.value.connections[id] };
     } else if (id === this.auth.currentUser.value.id) {
       return {
+        id,
         userName: 'You',
         email: this.auth.currentUser.value.email
       };
