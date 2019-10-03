@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
@@ -12,6 +12,7 @@ import { BoardDetailComponent } from './board-detail/board-detail.component';
 })
 export class BoardTabsPage {
 
+  @ViewChildren('tabButton') tabButtons: any;
   public allBoards$: Observable<any> = this.boardService.allBoardsSubject;
   public currentBoard;
   public settingsOptions: SettingsOption[] = [
@@ -75,6 +76,8 @@ export class BoardTabsPage {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteBoard(board.id);
+            // need to select another tab here!
+            this.tabButtons.first.el.click();
             if (typeof callBack === 'function') {
               callBack();
             }

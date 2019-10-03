@@ -14,7 +14,7 @@ export class BoardDetailComponent implements OnInit {
   @Input() board;
   @Input() closeBoardDetail;
   @Input() deleteBoard: () => {};
-  title = 'Board Title';
+  title = '';
   icons = icons;
   contacts = [this.contactService.getDetailsFromId('', true)];
   newStateName = '';

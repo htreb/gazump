@@ -32,6 +32,7 @@
     <ion-footer>
       <ion-segment mode="ios" [value]="allBoards[0]" scrollable>
         <ion-segment-button
+          #tabButton
           *ngFor="let board of allBoards; trackBy: boardTrackBy"
           [value]="board"
           mode="ios"
