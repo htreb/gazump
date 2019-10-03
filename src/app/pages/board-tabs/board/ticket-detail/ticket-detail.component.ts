@@ -60,18 +60,4 @@ export class TicketDetailComponent implements OnInit {
     await modal.present();
     const { data } = await modal.onWillDismiss();
   }
-
-  // TODO store these colors in an appropriate place on the db (map maybe with the completedBy);
-  getCompletedByColor(person: string) {
-    const colors = {
-      'Sellers Solicitors': 'primary',
-      'Buyers Solicitors': 'danger',
-      'Estate Agents': 'tertiary',
-      Sellers: 'success',
-      Buyers: 'warning',
-      Council: 'danger',
-      Other: 'success'
-    };
-    return colors[person];
-  }
 }
