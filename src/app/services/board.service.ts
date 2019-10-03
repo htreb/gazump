@@ -87,10 +87,19 @@ export class BoardService {
 
   createBoard(data: any) {
     return this.db
-    .collection('groups')
-    .doc(this.groupService.currentGroupId)
-    .collection('boards')
-    .add(data);
+      .collection('groups')
+      .doc(this.groupService.currentGroupId)
+      .collection('boards')
+      .add(data);
+  }
+
+  deleteBoard(boardId: string) {
+    return this.db
+      .collection('groups')
+      .doc(this.groupService.currentGroupId)
+      .collection('boards')
+      .doc(boardId)
+      .delete();
   }
 
   // TODO this isn't being used right now

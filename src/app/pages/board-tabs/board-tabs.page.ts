@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 
 @Component({
@@ -25,6 +25,7 @@ export class BoardTabsPage {
   constructor(
     private boardService: BoardService,
     private modalController: ModalController,
+    private alertCtrl: AlertController,
     ) { }
 
   segmentButtonSelected(board) {
@@ -41,15 +42,48 @@ export class BoardTabsPage {
       },
     ];
 
-    if (this.currentBoard) {
-      this.settingsOptions.unshift({
-        title: `Edit ${this.currentBoard.title}`,
-        icon: 'create',
-        func: () => this.openBoardDetail(this.currentBoard),
-      });
+    const boardRightNow = JSON.parse(JSON.stringify(this.currentBoard));
+    if (boardRightNow) {
+      this.settingsOptions = this.settingsOptions.concat([
+        {
+          title: `Edit ${boardRightNow.title}`,
+          icon: 'create',
+          func: () => this.openBoardDetail(boardRightNow),
+        },
+        {
+          title: `Delete ${boardRightNow.title}`,
+          icon: 'trash',
+          func: () => this.deleteBoard(boardRightNow),
+        }
+      ]);
     }
   }
 
+  async deleteBoard(board, callBack?) {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm',
+      message: `Are you sure you want to delete the board and all its tickets:
+                <br><br>
+                <b>${board.title}</b>
+                <br><br>
+                This cannot be undone.`,
+      buttons: [
+        {
+          text: 'Cancel'
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            this.boardService.deleteBoard(board.id);
+            if (typeof callBack === 'function') {
+              callBack();
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
   boardTrackBy(index, board) {
     return board.id;
@@ -61,6 +95,7 @@ export class BoardTabsPage {
       componentProps: {
         board,
         closeBoardDetail,
+        deleteBoard: board ? () => this.deleteBoard(board, closeBoardDetail) : null,
       }
     });
 
@@ -73,7 +108,7 @@ export class BoardTabsPage {
     if (data) {
       if (board && board.id) {
         this.boardService.updateBoard(board.id, data);
-        // If editing the current board then update is here
+        // If editing the current board then update it here
         // it won't auto do it until a tab is changed
         this.currentBoard = { ...this.currentBoard, ...data };
         this.updateSettingsOptions();
