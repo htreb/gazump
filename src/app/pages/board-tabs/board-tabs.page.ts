@@ -75,12 +75,13 @@ export class BoardTabsPage {
         {
           text: 'Ok',
           handler: () => {
-            this.boardService.deleteBoard(board.id);
-            // need to select another tab here!
-            this.tabButtons.first.el.click();
-            if (typeof callBack === 'function') {
-              callBack();
-            }
+            this.boardService.deleteBoard(board.id).then(() => {
+              // need to select another tab here!
+              this.tabButtons.first.el.click();
+              if (typeof callBack === 'function') {
+                callBack();
+              }
+            });
           }
         }
       ]

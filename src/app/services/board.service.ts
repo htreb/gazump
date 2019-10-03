@@ -45,7 +45,8 @@ export class BoardService {
             .collection('groups')
             .doc(group.id)
             .collection('boards', ref =>
-              ref.orderBy(`members.${this.auth.currentUser.value.id}`)
+              ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+              .orderBy('createdAt')
             )
             .valueChanges({ idField: 'id' });
         })
@@ -86,6 +87,7 @@ export class BoardService {
   }
 
   createBoard(data: any) {
+    data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
     return this.db
       .collection('groups')
       .doc(this.groupService.currentGroupId)

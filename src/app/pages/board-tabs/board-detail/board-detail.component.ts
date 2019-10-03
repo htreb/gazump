@@ -52,16 +52,14 @@ export class BoardDetailComponent implements OnInit {
 
   parseBoardDataToModel(boardData) {
     this.title = JSON.parse(JSON.stringify(boardData.title));
-    this.contacts = Object.keys(boardData.members).map(memberId => this.contactService.getDetailsFromId(memberId));
+    this.contacts = boardData.members.map(memberId => this.contactService.getDetailsFromId(memberId));
     this.states = JSON.parse(JSON.stringify(boardData.states));
     this.completedBy = JSON.parse(JSON.stringify(boardData.completedBy));
   }
 
   parseModelToBoardData() {
-    const members = {};
-    this.contacts.map(c => members[c.id] = 'USER');
     return {
-      members,
+      members: this.contacts.map(c => c.id),
       title: this.title,
       states: this.states,
       completedBy: this.completedBy
