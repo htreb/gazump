@@ -88,6 +88,8 @@ export class BoardService {
 
   createBoard(data: any) {
     data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    data.tickets = {};
+    data.states.map(s => data.tickets[s.id] = []);
     return this.db
       .collection('groups')
       .doc(this.groupService.currentGroupId)
@@ -161,7 +163,7 @@ export class BoardService {
 
   // TODO just use updateTicketSnippet and remove this?
   addTicketSnippet(boardId: string, stateId: string, snippet: any) {
-    snippet = { id: this.getId(), ...snippet };
+    snippet = {...snippet, id: this.getId()};
     return this.db
       .collection('groups')
       .doc(this.groupService.currentGroupId)

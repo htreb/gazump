@@ -144,7 +144,4 @@ export class BoardDetailComponent implements OnInit {
   reorderCompletedBy(ev) {
     this.completedBy = ev.detail.complete(this.completedBy);
   }
-
-
-
 }

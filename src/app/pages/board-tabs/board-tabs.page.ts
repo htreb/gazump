@@ -76,10 +76,12 @@ export class BoardTabsPage {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteBoard(board.id).then(() => {
+              this.currentBoard = null;
               if (this.tabButtons.first) {
                 // need to select another tab here!
                 this.tabButtons.first.el.click();
               }
+              this.updateSettingsOptions();
               if (typeof callBack === 'function') {
                 callBack();
               }

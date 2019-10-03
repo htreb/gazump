@@ -25,10 +25,6 @@ export class TicketDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.linkedChats$ = this.chatService.findChatsWhichMentionTicket(
-      this.currentTicketSnippet.id
-    );
-
     this.ticketForm = this.fb.group({
       id: [''],
       title: ['', [Validators.required]],
@@ -38,6 +34,10 @@ export class TicketDetailComponent implements OnInit {
     });
 
     this.ticketForm.patchValue(this.currentTicketSnippet);
+    this.linkedChats$ = this.chatService.findChatsWhichMentionTicket(
+      this.currentTicketSnippet.id
+    );
+
   }
 
   closePage(saveTicket = false) {

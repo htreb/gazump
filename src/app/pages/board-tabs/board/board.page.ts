@@ -44,7 +44,7 @@ export class BoardPage implements OnInit {
     const ids = [];
     if (this.boardData.states) {
       this.boardData.states.forEach(s =>
-        ids.push(`${this.boardData.id.toLowerCase()}${s.id}`)
+        ids.push(`${this.boardData.id}${s.id}`)
       );
     }
     return ids;
@@ -56,6 +56,12 @@ export class BoardPage implements OnInit {
 
   ticketTrackBy(index, ticket) {
     return ticket.id;
+  }
+
+  get emptyTickets() {
+    // the template doesn't like adding an array literal. It doesn't instantiate a new one each time
+    // just keeps using the same one and the columns start duplicating each other and get in a mess.
+    return [];
   }
 
   async updateDb(newDbValue: any) {
@@ -111,7 +117,7 @@ export class BoardPage implements OnInit {
     this.updateDb(updatedTickets);
   }
 
-  async openTicketDetail(currentTicketSnippet: any, currentState: any) {
+  async openTicketDetail(currentState: any, currentTicketSnippet: any = {}) {
     const modal = await this.modalController.create({
       component: TicketDetailComponent,
       componentProps: {
