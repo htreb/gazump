@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+import { Subscription, BehaviorSubject, combineLatest, of } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
 import { ContactService } from './contact.service';
@@ -135,7 +135,7 @@ export class ChatService {
 
   findChatsWhichMentionTicket(ticketId: string) {
     if (!ticketId) {
-      return [];
+      return of([]);
     }
     return this.allChatsSubject.pipe(
       map(allChats => {
