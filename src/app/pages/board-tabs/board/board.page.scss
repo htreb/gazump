@@ -39,6 +39,11 @@ $boardPadding: 8px;
 
 .ticket {
     transition: none; // ios adds an ugly bounce if this isn't here
+    max-height: 300px;
+
+    .title, .description {
+        white-space: pre-wrap;
+    }
 }
 
 /////// drag drop styles ///////

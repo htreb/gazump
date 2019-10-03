@@ -50,6 +50,7 @@
       placeholder="Description"
       class="description ion-padding"
       autosize
+      [minRows]="8"
     >
     </ion-textarea>
 
@@ -132,6 +133,7 @@
       fill="solid"
       strong="true"
       color="primary"
+      [disabled]="!ticketForm.valid"
     >
       Save
     </ion-button>
