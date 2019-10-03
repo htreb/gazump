@@ -1,13 +1,3 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ currentBoard?.title || "Boards" }}</ion-title>
-    <app-settings-icon slot="end" [settingsOptions]="settingsOptions"></app-settings-icon>
-  </ion-toolbar>
-</ion-header>
-
 <ng-template #loading>
   <app-loading></app-loading>
 </ng-template>
@@ -17,26 +7,35 @@
 </ng-template>
 
 <ng-container *ngIf="allBoards$ | async as allBoards">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>{{ findMatchingBoard(allBoards, displayingBoardId).title }}</ion-title>
+      <app-settings-icon slot="end" [settingsOptions]="settingsOptions(allBoards, displayingBoardId)"></app-settings-icon>
+    </ion-toolbar>
+  </ion-header>
   <ng-container *ngIf="!allBoards.loading; else loading">
     <ion-content *ngIf="allBoards.length; else noBoards">
 
       <app-board
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
         [boardData]='board'
-        [showing]='board.id === currentBoard?.id'
+        [showing]='board.id === displayingBoardId'
       >
       </app-board>
 
     </ion-content>
 
     <ion-footer>
-      <ion-segment mode="ios" [value]="currentBoard?.id || allBoards[0]['id']" scrollable>
+      <ion-segment mode="ios" [value]="displayingBoardId || allBoards[0] && allBoards[0]['id']" scrollable>
         <ion-segment-button
           #tabButton
           *ngFor="let board of allBoards; trackBy: boardTrackBy"
           [value]="board.id"
           mode="ios"
-          (ionSelect)="segmentButtonSelected(board)"
+          (ionSelect)="segmentButtonSelected(board.id)"
         >
           <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
           <ion-label class="ion-text-wrap">{{ board.title }}</ion-label>

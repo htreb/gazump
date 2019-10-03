@@ -14,14 +14,7 @@ export class BoardTabsPage {
 
   @ViewChildren('tabButton') tabButtons: any;
   public allBoards$: Observable<any> = this.boardService.allBoardsSubject;
-  public currentBoard;
-  public settingsOptions: SettingsOption[] = [
-    {
-      title: 'New Board',
-      icon: 'add',
-      func: () => this.openBoardDetail(),
-    },
-  ];
+  public displayingBoardId = '';
 
   constructor(
     private boardService: BoardService,
@@ -29,35 +22,45 @@ export class BoardTabsPage {
     private alertCtrl: AlertController,
     ) { }
 
-  segmentButtonSelected(board) {
-    this.currentBoard = board;
-    this.updateSettingsOptions();
+  findMatchingBoard(allBoards, matchingId) {
+    if (Array.isArray(allBoards)) {
+      const matching = allBoards.filter(b => b.id === matchingId);
+      if (matching.length === 1) {
+        return matching[0];
+      }
+    }
+    return {};
   }
 
-  updateSettingsOptions() {
-    this.settingsOptions = [
+  segmentButtonSelected(boardId) {
+    this.displayingBoardId = boardId;
+  }
+
+  settingsOptions(allBoards, matchingId): SettingsOption[] {
+    const currentBoard = this.findMatchingBoard(allBoards, matchingId);
+    let options = [
       {
         title: 'New Board',
         icon: 'add',
         func: () => this.openBoardDetail(),
       },
     ];
-
-    const boardRightNow = JSON.parse(JSON.stringify(this.currentBoard));
-    if (boardRightNow) {
-      this.settingsOptions = this.settingsOptions.concat([
+    if (currentBoard.title) {
+      options = options.concat([
         {
-          title: `Edit "${boardRightNow.title}"`,
+          title: `Edit "${currentBoard.title}"`,
           icon: 'create',
-          func: () => this.openBoardDetail(boardRightNow),
+          func: () => this.openBoardDetail(currentBoard),
         },
         {
-          title: `Delete "${boardRightNow.title}"`,
+          title: `Delete "${currentBoard.title}"`,
           icon: 'trash',
-          func: () => this.deleteBoard(boardRightNow),
+          func: () => this.deleteBoard(currentBoard),
         }
       ]);
     }
+
+    return options;
   }
 
   async deleteBoard(board, callBack?) {
@@ -76,12 +79,11 @@ export class BoardTabsPage {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteBoard(board.id).then(() => {
-              this.currentBoard = null;
+              this.displayingBoardId = '';
               if (this.tabButtons.first) {
                 // need to select another tab here!
                 this.tabButtons.first.el.click();
               }
-              this.updateSettingsOptions();
               if (typeof callBack === 'function') {
                 callBack();
               }
@@ -116,15 +118,11 @@ export class BoardTabsPage {
     if (data) {
       if (board && board.id) {
         this.boardService.updateBoard(board.id, data);
-        // If editing the current board then update it here
-        // it won't auto do it until a tab is changed
-        this.currentBoard = { ...this.currentBoard, ...data };
-        this.updateSettingsOptions();
       } else {
         this.boardService.createBoard(data).then(resp => {
           // find the matching tab and select it
           this.tabButtons.forEach(tab => {
-            if (tab.value.id === resp.id) {
+            if (tab.value === resp.id) {
               tab.el.click();
             }
           });
