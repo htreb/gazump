@@ -47,12 +47,12 @@ export class BoardTabsPage {
     if (boardRightNow) {
       this.settingsOptions = this.settingsOptions.concat([
         {
-          title: `Edit ${boardRightNow.title}`,
+          title: `Edit "${boardRightNow.title}"`,
           icon: 'create',
           func: () => this.openBoardDetail(boardRightNow),
         },
         {
-          title: `Delete ${boardRightNow.title}`,
+          title: `Delete "${boardRightNow.title}"`,
           icon: 'trash',
           func: () => this.deleteBoard(boardRightNow),
         }
@@ -76,8 +76,10 @@ export class BoardTabsPage {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteBoard(board.id).then(() => {
-              // need to select another tab here!
-              this.tabButtons.first.el.click();
+              if (this.tabButtons.first) {
+                // need to select another tab here!
+                this.tabButtons.first.el.click();
+              }
               if (typeof callBack === 'function') {
                 callBack();
               }
@@ -117,7 +119,14 @@ export class BoardTabsPage {
         this.currentBoard = { ...this.currentBoard, ...data };
         this.updateSettingsOptions();
       } else {
-        this.boardService.createBoard(data);
+        this.boardService.createBoard(data).then(resp => {
+          // find the matching tab and select it
+          this.tabButtons.forEach(tab => {
+            if (tab.value.id === resp.id) {
+              tab.el.click();
+            }
+          });
+        });
       }
     }
   }
