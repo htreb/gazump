@@ -30,11 +30,11 @@
     </ion-content>
 
     <ion-footer>
-      <ion-segment mode="ios" [value]="currentBoard || allBoards[0]" scrollable>
+      <ion-segment mode="ios" [value]="currentBoard?.id || allBoards[0]['id']" scrollable>
         <ion-segment-button
           #tabButton
           *ngFor="let board of allBoards; trackBy: boardTrackBy"
-          [value]="board"
+          [value]="board.id"
           mode="ios"
           (ionSelect)="segmentButtonSelected(board)"
         >
