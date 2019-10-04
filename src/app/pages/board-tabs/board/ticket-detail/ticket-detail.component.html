@@ -15,25 +15,12 @@
           <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <ion-badge [color]="currentState.color" slot="end" class="ion-margin">
-        {{ currentState.title | uppercase }}
-      </ion-badge>
-      <!-- <ion-buttons slot="end">
-        <ion-button (click)="stateSelect.open($event)">
-          <ion-badge [color]="currentState.color">
-            {{ currentState.title | uppercase }}
-          </ion-badge>
-          <ion-select
-            #stateSelect
-            interface="popover"
-            selectedText=" "
-            class="state-select"
-            formControlName="state"
-          >
-            <ion-select-option *ngFor="let state of allStates" class='state-option' [value]="state.state">{{ state.title }}</ion-select-option>
-          </ion-select>
+
+      <ion-buttons slot="end">
+        <ion-button (click)="deleteTicket(ticketForm.value)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
-      </ion-buttons> -->
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 

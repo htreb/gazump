@@ -11,17 +11,16 @@ import { ChatComponent } from 'src/app/shared/chat/chat.component';
 })
 export class TicketDetailComponent implements OnInit {
   @Input() currentTicketSnippet;
-  @Input() currentState;
   @Input() completedBy;
-  @Input() allStates;
   public ticketForm: FormGroup;
   public linkedChatsTip = `These are the chats which mention this ticket. Only chats you are a member of will appear here.`;
   linkedChats$;
+  @Input() deleteTicket = () => {};
 
   constructor(
     private modalCtrl: ModalController,
     private fb: FormBuilder,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) {}
 
   ngOnInit() {
@@ -30,7 +29,6 @@ export class TicketDetailComponent implements OnInit {
       title: ['', [Validators.required]],
       description: ['', [Validators.required]],
       completedBy: ['']
-      // state: [''] TODO hook this up so it works and moves the card
     });
 
     this.ticketForm.patchValue(this.currentTicketSnippet);

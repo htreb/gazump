@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import {
   moveItemInArray,
@@ -28,9 +28,10 @@ import {
     ])
   ]
 })
-export class BoardPage implements OnInit {
+export class BoardPage {
   @Input() boardData;
   @Input() showing;
+  private ticketDetailModal: HTMLIonModalElement;
 
   constructor(
     private boardService: BoardService,
@@ -38,7 +39,36 @@ export class BoardPage implements OnInit {
     private alertCtrl: AlertController
   ) {}
 
-  ngOnInit() {}
+
+  /**
+   *  This is called from the ticket detail component as well so
+   *  making it a function expression to stop the 'this' from changing
+   */
+  deleteTicket = async (ticket) => {
+    const alert = await this.alertCtrl.create({
+      header: 'Confirm',
+      message: `Are you sure you want to delete this ticket:
+                <br><br>
+                <b>${ticket.title}</b>
+                <br><br>
+                This cannot be undone.`,
+      buttons: [
+        {
+          text: 'Cancel'
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            this.boardService.deleteTicketSnippet(ticket);
+            if (this.ticketDetailModal) {
+              this.ticketDetailModal.dismiss();
+            }
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
   getColumnIds() {
     const ids = [];
@@ -118,18 +148,18 @@ export class BoardPage implements OnInit {
   }
 
   async openTicketDetail(currentState: any, currentTicketSnippet: any = {}) {
-    const modal = await this.modalController.create({
+    this.ticketDetailModal = await this.modalController.create({
       component: TicketDetailComponent,
       componentProps: {
         currentTicketSnippet,
         currentState,
         completedBy: this.boardData.completedBy,
-        allStates: this.boardData.states
+        deleteTicket: this.deleteTicket,
       }
     });
-    await modal.present();
+    await this.ticketDetailModal.present();
 
-    const { data } = await modal.onWillDismiss();
+    const { data } = await this.ticketDetailModal.onWillDismiss();
     if (data && data.saveTicket) {
       if (data.ticketFormValue.id) {
         // updating a ticket which already exists

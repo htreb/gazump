@@ -114,6 +114,34 @@ export class BoardService {
     };
   }
 
+  /**
+   * Returns the current board, state and index within the state of a given snippet.
+   * @param snippet the ticket snippet to find
+   */
+  findTicketSnippet(snippet) {
+    let currentBoardId;
+    let currentStateId;
+    let currentIndex;
+
+    const allBoards = JSON.parse(JSON.stringify(this.allBoardsSubject.value));
+    allBoards.map((board: any) => {
+      Object.keys(board.tickets).forEach(state => {
+        const idx = board.tickets[state].findIndex(ticket => ticket.id === snippet.id);
+        if (idx > -1) {
+          currentBoardId = board.id;
+          currentStateId = state;
+          currentIndex = idx;
+        }
+      });
+    });
+
+    return {
+      currentBoardId,
+      currentStateId,
+      currentIndex,
+    };
+  }
+
   updateTicketSnippet(boardId: string, newStateId: string, snippet: any) {
     // Find matching board and copy all tickets in all states
     const matchingBoard = this.allBoardsSubject.value.filter(
@@ -175,6 +203,23 @@ export class BoardService {
         )
       });
   }
+
+  deleteTicketSnippet(snippet) {
+    const {
+      currentBoardId,
+      currentStateId,
+    } = this.findTicketSnippet(snippet);
+
+    return this.db
+      .collection('groups')
+      .doc(this.groupService.currentGroupId)
+      .collection('boards')
+      .doc(currentBoardId)
+      .update({
+        [`tickets.${currentStateId}`]: firebase.firestore.FieldValue.arrayRemove(snippet)
+      });
+  }
+
 
   getId() {
     return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
