@@ -54,7 +54,7 @@ export class GroupService {
     }
     this.groupsSub = this.db
       .collection('groups', ref =>
-        ref.orderBy(`members.${this.auth.currentUser.value.id}`)
+        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
       )
       .valueChanges({ idField: 'id' })
       .pipe(takeUntil(this.auth.loggedOutSubject))
