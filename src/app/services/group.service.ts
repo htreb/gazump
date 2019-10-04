@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
+import * as firebase from 'firebase/app';
 import isEqual from 'lodash.isequal';
 
 @Injectable({
@@ -114,7 +115,8 @@ export class GroupService {
     const allUserIds = [...users.map(u => u.id), this.auth.currentUser.value.id ];
     return this.db.collection('groups').add({
       title,
-      members: allUserIds
+      members: allUserIds,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   }
 }

@@ -8,7 +8,7 @@ export class MembersDetailPipe implements PipeTransform {
   constructor(private contactService: ContactService) {}
 
   transform(memberIds: any): any {
-    const memberNames = Object.keys(memberIds).map(
+    const memberNames = memberIds.map(
       id => this.contactService.getDetailsFromId(id).userName
     );
     memberNames.sort((a, b) => {

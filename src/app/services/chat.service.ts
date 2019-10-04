@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { Subscription, BehaviorSubject, combineLatest, of } from 'rxjs';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
-import { ContactService } from './contact.service';
 import { GroupService } from './group.service';
 
 @Injectable({
@@ -17,7 +16,6 @@ export class ChatService {
   constructor(
     private db: AngularFirestore,
     private auth: AuthService,
-    private contactService: ContactService,
     private groupService: GroupService
   ) {
     this.subscribeToChats();
@@ -29,7 +27,7 @@ export class ChatService {
     }
     this.chatsSub = this.db
       .collection('chats', ref =>
-        ref.orderBy(`members.${this.auth.currentUser.value.id}`)
+        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
       )
       .valueChanges({ idField: 'id' })
       .subscribe((chats: any) => {
@@ -72,22 +70,12 @@ export class ChatService {
     return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
   }
 
-  startChat(title: string, membersArray: any) {
-    membersArray.push(this.contactService.getMe());
-    const membersMap = {};
-    membersArray.forEach(
-      m =>
-        (membersMap[m.id] = {
-          userName: m.userName,
-          email: m.email,
-          joined: firebase.firestore.FieldValue.serverTimestamp()
-        })
-    );
-
+  startChat(title: string, membersWithoutMe: any) {
+    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.currentUser.value.id ];
     return this.db.collection('chats').add({
       title,
       groupId: this.groupService.currentGroupId,
-      members: membersMap,
+      members: allMemberIds,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       linkedTickets: {}
     });
