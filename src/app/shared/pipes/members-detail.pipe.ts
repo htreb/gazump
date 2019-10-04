@@ -7,7 +7,7 @@ import { ContactService } from 'src/app/services/contact.service';
 export class MembersDetailPipe implements PipeTransform {
   constructor(private contactService: ContactService) {}
 
-  transform(memberIds: any): any {
+  transform(memberIds: any, allNames = false): any {
     const memberNames = memberIds.map(
       id => this.contactService.getDetailsFromId(id).userName
     );
@@ -20,7 +20,7 @@ export class MembersDetailPipe implements PipeTransform {
       }
       return a < b ? -1 : 1;
     });
-    if (memberNames.length < 4) {
+    if (memberNames.length < 4 || allNames) {
       return `${memberNames.slice(0, memberNames.length - 1).join(', ')} and ${
         memberNames[memberNames.length - 1]
       }.`;
