@@ -42,7 +42,10 @@ export class ContactService {
   getGroupContacts() {
     return this.groupService.currentGroupSubject.pipe(
       map(currentGroup => {
-        const allUsers = Object.keys(currentGroup.members).map(
+        if (!currentGroup.members) {
+          return [];
+        }
+        const allUsers = currentGroup.members.map(
           contactId => this.getDetailsFromId(contactId)
         );
 
