@@ -164,7 +164,6 @@ export class BoardPage {
       if (data.ticketFormValue.id) {
         // updating a ticket which already exists
         this.boardService.updateTicketSnippet(
-          this.boardData.id,
           currentState.id,
           data.ticketFormValue
         );

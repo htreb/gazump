@@ -142,28 +142,25 @@ export class BoardService {
     };
   }
 
-  updateTicketSnippet(boardId: string, newStateId: string, snippet: any) {
-    // Find matching board and copy all tickets in all states
-    const matchingBoard = this.allBoardsSubject.value.filter(
-      board => board.id === boardId
-    )[0];
-    const allTickets = JSON.parse(JSON.stringify(matchingBoard.tickets));
-
-    // loop all ticket states to find matching ticket id and save its state and index
-    let currentStateId;
-    let currentIndex;
-    Object.keys(allTickets).forEach(s => {
-      const idx = allTickets[s].findIndex(t => t.id === snippet.id);
-      if (idx > -1) {
-        currentStateId = s;
-        currentIndex = idx;
-      }
-    });
+  updateTicketSnippet(newStateId: string, snippet: any) {
+    const {
+      currentBoardId,
+      currentStateId,
+      currentIndex,
+    } = this.findTicketSnippet(snippet);
 
     if (currentStateId === undefined || currentIndex === -1) {
       console.log(`can't find the ticket with id ${snippet.id}`);
       return Promise.reject();
     }
+
+    // Find matching board and copy all tickets in all states
+    let allTickets;
+    this.allBoardsSubject.value.map(board => {
+      if (board.id === currentBoardId) {
+        allTickets = JSON.parse(JSON.stringify(board.tickets));
+      }
+    });
 
     // new object to store required format for firebase {tickets.stateId: [ ...]...
     const updatedTickets = {};
@@ -186,7 +183,7 @@ export class BoardService {
     }
     updatedTickets[`tickets.${currentStateId}`] = allTickets[currentStateId];
 
-    return this.updateBoard(boardId, updatedTickets);
+    return this.updateBoard(currentBoardId, updatedTickets);
   }
 
   // TODO just use updateTicketSnippet and remove this?
