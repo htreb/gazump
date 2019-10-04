@@ -21,7 +21,7 @@ export class GroupService {
     private auth: AuthService,
     private router: Router
   ) {
-    const updateGroupFromUrl = (url: string) => {
+    const updateCurrentGroupSubjectFromUrl = (url: string) => {
       const urlSegments = url.split('/');
       const groupIndex = urlSegments.indexOf('group');
       if (groupIndex > -1) {
@@ -33,12 +33,12 @@ export class GroupService {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((events: NavigationEnd) => {
-        updateGroupFromUrl(events.urlAfterRedirects);
+        updateCurrentGroupSubjectFromUrl(events.urlAfterRedirects);
       });
 
     // sometimes get need a group before any navigationEnd events (filtering tickets on chat page)
     // so set initial group here.
-    updateGroupFromUrl(this.router.url);
+    updateCurrentGroupSubjectFromUrl(this.router.url);
   }
 
   get currentGroupId() {
