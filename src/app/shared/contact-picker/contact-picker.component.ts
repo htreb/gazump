@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
 export class ContactPickerComponent implements OnInit {
 
   @Input() allContacts = false;
-  @Input() dismissPopover;
   @Input() selectedContacts: any = [];
   searchTerm$ = new BehaviorSubject<string>('');
   filteredContacts$;
@@ -68,12 +67,5 @@ export class ContactPickerComponent implements OnInit {
       }
     });
     return idx;
-  }
-
-  @HostListener('window:resize', ['$event'])
-  closeContactPicker(ev: any = null, attachContacts = false) {
-    this.dismissPopover({
-      contacts: attachContacts && this.selectedContacts
-    });
   }
 }

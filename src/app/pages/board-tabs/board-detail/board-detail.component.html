@@ -25,6 +25,13 @@
     </ion-item>
   </div>
 
+  <div class="section">
+    <ion-item class="ion-text-center" lines="none">
+      <ion-label>Members</ion-label>
+    </ion-item>
+    <app-contact-picker [selectedContacts]='contacts'></app-contact-picker>
+  </div>
+
   <!-- <ion-item lines="none">
     <ion-label>Icon</ion-label>
     <ion-select
@@ -69,25 +76,6 @@
         <ion-reorder slot="end"></ion-reorder>
       </ion-item>
     </ion-reorder-group>
-  </div>
-
-  <div class="section">
-    <ion-item class="ion-text-center" lines="none">
-      <ion-label>Members</ion-label>
-    </ion-item>
-    <ion-button (click)="selectContacts()">Choose Members</ion-button>
-    <ion-list>
-      <ion-item *ngFor="let contact of contacts">
-        <ion-label class="ion-text-wrap">
-          <ion-text>
-            <h2>{{ contact.userName }}</h2>
-          </ion-text>
-          <ion-text color="medium">
-            <p>{{ contact.email }}</p>
-          </ion-text>
-        </ion-label>
-      </ion-item>
-    </ion-list>
   </div>
 
   <div class="section">

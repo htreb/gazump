@@ -12,7 +12,7 @@ import { AutosizeModule } from 'ngx-autosize';
 import { ChatComponent } from './chat/chat.component';
 import { FormsModule } from '@angular/forms';
 import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
-import { StartChatComponent } from './start-chat/start-chat.component';
+import { StartInstanceComponent } from './start-instance/start-instance.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
@@ -29,7 +29,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TextComponent,
     ChatComponent,
     TicketPickerComponent,
-    StartChatComponent,
+    StartInstanceComponent,
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
@@ -48,7 +48,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TipComponent,
     TextComponent,
     ChatComponent,
-    StartChatComponent,
+    StartInstanceComponent,
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
@@ -58,7 +58,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TextComponent,
     ChatComponent,
     TicketPickerComponent,
-    StartChatComponent,
+    StartInstanceComponent,
     ContactPickerComponent,
   ]
 })

@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>New {{ instanceName | lowercase }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class='ion-padding'>
+
+  <ion-item>
+    <ion-label position='fixed'>Title</ion-label>
+    <ion-input #titleInput [(ngModel)]="title"></ion-input>
+  </ion-item>
+
+  <app-contact-picker
+    [allContacts]='allContacts'
+    [selectedContacts]='selectedContacts'
+  ></app-contact-picker>
+
+</ion-content>
+
+<ion-footer no-border class="ion-padding footer-buttons">
+  <ion-button
+    (click)="close()"
+    class="footer-button"
+    expand="block"
+    fill="outline"
+    color="primary"
+    strong="true"
+  >
+    Cancel
+  </ion-button>
+  <ion-button
+    (click)="close(true)"
+    class="footer-button"
+    expand="block"
+    fill="solid"
+    strong="true"
+    color="primary"
+    [disabled]='!title.trim() || !selectedContacts.length'
+  >
+    Start
+  </ion-button>
+</ion-footer>

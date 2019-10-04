@@ -98,27 +98,6 @@ export class BoardDetailComponent implements OnInit {
     this.states = ev.detail.complete(this.states);
   }
 
-  async selectContacts() {
-    const popover = await this.popoverController.create({
-      component: ContactPickerComponent,
-      componentProps: {
-        selectedContacts: JSON.parse(JSON.stringify(this.contacts)),
-        dismissPopover,
-      },
-      cssClass: 'picker',
-    });
-
-    function dismissPopover(args) {
-      return popover.dismiss(args);
-    }
-    await popover.present();
-    const { data } = await popover.onWillDismiss();
-    console.log('data is ', data);
-    if (data && data.contacts) {
-      this.contacts = data.contacts;
-    }
-  }
-
   async addCompletedBy() {
     const trimmedCB = this.newCompletedByName.trim();
     if (!trimmedCB) {
