@@ -12,7 +12,7 @@
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-      <ion-title>{{ findMatchingBoard(allBoards, displayingBoardId).title }}</ion-title>
+      <ion-title>{{ findMatchingBoard(allBoards, displayingBoardId).title || "Boards" }}</ion-title>
       <app-settings-icon slot="end" [settingsOptions]="settingsOptions(allBoards, displayingBoardId)"></app-settings-icon>
     </ion-toolbar>
   </ion-header>
@@ -23,6 +23,7 @@
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
         [boardData]='board'
         [showing]='board.id === displayingBoardId'
+        (displayingBoardDestroyed)="displayFirstBoard()"
       >
       </app-board>
 

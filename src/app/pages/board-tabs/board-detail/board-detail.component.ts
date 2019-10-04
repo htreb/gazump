@@ -1,7 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { icons } from './icon-list';
-import { ToastController, PopoverController } from '@ionic/angular';
-import { ContactPickerComponent } from 'src/app/shared/contact-picker/contact-picker.component';
+import { ToastController } from '@ionic/angular';
 import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
@@ -11,6 +10,7 @@ import { ContactService } from 'src/app/services/contact.service';
 })
 export class BoardDetailComponent implements OnInit {
 
+  @ViewChild('titleInput', { static: false }) titleInput: any;
   @Input() board;
   @Input() closeBoardDetail;
   @Input() deleteBoard: () => {};
@@ -36,9 +36,12 @@ export class BoardDetailComponent implements OnInit {
 
   constructor(
     private toastCtrl: ToastController,
-    private popoverController: PopoverController,
     private contactService: ContactService,
   ) { }
+
+  ionViewDidEnter() {
+    this.titleInput.setFocus();
+  }
 
   getId() {
     return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
@@ -89,7 +92,6 @@ export class BoardDetailComponent implements OnInit {
   }
 
   removeState(state) {
-
     // TODO block deleting a state which has tickets on it!
     this.states = this.states.filter(s => s.id !== state.id);
   }
