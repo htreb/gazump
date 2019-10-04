@@ -108,13 +108,13 @@ export class GroupService {
   /**
    * creates a new group with title and users provided
    * @param title group name
-   * @param users array of userIds
+   * @param users array of user detail objects
    */
-  createGroup(title: string, users: string[]) {
-    const allUsers = [this.auth.currentUser.value.id, ...users];
+  createGroup(title: string, users: any) {
+    const allUserIds = [...users.map(u => u.id), this.auth.currentUser.value.id ];
     return this.db.collection('groups').add({
       title,
-      members: allUsers
+      members: allUserIds
     });
   }
 }
