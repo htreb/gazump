@@ -31,7 +31,9 @@ import {
 export class BoardPage implements OnDestroy {
   @Input() boardData;
   @Input() showing;
-  @Output() displayingBoardDestroyed = new EventEmitter();
+  // async emitter to avoid ExpressionChangedAfterItHasBeenCheckedError
+  // in the settings options on the board-tabs page
+  @Output() displayingBoardDestroyed = new EventEmitter(true);
   private ticketDetailModal: HTMLIonModalElement;
 
   constructor(

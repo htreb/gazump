@@ -1,5 +1,5 @@
-import { Component, ViewChildren } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ViewChildren, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
 import { ModalController, AlertController } from '@ionic/angular';
@@ -10,11 +10,21 @@ import { BoardDetailComponent } from './board-detail/board-detail.component';
   templateUrl: './board-tabs.page.html',
   styleUrls: ['./board-tabs.page.scss'],
 })
-export class BoardTabsPage {
+export class BoardTabsPage implements OnInit, OnDestroy {
 
   @ViewChildren('tabButton') tabButtons: any;
-  public allBoards$: Observable<any> = this.boardService.allBoardsSubject;
-  public displayingBoardId = '';
+  public allBoards: any;
+  public displayingBoardId: string;
+  public settingsOptions: SettingsOption[] = [
+    {
+      title: 'New Board',
+      icon: 'add',
+      func: this.openBoardDetail,
+    },
+  ];
+  public displayingBoardTitle: string;
+
+  private allBoardsSub: Subscription;
 
   constructor(
     private boardService: BoardService,
@@ -22,55 +32,58 @@ export class BoardTabsPage {
     private alertCtrl: AlertController,
     ) { }
 
-  findMatchingBoard(allBoards, matchingId) {
-    if (Array.isArray(allBoards)) {
-      const matching = allBoards.filter(b => b.id === matchingId);
-      if (matching.length === 1) {
-        return matching[0];
-      }
-    }
-    return {};
+  ngOnInit(): void {
+    this.allBoardsSub = this.boardService.allBoardsSubject.subscribe(allBoards => {
+      this.allBoards = allBoards;
+      this.updateSettingsAndTitle();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.allBoardsSub.unsubscribe();
   }
 
   segmentButtonSelected(boardId) {
     this.displayingBoardId = boardId;
+    this.updateSettingsAndTitle();
   }
 
-  settingsOptions(allBoards, matchingId): SettingsOption[] {
-    const currentBoard = this.findMatchingBoard(allBoards, matchingId);
-    let options = [
+  updateSettingsAndTitle() {
+    this.settingsOptions = [
       {
         title: 'New Board',
         icon: 'add',
         func: () => this.openBoardDetail(),
       },
     ];
-    if (currentBoard.title) {
-      options = options.concat([
+    this.displayingBoardTitle = '';
+    const currentBoard = this.displayingBoardId && this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
+    if (currentBoard) {
+      this.displayingBoardTitle = currentBoard.title;
+      this.settingsOptions = this.settingsOptions.concat([
         {
           title: `Edit "${currentBoard.title}"`,
           icon: 'create',
-          func: () => this.openBoardDetail(currentBoard),
+          func: () => this.openBoardDetail(this.displayingBoardId),
         },
         {
           title: `Delete "${currentBoard.title}"`,
           icon: 'trash',
-          func: () => this.deleteBoard(currentBoard),
+          func: () => this.deleteBoard(this.displayingBoardId),
         }
       ]);
     }
-    return options;
   }
 
   displayFirstBoard() {
     this.displayingBoardId = '';
     if (this.tabButtons && this.tabButtons.first) {
-      // need to select another tab here!
       this.tabButtons.first.el.click();
     }
   }
 
-  async deleteBoard(board, callBack?) {
+  async deleteBoard(boardId: string, callBack?) {
+    const board = this.boardService.getOneBoard(boardId);
     const alert = await this.alertCtrl.create({
       header: 'Confirm',
       message: `Are you sure you want to delete the board and all its tickets:
@@ -102,13 +115,14 @@ export class BoardTabsPage {
     return board.id;
   }
 
-  async openBoardDetail(board?: any) {
+  async openBoardDetail(boardId?: string) {
+    const board = boardId ? this.boardService.getOneBoard(boardId) : null;
     const modal = await this.modalController.create({
       component: BoardDetailComponent,
       componentProps: {
         board,
         closeBoardDetail,
-        deleteBoard: board ? () => this.deleteBoard(board, closeBoardDetail) : null,
+        deleteBoard: board ? () => this.deleteBoard(board.id, closeBoardDetail) : null,
       }
     });
 

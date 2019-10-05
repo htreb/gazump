@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
-import { takeUntil, map, switchMap } from 'rxjs/operators';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 import isEqual from 'lodash.isequal';
 import { GroupService } from './group.service';
@@ -62,6 +62,13 @@ export class BoardService {
     }
     this.allBoardsSubject.next({ loading: true });
     this.boardsSub = null;
+  }
+
+  getOneBoard(boardId: string) {
+    if (!boardId || this.allBoardsSubject.value.loading) {
+      return;
+    }
+    return this.allBoardsSubject.value.filter(board => board.id === boardId)[0];
   }
 
   /**
