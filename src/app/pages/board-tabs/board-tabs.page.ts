@@ -74,6 +74,12 @@ export class BoardTabsPage implements OnInit, OnDestroy {
           title: `Delete "${currentBoard.title}"`,
           icon: 'trash',
           func: () => this.deleteBoard(this.displayingBoardId),
+        },
+        // TODO delete this!
+        {
+          title: `Dummy tickets for "${currentBoard.title}"`,
+          icon: 'construct',
+          func: () => this.boardService.makeDummyTickets(this.displayingBoardId),
         }
       ]);
     }

@@ -175,9 +175,4 @@ export class BoardPage {
       }
     }
   }
-
-  // TODO  delete this
-  dummyTickets() {
-    this.boardService.makeDummyTickets(this.boardData.id);
-  }
 }
