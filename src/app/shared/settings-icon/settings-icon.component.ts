@@ -3,7 +3,9 @@ import {
   HostListener,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { SettingsListComponent } from '../settings-list/settings-list.component';
@@ -14,20 +16,16 @@ import { SettingsListComponent } from '../settings-list/settings-list.component'
   styleUrls: ['./settings-icon.component.scss']
 })
 export class SettingsIconComponent implements OnChanges {
+
   @Input() settingsOptions;
+  @Output() newSettingsOptions = new EventEmitter(true);
   private popover: HTMLIonPopoverElement;
 
   constructor(private popoverController: PopoverController) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // close the settings if the options have changed.
-    if (
-      changes.settingsOptions && changes.settingsOptions.previousValue &&
-      changes.settingsOptions.currentValue.length !==
-      changes.settingsOptions.previousValue.length
-    ) {
-      this.closeSettings();
-    }
+    // update the setting list if settings options have changed.
+    this.newSettingsOptions.emit(changes.settingsOptions.currentValue);
   }
 
   async showSettings(ev: any) {
@@ -36,7 +34,8 @@ export class SettingsIconComponent implements OnChanges {
       event: ev,
       componentProps: {
         closePopover: this.closeSettings,
-        settingsOptions: this.settingsOptions
+        settingsOptions: this.settingsOptions,
+        newSettingsOptions: this.newSettingsOptions,
       }
     });
     return await this.popover.present();

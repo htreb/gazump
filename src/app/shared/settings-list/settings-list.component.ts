@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 
 export interface SettingsOption {
   title: string;
@@ -11,12 +11,23 @@ export interface SettingsOption {
   templateUrl: './settings-list.component.html',
   styleUrls: ['./settings-list.component.scss'],
 })
-export class SettingsListComponent {
+export class SettingsListComponent implements OnInit, OnDestroy {
 
   @Input() closePopover;
   @Input() settingsOptions;
+  newSettingsOptions;
+  changesSub;
 
   constructor() {}
+
+  ngOnInit(): void {
+    this.changesSub = this.newSettingsOptions.subscribe(options => {
+      this.settingsOptions = options;
+    });
+  }
+  ngOnDestroy(): void {
+    this.changesSub.unsubscribe();
+  }
 
   onSettingClicked(setting) {
     if (typeof this.closePopover === 'function') {
