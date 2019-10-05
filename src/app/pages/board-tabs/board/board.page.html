@@ -1,65 +1,65 @@
-<ion-content scrollX="true" [@showing]="showing ? 'active' : 'hidden'">
-  <div
-    class="board"
-    cdkDropList
-    cdkDropListOrientation="horizontal"
-    [cdkDropListData]="boardData.states"
-    (cdkDropListDropped)="columnDrop($event)"
+<div
+  #boardElement
+  class="board"
+  [@showing]="showing ? 'active' : 'hidden'"
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  [cdkDropListData]="boardData.states"
+  (cdkDropListDropped)="columnDrop($event)"
+>
+  <ion-card
+    #columnElement
+    mode="md"
+    *ngFor="let column of boardData.states; trackBy: columTrackBy"
+    cdkDrag
+    class="column"
+    color="medium"
   >
-    <ion-card
-      #columnElement
-      mode="md"
-      *ngFor="let column of boardData.states; trackBy: columTrackBy"
-      cdkDrag
-      class="column"
-      color="medium"
+    <ion-header mode="md">
+      <ion-toolbar color="medium">
+        <ion-title class="card-title">{{ column.title }}</ion-title>
+        <ion-buttons cdkDragHandle slot="end" class="drag-handle">
+          <ion-button disabled fill="clear">
+            <ion-icon slot="icon-only" src="/assets/icons/drag.svg"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <div
+      *ngIf="(boardData.tickets && boardData.tickets[column.id]) || emptyTickets as ticketsForState"
+      cdkDropList
+      id="{{ boardData.id }}{{ column.id }}"
+      [cdkDropListConnectedTo]="getColumnIds()"
+      [cdkDropListData]="{ stateId: column.id, tickets: ticketsForState }"
+      (cdkDropListDropped)="ticketDrop($event)"
+      class="ticket-drop-zone"
     >
-      <ion-header mode="md">
-        <ion-toolbar color="medium">
-          <ion-title class="card-title">{{ column.title }}</ion-title>
-          <ion-buttons cdkDragHandle slot="end" class="drag-handle">
-            <ion-button disabled fill="clear">
-              <ion-icon slot="icon-only" src="/assets/icons/drag.svg"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <div
-        *ngIf="(boardData.tickets && boardData.tickets[column.id]) || emptyTickets as ticketsForState"
-        cdkDropList
-        id="{{ boardData.id }}{{ column.id }}"
-        [cdkDropListConnectedTo]="getColumnIds()"
-        [cdkDropListData]="{ stateId: column.id, tickets: ticketsForState }"
-        (cdkDropListDropped)="ticketDrop($event)"
-        class="ticket-drop-zone"
+      <ion-card
+        mode="md"
+        *ngFor="let ticket of ticketsForState; trackBy: ticketTrackBy"
+        cdkDrag
+        color="light"
+        class="ticket"
+        (click)="openTicketDetail(column, ticket)"
+        (cdkDragMoved)="onTicketDrag($event)"
       >
-        <ion-card
-          mode="md"
-          *ngFor="let ticket of ticketsForState; trackBy: ticketTrackBy"
-          cdkDrag
-          color="light"
-          class="ticket"
-          (click)="openTicketDetail(column, ticket)"
-          (cdkDragMoved)="onTicketDrag($event)"
-        >
-          <div class="ion-margin title">{{ ticket.title }}</div>
-          <div class="ion-margin description">{{ ticket.description }}</div>
-        </ion-card>
-      </div>
-      <ion-footer mode="md">
-        <ion-button
-          fill="clear"
-          expand="block"
-          color='medium'
-          (click)="openTicketDetail(column)"
-        >
-          <ion-icon
-            slot="icon-only"
-            src="/assets/icons/add-ticket.svg"
-            class='new-ticket-icon'
-          ></ion-icon>
-        </ion-button>
-      </ion-footer>
-    </ion-card>
-  </div>
-</ion-content>
+        <div class="ion-margin title">{{ ticket.title }}</div>
+        <div class="ion-margin description">{{ ticket.description }}</div>
+      </ion-card>
+    </div>
+    <ion-footer mode="md">
+      <ion-button
+        fill="clear"
+        expand="block"
+        color='medium'
+        (click)="openTicketDetail(column)"
+      >
+        <ion-icon
+          slot="icon-only"
+          src="/assets/icons/add-ticket.svg"
+          class='new-ticket-icon'
+        ></ion-icon>
+      </ion-button>
+    </ion-footer>
+  </ion-card>
+</div>

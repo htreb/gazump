@@ -35,7 +35,7 @@ const snapScrollIntervalDuration = 500;
 export class BoardPage {
   @Input() boardData;
   @Input() showing;
-  @ViewChild(IonContent, { static: false }) content: IonContent;
+  @ViewChild('boardElement', { static: false }) boardElement: any;
   @ViewChildren('columnElement') columns: any;
   private scrollingTimeout: any;
   private getNextColumnToScrollToFunc: any;
@@ -190,14 +190,17 @@ export class BoardPage {
     this.scrollingTimeout = false;
   }
 
-  async scrollToNextColRecursively() {
+  scrollToNextColRecursively() {
     // it's async below don't want to queue this a bunch of times before it actually gets to the timeout
     // block it now.
     this.scrollingTimeout = true;
 
     if (this.getNextColumnToScrollToFunc) {
-      const nextCol = await this.getNextColumnToScrollToFunc();
-      this.content.scrollToPoint(nextCol.leftToCenter, 0, snapScrollIntervalDuration * 1.5);
+      const nextCol = this.getNextColumnToScrollToFunc();
+      this.boardElement.nativeElement.scrollTo({
+        left: nextCol.leftToCenter,
+        behavior: 'smooth'
+      });
 
       if (nextCol.last) {
         // this shouldn't be needed but it can't hurt
@@ -210,10 +213,9 @@ export class BoardPage {
     }
   }
 
-  async onTicketDrag(event: CdkDragMove) {
+  onTicketDrag(event: CdkDragMove) {
     this.getNextColumnToScrollToFunc = null;
-    const scrollEl = await this.content.getScrollElement();
-    const { left, width } = scrollEl.getBoundingClientRect();
+    const { left, width } = this.boardElement.nativeElement.getBoundingClientRect();
 
     if (
       event.pointerPosition.x < left + distanceFromBoardEdgeToSnapScroll &&
@@ -239,15 +241,14 @@ export class BoardPage {
   /**
    * Loop forwards through columns to find first which starts after the middle of the board
    */
-  async findNextColumnToRight() {
-    const scrollEl = await this.content.getScrollElement();
-    const contentRect = scrollEl.getBoundingClientRect();
+  findNextColumnToRight() {
+    const boardRect = this.boardElement.nativeElement.getBoundingClientRect();
     for (const nextCol of this.columns) {
       const { left, width } = nextCol.el.getBoundingClientRect();
-      if (left - contentRect.left > contentRect.width / 2) {
+      if (left - boardRect.left > boardRect.width / 2) {
         return {
           col: nextCol.el,
-          leftToCenter: nextCol.el.offsetLeft - (contentRect.width - width) / 2,
+          leftToCenter: nextCol.el.offsetLeft - (boardRect.width - width) / 2,
           last: nextCol === this.columns.last,
         };
       }
@@ -257,17 +258,16 @@ export class BoardPage {
   /**
    * Loop backwards through columns to find first which ends before the middle of the screen
    */
-  async findNextColumnToLeft() {
-    const scrollEl = await this.content.getScrollElement();
-    const contentRect = scrollEl.getBoundingClientRect();
+  findNextColumnToLeft() {
+    const boardRect = this.boardElement.nativeElement.getBoundingClientRect();
     const columns = this.columns.toArray();
     for (let i = columns.length - 1; i >= 0; i--) {
       const { right, width } = columns[i].el.getBoundingClientRect();
-      if (right - contentRect.left < contentRect.width / 2) {
+      if (right - boardRect.left < boardRect.width / 2) {
         return {
           col: columns[i].el,
           leftToCenter:
-            columns[i].el.offsetLeft - (contentRect.width - width) / 2,
+            columns[i].el.offsetLeft - (boardRect.width - width) / 2,
           last: i === 0,
         };
       }
