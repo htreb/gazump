@@ -17,7 +17,7 @@ import {
 } from '@angular/animations';
 
 const distanceFromBoardEdgeToSnapScroll = 30;
-const snapScrollIntervalDuration = 1000;
+const snapScrollIntervalDuration = 500;
 
 @Component({
   selector: 'app-board',
