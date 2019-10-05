@@ -3,7 +3,6 @@ $boardPadding: 8px;
 .board {
     display: flex;
     flex: 1;
-    overflow: scroll;
     height: 100%;
     padding: $boardPadding 0;
     // force margins on either side, "flex loses right padding when overflowing"

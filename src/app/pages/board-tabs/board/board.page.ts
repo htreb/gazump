@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChildren, ViewChild } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import {
   moveItemInArray,
   transferArrayItem,
-  CdkDragDrop
+  CdkDragDrop,
+  CdkDragMove
 } from '@angular/cdk/drag-drop';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, IonContent } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 import {
   trigger,
@@ -14,6 +15,9 @@ import {
   transition,
   animate
 } from '@angular/animations';
+
+const distanceFromBoardEdgeToSnapScroll = 30;
+const snapScrollIntervalDuration = 1000;
 
 @Component({
   selector: 'app-board',
@@ -31,6 +35,10 @@ import {
 export class BoardPage {
   @Input() boardData;
   @Input() showing;
+  @ViewChild(IonContent, { static: false }) content: IonContent;
+  @ViewChildren('columnElement') columns: any;
+  private scrollingTimeout: any;
+  private getNextColumnToScrollToFunc: any;
   private ticketDetailModal: HTMLIonModalElement;
 
   constructor(
@@ -43,7 +51,7 @@ export class BoardPage {
    *  This is called from the ticket detail component as well so
    *  making it a function expression to stop the 'this' from changing
    */
-  deleteTicket = async (ticket) => {
+  deleteTicket = async ticket => {
     const alert = await this.alertCtrl.create({
       header: 'Confirm',
       message: `Are you sure you want to delete this ticket:
@@ -120,6 +128,7 @@ export class BoardPage {
   }
 
   ticketDrop(event: CdkDragDrop<any>) {
+    this.clearScrollTimeout();
     const updatedTickets = {};
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) {
@@ -153,7 +162,7 @@ export class BoardPage {
         currentTicketSnippet,
         currentState,
         completedBy: this.boardData.completedBy,
-        deleteTicket: this.deleteTicket,
+        deleteTicket: this.deleteTicket
       }
     });
     await this.ticketDetailModal.present();
@@ -172,6 +181,95 @@ export class BoardPage {
           currentState.id,
           data.ticketFormValue
         );
+      }
+    }
+  }
+
+  clearScrollTimeout() {
+    clearTimeout(this.scrollingTimeout);
+    this.scrollingTimeout = false;
+  }
+
+  async scrollToNextColRecursively() {
+    // it's async below don't want to queue this a bunch of times before it actually gets to the timeout
+    // block it now.
+    this.scrollingTimeout = true;
+
+    if (this.getNextColumnToScrollToFunc) {
+      const nextCol = await this.getNextColumnToScrollToFunc();
+      this.content.scrollToPoint(nextCol.leftToCenter, 0, snapScrollIntervalDuration * 1.5);
+
+      if (nextCol.last) {
+        // this shouldn't be needed but it can't hurt
+        this.clearScrollTimeout();
+      } else {
+        this.scrollingTimeout = setTimeout(() => {
+          this.scrollToNextColRecursively();
+        }, snapScrollIntervalDuration);
+      }
+    }
+  }
+
+  async onTicketDrag(event: CdkDragMove) {
+    this.getNextColumnToScrollToFunc = null;
+    const scrollEl = await this.content.getScrollElement();
+    const { left, width } = scrollEl.getBoundingClientRect();
+
+    if (
+      event.pointerPosition.x < left + distanceFromBoardEdgeToSnapScroll &&
+      event.delta.x < 0
+    ) {
+      this.getNextColumnToScrollToFunc = this.findNextColumnToLeft;
+    } else if (
+      event.pointerPosition.x > width + left - distanceFromBoardEdgeToSnapScroll &&
+      event.delta.x > 0
+    ) {
+      this.getNextColumnToScrollToFunc = this.findNextColumnToRight;
+    }
+    if (this.getNextColumnToScrollToFunc) {
+      // need to only call this one at a time!
+      if (!this.scrollingTimeout) {
+        return this.scrollToNextColRecursively();
+      }
+    } else {
+      this.clearScrollTimeout();
+    }
+  }
+
+  /**
+   * Loop forwards through columns to find first which starts after the middle of the board
+   */
+  async findNextColumnToRight() {
+    const scrollEl = await this.content.getScrollElement();
+    const contentRect = scrollEl.getBoundingClientRect();
+    for (const nextCol of this.columns) {
+      const { left, width } = nextCol.el.getBoundingClientRect();
+      if (left - contentRect.left > contentRect.width / 2) {
+        return {
+          col: nextCol.el,
+          leftToCenter: nextCol.el.offsetLeft - (contentRect.width - width) / 2,
+          last: nextCol === this.columns.last,
+        };
+      }
+    }
+  }
+
+  /**
+   * Loop backwards through columns to find first which ends before the middle of the screen
+   */
+  async findNextColumnToLeft() {
+    const scrollEl = await this.content.getScrollElement();
+    const contentRect = scrollEl.getBoundingClientRect();
+    const columns = this.columns.toArray();
+    for (let i = columns.length - 1; i >= 0; i--) {
+      const { right, width } = columns[i].el.getBoundingClientRect();
+      if (right - contentRect.left < contentRect.width / 2) {
+        return {
+          col: columns[i].el,
+          leftToCenter:
+            columns[i].el.offsetLeft - (contentRect.width - width) / 2,
+          last: i === 0,
+        };
       }
     }
   }
