@@ -1,9 +1,10 @@
-import { Component, ViewChildren, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, ViewChildren, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
 import { ModalController, AlertController } from '@ionic/angular';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
+import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-icon.component';
 
 @Component({
   selector: 'app-board-tabs',
@@ -13,6 +14,7 @@ import { BoardDetailComponent } from './board-detail/board-detail.component';
 export class BoardTabsPage implements OnInit, OnDestroy {
 
   @ViewChildren('tabButton') tabButtons: any;
+  @ViewChild(SettingsIconComponent, { static: false }) settings;
   public allBoards: any;
   public displayingBoardId: string;
   public settingsOptions: SettingsOption[] = [
@@ -59,6 +61,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     this.displayingBoardTitle = '';
     let currentBoard = this.displayingBoardId && this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
     if (!currentBoard && this.allBoards[0]) {
+      this.settings.closeSettings();
       currentBoard = this.allBoards[0];
       this.displayingBoardId = currentBoard.id;
     }
