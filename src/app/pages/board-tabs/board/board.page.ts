@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import {
   moveItemInArray,
@@ -28,12 +28,9 @@ import {
     ])
   ]
 })
-export class BoardPage implements OnDestroy {
+export class BoardPage {
   @Input() boardData;
   @Input() showing;
-  // async emitter to avoid ExpressionChangedAfterItHasBeenCheckedError
-  // in the settings options on the board-tabs page
-  @Output() displayingBoardDestroyed = new EventEmitter(true);
   private ticketDetailModal: HTMLIonModalElement;
 
   constructor(
@@ -41,13 +38,6 @@ export class BoardPage implements OnDestroy {
     private modalController: ModalController,
     private alertCtrl: AlertController
   ) {}
-
-    ngOnDestroy(): void {
-      // if the currently displaying board is destroyed tell the board tabs page to select another
-      if (this.showing) {
-        this.displayingBoardDestroyed.emit();
-      }
-    }
 
   /**
    *  This is called from the ticket detail component as well so

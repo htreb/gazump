@@ -57,7 +57,11 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       },
     ];
     this.displayingBoardTitle = '';
-    const currentBoard = this.displayingBoardId && this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
+    let currentBoard = this.displayingBoardId && this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
+    if (!currentBoard && this.allBoards[0]) {
+      currentBoard = this.allBoards[0];
+      this.displayingBoardId = currentBoard.id;
+    }
     if (currentBoard) {
       this.displayingBoardTitle = currentBoard.title;
       this.settingsOptions = this.settingsOptions.concat([
@@ -72,13 +76,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
           func: () => this.deleteBoard(this.displayingBoardId),
         }
       ]);
-    }
-  }
-
-  displayFirstBoard() {
-    this.displayingBoardId = '';
-    if (this.tabButtons && this.tabButtons.first) {
-      this.tabButtons.first.el.click();
     }
   }
 
@@ -99,7 +96,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteBoard(board.id).then(() => {
-              this.displayFirstBoard();
               if (typeof callBack === 'function') {
                 callBack();
               }
@@ -137,10 +133,11 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         this.boardService.updateBoard(board.id, data);
       } else {
         this.boardService.createBoard(data).then(resp => {
-          // find the matching tab and select it
+          this.displayingBoardId = resp.id;
+          // find the matching tab and scrolls it into view
           this.tabButtons.forEach(tab => {
             if (tab.value === resp.id) {
-              tab.el.click();
+              tab.el.scrollIntoView({behavior: 'smooth'});
             }
           });
         });

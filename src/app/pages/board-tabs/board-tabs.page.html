@@ -22,14 +22,13 @@
       *ngFor="let board of allBoards; trackBy: boardTrackBy"
       [boardData]='board'
       [showing]='board.id === displayingBoardId'
-      (displayingBoardDestroyed)="displayFirstBoard()"
     >
     </app-board>
 
   </ion-content>
 
   <ion-footer>
-    <ion-segment mode="ios" [value]="displayingBoardId || allBoards[0] && allBoards[0]['id']" scrollable>
+    <ion-segment mode="ios" [value]="displayingBoardId" scrollable>
       <ion-segment-button
         #tabButton
         *ngFor="let board of allBoards; trackBy: boardTrackBy"
