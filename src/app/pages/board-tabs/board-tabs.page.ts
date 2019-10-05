@@ -1,4 +1,10 @@
-import { Component, ViewChildren, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  OnInit,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BoardService } from 'src/app/services/board.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
@@ -9,10 +15,9 @@ import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-ico
 @Component({
   selector: 'app-board-tabs',
   templateUrl: './board-tabs.page.html',
-  styleUrls: ['./board-tabs.page.scss'],
+  styleUrls: ['./board-tabs.page.scss']
 })
 export class BoardTabsPage implements OnInit, OnDestroy {
-
   @ViewChildren('tabButton') tabButtons: any;
   @ViewChild(SettingsIconComponent, { static: false }) settings;
   public allBoards: any;
@@ -21,8 +26,8 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     {
       title: 'New Board',
       icon: 'add',
-      func: this.openBoardDetail,
-    },
+      func: this.openBoardDetail
+    }
   ];
   public displayingBoardTitle: string;
 
@@ -31,14 +36,16 @@ export class BoardTabsPage implements OnInit, OnDestroy {
   constructor(
     private boardService: BoardService,
     private modalController: ModalController,
-    private alertCtrl: AlertController,
-    ) { }
+    private alertCtrl: AlertController
+  ) {}
 
   ngOnInit(): void {
-    this.allBoardsSub = this.boardService.allBoardsSubject.subscribe(allBoards => {
-      this.allBoards = allBoards;
-      this.updateSettingsAndTitle();
-    });
+    this.allBoardsSub = this.boardService.allBoardsSubject.subscribe(
+      allBoards => {
+        this.allBoards = allBoards;
+        this.updateSettingsAndTitle();
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -55,15 +62,20 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       {
         title: 'New Board',
         icon: 'add',
-        func: () => this.openBoardDetail(),
-      },
+        func: () => this.openBoardDetail()
+      }
     ];
     this.displayingBoardTitle = '';
-    let currentBoard = this.displayingBoardId && this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
+    let currentBoard =
+      this.displayingBoardId &&
+      !this.allBoards.loading &&
+      this.allBoards.filter(b => this.displayingBoardId === b.id)[0];
     if (!currentBoard && this.allBoards[0]) {
-      this.settings.closeSettings();
       currentBoard = this.allBoards[0];
       this.displayingBoardId = currentBoard.id;
+      if (this.settings) {
+        this.settings.closeSettings();
+      }
     }
     if (currentBoard) {
       this.displayingBoardTitle = currentBoard.title;
@@ -71,18 +83,18 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         {
           title: `Edit "${currentBoard.title}"`,
           icon: 'create',
-          func: () => this.openBoardDetail(this.displayingBoardId),
+          func: () => this.openBoardDetail(this.displayingBoardId)
         },
         {
           title: `Delete "${currentBoard.title}"`,
           icon: 'trash',
-          func: () => this.deleteBoard(this.displayingBoardId),
+          func: () => this.deleteBoard(this.displayingBoardId)
         },
         // TODO delete this!
         {
           title: `Dummy tickets for "${currentBoard.title}"`,
           icon: 'construct',
-          func: () => this.boardService.makeDummyTickets(this.displayingBoardId),
+          func: () => this.boardService.makeDummyTickets(this.displayingBoardId)
         }
       ]);
     }
@@ -127,7 +139,9 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       componentProps: {
         board,
         closeBoardDetail,
-        deleteBoard: board ? () => this.deleteBoard(board.id, closeBoardDetail) : null,
+        deleteBoard: board
+          ? () => this.deleteBoard(board.id, closeBoardDetail)
+          : null
       }
     });
 
@@ -146,12 +160,11 @@ export class BoardTabsPage implements OnInit, OnDestroy {
           // find the matching tab and scrolls it into view
           this.tabButtons.forEach(tab => {
             if (tab.value === resp.id) {
-              tab.el.scrollIntoView({behavior: 'smooth'});
+              tab.el.scrollIntoView({ behavior: 'smooth' });
             }
           });
         });
       }
     }
   }
-
 }
