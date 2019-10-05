@@ -4,6 +4,7 @@ $boardPadding: 8px;
     display: flex;
     flex: 1;
     height: 100%;
+    width: fit-content;
     padding: $boardPadding 0;
     // force margins on either side, "flex loses right padding when overflowing"
     &:before { content: ''; min-width: $boardPadding; }
