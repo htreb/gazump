@@ -6,7 +6,7 @@ import {
   CdkDragDrop,
   CdkDragMove
 } from '@angular/cdk/drag-drop';
-import { ModalController, AlertController, IonContent } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 import {
   trigger,
@@ -15,6 +15,7 @@ import {
   transition,
   animate
 } from '@angular/animations';
+import * as scroll from 'scroll';
 
 const distanceFromBoardEdgeToSnapScroll = 30;
 const snapScrollIntervalDuration = 500;
@@ -197,10 +198,11 @@ export class BoardPage {
 
     if (this.getNextColumnToScrollToFunc) {
       const nextCol = this.getNextColumnToScrollToFunc();
-      this.boardElement.nativeElement.scrollTo({
-        left: nextCol.leftToCenter,
-        behavior: 'smooth'
-      });
+      scroll.left(
+        this.boardElement.nativeElement,
+        nextCol.leftToCenter,
+        // { duration: snapScrollIntervalDuration }
+      );
 
       if (nextCol.last) {
         // this shouldn't be needed but it can't hurt
@@ -253,6 +255,11 @@ export class BoardPage {
         };
       }
     }
+    return {
+      col: null,
+      leftToCenter: 0,
+      last: true,
+    };
   }
 
   /**
@@ -272,5 +279,10 @@ export class BoardPage {
         };
       }
     }
+    return {
+      col: null,
+      leftToCenter: 0,
+      last: true,
+    };
   }
 }

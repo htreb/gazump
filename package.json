@@ -38,6 +38,7 @@
     "ngx-autosize": "^1.6.4",
     "ngx-smooth-dnd": "^0.3.0",
     "rxjs": "^6.5.3",
+    "scroll": "^3.0.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },
