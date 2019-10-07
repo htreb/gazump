@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { ContactService } from 'src/app/services/contact.service';
 import { AlertController } from '@ionic/angular';
+import { GroupService } from 'src/app/services/group.service';
 
 @Component({
   selector: 'app-contacts',
@@ -18,6 +19,7 @@ export class ContactsPage implements OnInit {
   constructor(
     private contactService: ContactService,
     private alertCtrl: AlertController,
+    private groupService: GroupService,
   ) {}
 
   ngOnInit() {
@@ -26,6 +28,14 @@ export class ContactsPage implements OnInit {
       // the below regex is used over the Validators.email as this prevents emails like '2@2' from being valid
       Validators.pattern(/^[\w-\.+]+@([\w-]+\.)+[\w-]{2,4}$/)
     ]);
+  }
+
+  ionViewWillEnter() {
+    this.groupService.showGroupMenuItems = false;
+  }
+
+  ionViewWillLeave() {
+    this.groupService.showGroupMenuItems = true;
   }
 
   sendContactRequest() {

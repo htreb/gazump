@@ -13,6 +13,21 @@
 
     <ion-content forceOverscroll="false" color="medium">
       <div class="menu">
+
+        <ion-menu-toggle autoHide="false" class='all-groups-item'>
+          <ion-item
+            routerLink="/"
+            routerDirection="root"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            lines="full"
+            detail="false"
+          >
+            <ion-icon slot="start" name="arrow-back" class='back-icon'></ion-icon>
+            <ion-label>All groups</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
         <ng-container *ngIf="currentGroup$ | async as currentGroup">
           <ng-container
             *ngIf="!currentGroup.loading && groupService.showGroupMenuItems"
@@ -24,18 +39,6 @@
                 }}</ion-item>
               </ion-toolbar>
             </ion-header>
-
-            <ion-menu-toggle autoHide="false">
-              <ion-item
-                routerLink="/"
-                routerDirection="root"
-                lines="full"
-                detail="false"
-              >
-                <ion-icon slot="start" name="arrow-back"></ion-icon>
-                <ion-label>All groups</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
 
             <ion-list class="ion-no-padding menu-items">
               <ion-menu-toggle autoHide="false">
@@ -60,7 +63,17 @@
           </ng-container>
         </ng-container>
 
-        <ion-list class="ion-no-padding ion-no-margin settings-items">
+        <ion-list class="ion-no-padding ion-no-margin users-items">
+          <ion-item
+            [routerLink]="['/', 'contacts']"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            lines="full"
+            detail="false"
+          >
+            <ion-label>Contacts</ion-label>
+            <ion-icon slot="end" name="contacts"></ion-icon>
+          </ion-item>
           <ion-item tappable (click)="showSettings()" lines="full">
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>

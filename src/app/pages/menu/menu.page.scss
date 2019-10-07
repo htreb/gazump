@@ -2,14 +2,15 @@
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+}
 
-    .menu-items {
-        flex: 1;
+.all-groups-item .active {
+    .back-icon {
+        display: none;
     }
 }
 
-.menu-items, .settings-items {
+.menu-items, .users-items {
     background: transparent;
 }
 
@@ -24,4 +25,11 @@ ion-item {
             color: var(--ion-color-primary-contrast);
         }
     }
+}
+
+.users-items {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
 }

@@ -32,7 +32,7 @@ export class ListGroupsPage implements OnInit {
     this.groupService.subscribeToUsersGroups();
   }
 
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.groupService.showGroupMenuItems = false;
   }
 

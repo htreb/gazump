@@ -24,6 +24,10 @@ const routes: Routes = [
         path: 'group/:groupId/chats',
         loadChildren: () => import('../list-chats/list-chats.module').then(m => m.ListChatsPageModule)
       },
+      {
+        path: 'contacts',
+        loadChildren: () => import('../contacts/contacts.module').then(m => m.ContactsPageModule)
+      },
       { path: 'group/:groupId', redirectTo: 'group/:groupId/boards', pathMatch: 'full' },
     ]
   }
