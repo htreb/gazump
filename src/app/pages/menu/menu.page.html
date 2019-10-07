@@ -64,16 +64,18 @@
         </ng-container>
 
         <ion-list class="ion-no-padding ion-no-margin users-items">
-          <ion-item
-            [routerLink]="['/', 'contacts']"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            lines="full"
-            detail="false"
-          >
-            <ion-label>Contacts</ion-label>
-            <ion-icon slot="end" name="contacts"></ion-icon>
-          </ion-item>
+          <ion-menu-toggle autoHide="false">
+            <ion-item
+              [routerLink]="['/', 'contacts']"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              lines="full"
+              detail="false"
+            >
+              <ion-label>Contacts</ion-label>
+              <ion-icon slot="end" name="contacts"></ion-icon>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-item tappable (click)="showSettings()" lines="full">
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>
