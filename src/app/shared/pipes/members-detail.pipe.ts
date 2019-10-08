@@ -7,6 +7,11 @@ import { ContactService } from 'src/app/services/contact.service';
 export class MembersDetailPipe implements PipeTransform {
   constructor(private contactService: ContactService) {}
 
+  /**
+   *
+   * @param memberIds array of ids to show
+   * @param allNames whether to print out all names or truncate after first two with ...and X more
+   */
   transform(memberIds: any, allNames = false): any {
     const memberNames = memberIds.map(
       id => this.contactService.getDetailsFromId(id).userName
@@ -18,7 +23,7 @@ export class MembersDetailPipe implements PipeTransform {
       if (b === 'Unknown') {
         return -1;
       }
-      return a < b ? -1 : 1;
+      return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
     });
     if (memberNames.length < 4 || allNames) {
       return `${memberNames.slice(0, memberNames.length - 1).join(', ')} and ${
