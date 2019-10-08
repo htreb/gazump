@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { ContactService } from 'src/app/services/contact.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ToastController } from '@ionic/angular';
 import { GroupService } from 'src/app/services/group.service';
 
 @Component({
@@ -15,11 +15,13 @@ export class ContactsPage implements OnInit {
   allContacts$ = this.contactService.getUsersContacts();
   receivedRequests$ = this.contactService.getReceivedRequests();
   sentRequests$ = this.contactService.getSentRequests();
+  private warningToast;
 
   constructor(
     private contactService: ContactService,
     private alertCtrl: AlertController,
     private groupService: GroupService,
+    private toastCtrl: ToastController,
   ) {}
 
   ngOnInit() {
@@ -38,23 +40,45 @@ export class ContactsPage implements OnInit {
     this.groupService.showGroupMenuItems = true;
   }
 
-  sendContactRequest() {
-    const email = this.addContactEmail.value;
+  async showWarningToast(message: string) {
+    if (!message) {
+      return;
+    }
+    if (this.warningToast) {
+      this.warningToast.dismiss();
+    }
+    this.warningToast = await this.toastCtrl.create({
+      message,
+      duration: 3000,
+      color: 'danger'
+    });
+    this.warningToast.present();
+  }
+
+  async sendContactRequest() {
+    const email = this.addContactEmail.value.trim();
+    if (!this.addContactEmail.valid) {
+      // can be called from an enter press so check validity here
+      return;
+    }
+
     this.addContactEmail.setValue('');
     try {
-      this.contactService.sendRequest(email);
-    } catch {
+      await this.contactService.sendRequest(email);
+    } catch (err) {
+      if (err) {
+        this.showWarningToast(err.message);
+      }
       this.addContactEmail.setValue(email);
     }
   }
 
   async cancelSentRequest(request) {
-    console.log('cancel Request', request);
     const alert = await this.alertCtrl.create({
       header: 'Confirm',
       message: `Are you sure you want to cancel your contact request to:
                 <br><br>
-                <b>${request.email}?</b>`,
+                <b>${request.accepterEmail}?</b>`,
       buttons: [
         {
           text: 'Cancel'
@@ -62,7 +86,7 @@ export class ContactsPage implements OnInit {
         {
           text: 'Ok',
           handler: () => {
-            this.contactService.cancelSentRequest(request.id);
+            this.contactService.cancelSentRequest(request);
           }
         }
       ]
@@ -80,7 +104,7 @@ export class ContactsPage implements OnInit {
       header: 'Confirm',
       message: `Are you sure you want to decline the contact request from:
                 <br><br>
-                <b>${request.userName}?</b>`,
+                <b>${request.requesterEmail}?</b>`,
       buttons: [
         {
           text: 'Cancel'

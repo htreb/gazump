@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { GroupService } from './group.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+import { forkJoin } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -78,68 +79,104 @@ export class ContactService {
   }
 
   getSentRequests() {
-    return this.db
-      .collection('users')
-      .doc(this.auth.currentUser.value.id)
-      .collection('sentContactRequests')
-      .valueChanges({ idField: 'id' });
+    return this.auth.currentUser.pipe(
+      map(userDoc => userDoc.contactRequests || []));
   }
 
-  sendRequest(email) {
+  /**
+   * create new contactRequest doc
+   * update own user object contactRequests array with
+   * invited email and docId of that contactRequest doc
+   * @param email address of user they want to invite
+   */
+  async sendRequest(email) {
     // TODO Cloud function will pick up a change here and submit request to user if they exist
-    this.db
-      .collection('users')
-      .doc(this.auth.currentUser.value.id)
-      .collection('sentContactRequests')
-      .add({email});
+    if (email === this.auth.currentUser.value.email) {
+      throw new Error(`You can't add yourself`);
+    }
+    let requestError;
+    // check current sent requests and contacts. Don't duplicate a connection
+    await forkJoin({
+      sentRequests: this.getSentRequests().pipe(take(1)),
+      allContacts: this.getUsersContacts().pipe(take(1)),
+    }).subscribe(currentContacts => {
+      if (currentContacts.sentRequests.filter(request => request.email === email).length) {
+        requestError = 'You have already sent a request to them';
+      } else if (currentContacts.allContacts.filter(contact => contact.email === email).length) {
+        requestError = 'You are already connected with them';
+      }
+    });
+    if (requestError) {
+      throw new Error(requestError);
+    } else {
+      const request = await this.db
+        .collection('contactRequests')
+        .add({
+          accepterEmail: email,
+          requester: this.auth.currentUser.value.id,
+          requesterUserName: this.auth.currentUser.value.userName,
+          requesterEmail: this.auth.currentUser.value.email,
+          declined: false,
+        });
+
+      this.db.collection('users')
+        .doc(this.auth.currentUser.value.id)
+        .update({
+          contactRequests: firebase.firestore.FieldValue.arrayUnion({
+            email,
+            requestId: request.id,
+          })
+        });
+    }
   }
 
-  cancelSentRequest(requestId) {
+  async cancelSentRequest(request) {
     // TODO Cloud function will pick up a change here and remove request from user if they exist
-    this.db
-      .collection('users')
-      .doc(this.auth.currentUser.value.id)
-      .collection('sentContactRequests')
-      .doc(requestId)
-      .delete();
+    const batch = this.db.firestore.batch();
+
+    batch.delete(this.db.collection('contactRequests').doc(request.requestId).ref);
+    batch.update(this.db.collection('users').doc(this.auth.currentUser.value.id).ref, {
+      contactRequests: firebase.firestore.FieldValue.arrayRemove(request),
+    });
+
+    batch.commit();
   }
 
   getReceivedRequests() {
-    return this.auth.currentUser.pipe(map(userDoc => userDoc.receivedContactRequests));
+    return this.db
+      .collection('contactRequests', ref => ref
+      .where('accepterEmail', '==', this.auth.currentUser.value.email)
+      .where('declined', '==', false))
+      .valueChanges({ idField: 'id' });
   }
 
-  acceptContactRequest(user) {
+  /**
+   * By adding the accepter user Id the cloud function will pick up this update
+   * and connect the two users.
+   * @param receivedRequest the request doc to accept
+   */
+  acceptContactRequest(receivedRequest) {
     // TODO some cloud function needed here?
-    console.log('accept request from', user);
+    return this.db
+      .collection('contactRequests')
+      .doc(receivedRequest.id)
+      .update({
+        accepter: this.auth.currentUser.value.id,
+      });
   }
 
-  declineContactRequest(user) {
+  /**
+   * By setting declined to true will hide the request from future contactRequest queries
+   * doesn't inform requester they were declined.
+   * @param receivedRequest the request doc to decline
+   */
+  declineContactRequest(receivedRequest) {
     // I can do this silently, no need to tell the other user they were declined
-    this.db
-    .collection('users')
-    .doc(this.auth.currentUser.value.id)
+    return this.db
+    .collection('contactRequests')
+    .doc(receivedRequest.id)
     .update({
-      receivedContactRequests: firebase.firestore.FieldValue.arrayRemove(user)
+      declined: true,
     });
   }
 }
-
-
-// const batch = this.db.firestore.batch();
-// batch.update(
-//   this.db.firestore.collection('users').doc(this.auth.currentUser.value.id),
-//   {
-//     pendingRequests: firebase.firestore.FieldValue.arrayUnion(email)
-//   }
-// );
-// // batch.update()
-
-// this.db
-//   .collection('users', ref => ref.where('email', '==', email).limit(1))
-//   .valueChanges()
-//   .pipe(
-//     take(1),
-//     map(user => {
-//       return user;
-//     })
-//   );

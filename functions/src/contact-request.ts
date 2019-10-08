@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+// import * as firebase from 'firebase/app';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
@@ -15,7 +16,7 @@ export const completeContactRequest = functions.firestore
 .document('contactRequests/{requestId}')
 .onUpdate(async (snapshot, context) => {
     const data = snapshot.after.data();
-    if (data && data.requester && data.accepter && data.accepted) {
+    if (data && data.requester && data.accepter) {
         const requesterRef = db.doc(`users/${data.requester}`);
         const accepterRef = db.doc(`users/${data.accepter}`);
         const requesterSnapshot = await requesterRef.get();
@@ -28,19 +29,25 @@ export const completeContactRequest = functions.firestore
                 [`connections.${requesterSnapshot.id}`]: {
                         email: requesterData.email,
                         userName: requesterData.userName,
-                    }})
+                    },
+                contactRequests: admin.firestore.FieldValue.arrayRemove({
+                    email: accepterData.email,
+                    requestId: context.params.requestId,
+                })
+            })
             batch.update(requesterRef, {
                 [`connections.${accepterSnapshot.id}`]: {
                     email: accepterData.email,
                     userName: accepterData.userName,
-                }})
+                }
+            })
+            batch.delete(db.doc(`contactRequests/${context.params.requestId}`));
             await batch.commit();
             console.log(`Successfully connected requester: ${requesterSnapshot.id} to accepter: ${accepterSnapshot.id}`)
-            await db.doc(`contactRequests/${context.params.requestId}`).delete();
         } else {
             console.log(`Couldn't find both parties, requester: ${requesterSnapshot.id}, accepter: ${accepterSnapshot.id}`)
         }
     } else {
-        console.log('Missing requester, accepter or accepted status, data is', data);
+        console.log('Missing requester or accepter data is', data);
     }
 });

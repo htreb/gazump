@@ -23,10 +23,10 @@
       <ion-item *ngFor="let receivedRequest of receivedRequests">
         <ion-label class="ion-text-wrap">
           <ion-text>
-            <h2>{{ receivedRequest.userName }}</h2>
+            <h2>{{ receivedRequest.requesterUserName }}</h2>
           </ion-text>
           <ion-text color="medium">
-            <p>{{ receivedRequest.email }}</p>
+            <p>{{ receivedRequest.requesterEmail }}</p>
           </ion-text>
         </ion-label>
         <div slot="end" class="ion-margin button-container">
@@ -44,8 +44,17 @@
   <h1>Add Contacts</h1>
   <ion-card>
     <ion-item>
-      <ion-input placeholder="Email" [formControl]="addContactEmail"></ion-input>
-      <ion-button slot="end" color="primary" [disabled]='!addContactEmail.valid' (click)="sendContactRequest()">
+      <ion-input
+        placeholder="Email"
+        [formControl]="addContactEmail"
+        (keyup.enter)="sendContactRequest()"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        color="primary"
+        (click)="sendContactRequest()"
+        [disabled]='!addContactEmail.valid'
+      >
         Send request
       </ion-button>
     </ion-item>
