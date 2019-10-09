@@ -7,9 +7,6 @@ const routes: Routes = [
   { path: '',
     loadChildren: () => import('./pages/menu/menu.module').then(m => m.MenuPageModule),
     canActivate: [AuthGuard],
-    data: {
-      roles: ['USER', 'ADMIN']
-    }
   },
   // if empty try to take them to the menu, if not signed in the auth guard will take them to login
   { path: '**', redirectTo: '' } // TODO 404 page? for now just take them to the menu page

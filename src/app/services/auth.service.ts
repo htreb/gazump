@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { from, Observable, of, BehaviorSubject, Subject } from 'rxjs';
-import { switchMap, take, tap, map } from 'rxjs/operators';
+import { from, Observable, of, BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { switchMap, take, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  user: Observable<any>;
+  authSub: Subscription;
   currentUser = new BehaviorSubject(null);
   loggedOutSubject: Subject<any> = new Subject();
 
@@ -19,39 +19,41 @@ export class AuthService {
     private db: AngularFirestore,
     private router: Router
   ) {
-    // subscribe to current logged in user, find them in the users table and return
-    // an observable containing the id in the database.
-    this.user = this.afAuth.authState.pipe(
+    this.authSub = this.getCurrentUser().subscribe();
+  }
+
+  /**
+   * subscribe to current logged in user, find them in the users table and return
+   * an observable containing the id in the database.
+   */
+  getCurrentUser() {
+    return this.afAuth.authState.pipe(
       switchMap(user => {
         if (user) {
           return this.db
             .doc(`users/${user.uid}`)
-            .valueChanges()
+            .snapshotChanges()
             .pipe(
-              take(1),
-              tap((data: any) => {
-                console.log('Data is:•••••••••••••', data);
-                console.log('User is:•••••••••••••', user);
-                data.id = user.uid;
+              map(doc => {
+                const data = { id: doc.payload.id, ...doc.payload.data() };
                 this.currentUser.next(data);
-              })
-            );
+                return data;
+              }));
         } else {
+          console.log('Got no user in the auth service emitting loggedOutSubject...', user);
+          this.loggedOutSubject.next();
           this.currentUser.next(null);
+          // this.loggedOutSubject.complete(); // TODO! ticket #23
           return of(null);
         }
-      })
-    );
-
-    this.afAuth.authState.subscribe(user => {
-      if (!user) {
-        console.log('got no user in the auth service emitting loggedOutSubject...', user);
-        this.loggedOutSubject.next();
-        // this.loggedOutSubject.complete(); // TODO! ticket #23
-      }
-    });
+    }));
   }
 
+  cleanUpSubscriptions() {
+    if (this.authSub) {
+      this.authSub.unsubscribe();
+    }
+  }
   /**
    * logs in a current user with email and password and returns the corresponding user from the users database
    * @param email string
@@ -87,7 +89,7 @@ export class AuthService {
       switchMap(data => {
         if (!data || !data.user) {
           console.log(
-            'something has gone wrong signing up the new user, we shouldn\'t get here'
+            'Something has gone wrong signing up the new user, we shouldn\'t get here'
           );
           return of(null);
         }
@@ -124,7 +126,7 @@ export class AuthService {
    */
   logOut(): void {
     this.afAuth.auth.signOut();
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/login'); // TODO make this a 'root' direction?
   }
 
   /**

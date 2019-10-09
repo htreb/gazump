@@ -203,7 +203,7 @@ export class LoginPage implements OnInit {
 
     this.auth.logIn(this.email, this.password).subscribe(
       user => {
-        this.enterApp(user);
+        this.router.navigateByUrl('/groups');
         loading.dismiss();
       },
       async err => {
@@ -229,8 +229,8 @@ export class LoginPage implements OnInit {
 
     this.auth.signUp(this.email, this.password).subscribe(
       user => {
+        this.router.navigateByUrl('/groups');
         loading.dismiss();
-        this.enterApp(user);
       },
       async err => {
         loading.dismiss();
@@ -243,18 +243,6 @@ export class LoginPage implements OnInit {
         alert.present();
       }
     );
-  }
-
-  /**
-   * takes user to appropriate page based on their role after signing up or logging in
-   */
-  enterApp(user: any) {
-    const role = user.role;
-    if (role === 'USER') {
-      this.router.navigateByUrl('/groups');
-    } else if (role === 'ADMIN') {
-      this.router.navigateByUrl('/groups'); // TODO SEND TO ADMIN PAGE?
-    }
   }
 
   /**
