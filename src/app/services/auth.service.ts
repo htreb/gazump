@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
+
+  private showPageLoadingSpinner = false;
   authSub: Subscription;
   currentUser = new BehaviorSubject(null);
   loggedOutSubject: Subject<any> = new Subject();
@@ -22,6 +24,13 @@ export class AuthService {
     this.authSub = this.getCurrentUser().subscribe();
   }
 
+  get loading() {
+    return this.showPageLoadingSpinner;
+  }
+
+  set loading(loading: boolean) {
+    this.showPageLoadingSpinner = loading;
+  }
   /**
    * subscribe to current logged in user, find them in the users table and return
    * an observable containing the id in the database.

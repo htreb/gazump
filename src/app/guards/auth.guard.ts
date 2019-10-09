@@ -8,21 +8,16 @@ import { take, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  /**
-   * This flag is picked up by the app component and is used to display the page-loading-spinner
-   * while the auth check is going on
-   */
-  public loading = false;
-
   constructor(
     private auth: AuthService) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
-    this.loading = true;
+    this.auth.loading = true;
     return this.auth.getCurrentUser().pipe(
       take(1),
       map((user: any) => {
-        this.loading = false;
+        // give the new page a chance to load behind
+        setTimeout(() => {this.auth.loading = false; }, 800);
         return !!user;
       }));
   }

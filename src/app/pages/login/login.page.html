@@ -21,7 +21,7 @@
         (click)="toSignUp(true)"
         [disabled]="returningMember && !showResetPasswordEmailWarning"
       >
-        Sign in
+        Log in
       </ion-button>
       <ion-button
         strong
@@ -120,7 +120,7 @@
       class="enter-email-for-reset ion-text-center"
       [ngClass]="{ show: showResetPasswordEmailWarning }"
     >
-      <ion-label color="warning" text-wrap>
+      <ion-label color="warning" class="ion-text-wrap">
         Please enter the email address you used to sign up.
       </ion-label>
     </ion-item>
@@ -138,7 +138,7 @@
 
     <ion-button
       strong
-      no-margin
+      class="ion-no-margin"
       expand="full"
       (click)="formSubmit()"
       [disabled]="!signInForm.valid"

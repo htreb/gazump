@@ -14,8 +14,8 @@ import {
     trigger('fadeIn', [
       state('*', style({ opacity: 1 })),
       state('void', style({ opacity: 0 })),
-      transition('void => *', [animate('0.6s 0.0s ease-out')]),
-      transition('* => void', [animate('0.6s 0.0s ease-in')])
+      transition('void => *', [animate('0.3s 0.0s ease-out')]),
+      transition('* => void', [animate('0.3s 0.0s ease-in')])
     ])
   ]
 })

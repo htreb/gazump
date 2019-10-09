@@ -9,7 +9,6 @@ import {
 import {
   AlertController,
   ToastController,
-  LoadingController
 } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
@@ -53,7 +52,6 @@ export class LoginPage implements OnInit {
     private auth: AuthService,
     private toastCtrl: ToastController,
     private router: Router,
-    private loadingCtrl: LoadingController
   ) {}
 
   ngOnInit() {
@@ -196,18 +194,13 @@ export class LoginPage implements OnInit {
    * Logs returning user in
    */
   async logIn() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Logging you in...'
-    });
-    await loading.present();
-
+    this.auth.loading = true;
     this.auth.logIn(this.email, this.password).subscribe(
       user => {
         this.router.navigateByUrl('/groups');
-        loading.dismiss();
       },
       async err => {
-        loading.dismiss();
+        this.auth.loading = false;
         const alert = await this.alertCtrl.create({
           header: 'Error',
           message: err.message, // TODO more human readable error messages?
@@ -222,19 +215,13 @@ export class LoginPage implements OnInit {
    * Signs new user up
    */
   async signUp() {
-    const loading = await this.loadingCtrl.create({
-      message: 'Signing you up...'
-    });
-    await loading.present();
-
+    this.auth.loading = true;
     this.auth.signUp(this.email, this.password).subscribe(
       user => {
         this.router.navigateByUrl('/groups');
-        loading.dismiss();
       },
       async err => {
-        loading.dismiss();
-
+        this.auth.loading = false;
         const alert = await this.alertCtrl.create({
           header: 'Error',
           message: err.message, // TODO more human readable error messages?
