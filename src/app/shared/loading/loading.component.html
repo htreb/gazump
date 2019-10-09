@@ -1,3 +1,7 @@
-<div class='loading'>
+<div
+  class='loading'
+  *ngIf="show"
+  [@fadeIn]="'unneededStateHereSinceItAnimatesFromShowingToVoid'"
+>
   <ion-spinner name="dots" class="spinner-dots"></ion-spinner>
 </div>
