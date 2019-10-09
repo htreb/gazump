@@ -17,6 +17,7 @@ import { PageLoadingSpinnerComponent } from './page-loading-spinner/page-loading
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { IonicStorageModule } from '@ionic/storage';
+import { SharedModule } from './shared/shared.module';
 
 // import { Camera } from '@ionic-native/camera/ngx';
 
@@ -33,7 +34,8 @@ import { IonicStorageModule } from '@ionic/storage';
     AngularFireAuthModule,
     AngularFireStorageModule,
     BrowserAnimationsModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    SharedModule,
   ],
   providers: [
     StatusBar,
