@@ -347,6 +347,12 @@ export class BoardPage implements OnChanges {
               ticketContainer,
               ticketTop - (boardTop + ((boardHeight - ticketHeight) / 2)) + ticketContainer.scrollTop,
               { duration: 600 },
+              (err, success) => {
+                this.renderer.addClass(ticket.el, 'shake');
+                setTimeout(() => {
+                  this.renderer.removeClass(ticket.el, 'shake');
+                }, 1400);
+              }
               );
           }
         );
