@@ -7,9 +7,6 @@
   [cdkDropListData]="boardData.states"
   (cdkDropListDropped)="columnDrop($event)"
 >
-<ion-button (click)="scrollToTicket()">
-  scrollToticker;
-</ion-button>
   <ion-card
     #columnElement
     *ngFor="let column of boardData.states; trackBy: columTrackBy"
