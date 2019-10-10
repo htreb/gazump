@@ -81,4 +81,10 @@ ion-modal.full-screen {
       flex: 1;
   }
 }
+
+.board-dragging {
+  .board, .ticket, .column, .drag-handle {
+    cursor: grabbing !important;
+  }
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////

@@ -12,6 +12,8 @@
     mode="md"
     *ngFor="let column of boardData.states; trackBy: columTrackBy"
     cdkDrag
+    (cdkDragStarted)="onDragStart()"
+    (cdkDragReleased)="onDragEnd()"
     class="column"
     color="medium"
   >
@@ -42,6 +44,8 @@
         class="ticket"
         (click)="openTicketDetail(column, ticket)"
         (cdkDragMoved)="onTicketDrag($event)"
+        (cdkDragStarted)="onDragStart()"
+        (cdkDragReleased)="onDragEnd()"
       >
         <div class="ion-margin title">{{ ticket.title }}</div>
         <div class="ion-margin description">{{ ticket.description }}</div>

@@ -22,10 +22,6 @@ $boardPadding: 8px;
         font-size: 1em;
     }
 
-    .drag-handle {
-        cursor: move;
-    }
-
     .ticket-drop-zone {
         flex: 1;
         overflow: scroll;
@@ -65,4 +61,13 @@ $boardPadding: 8px;
 
 .cdk-drag-placeholder {
     opacity: 0;
+}
+
+.ticket,
+.drag-handle {
+    cursor: grab;
+
+    &:active{
+        cursor: grabbing;
+    }
 }

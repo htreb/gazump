@@ -1,4 +1,4 @@
-import { Component, Input, ViewChildren, ViewChild } from '@angular/core';
+import { Component, Input, ViewChildren, ViewChild, Inject, Renderer2, RendererStyleFlags2 } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import {
   moveItemInArray,
@@ -16,6 +16,7 @@ import {
   animate
 } from '@angular/animations';
 import * as scroll from 'scroll';
+import { DOCUMENT } from '@angular/common';
 
 const distanceFromBoardEdgeToSnapScroll = 30;
 const snapScrollIntervalDuration = 500;
@@ -45,7 +46,9 @@ export class BoardPage {
   constructor(
     private boardService: BoardService,
     private modalController: ModalController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    @Inject(DOCUMENT) private document: Document,
+    private renderer: Renderer2,
   ) {}
 
   /**
@@ -284,5 +287,13 @@ export class BoardPage {
       leftToCenter: 0,
       last: true,
     };
+  }
+
+  onDragStart() {
+    this.renderer.addClass(this.document.body, 'board-dragging');
+  }
+
+  onDragEnd() {
+    this.renderer.removeClass(this.document.body, 'board-dragging');
   }
 }
