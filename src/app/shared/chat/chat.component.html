@@ -57,7 +57,12 @@
               <ion-text class="name">{{ message.senderName }}</ion-text>
             </div>
             <div class="ion-padding text">
-              <ion-badge *ngFor="let ticket of message.tickets" class="ticket-badge">
+              <ion-badge
+                tappable
+                *ngFor="let ticket of message.tickets"
+                class="ticket-badge"
+                (click)="onLinkedTicketClick($event, ticket)"
+              >
                 {{ ticket.title | truncate }}
               </ion-badge>
               <div>{{ message.message }}</div>
@@ -83,7 +88,12 @@
               >
             </div>
             <div class="ion-padding text">
-              <ion-badge *ngFor="let ticket of message.tickets" class="ticket-badge">
+              <ion-badge
+                tappable
+                *ngFor="let ticket of message.tickets"
+                class="ticket-badge"
+                (click)="onLinkedTicketClick($event, ticket)"
+              >
                 {{ ticket.title | truncate }}
               </ion-badge>
               <div>{{ message.message }}</div>

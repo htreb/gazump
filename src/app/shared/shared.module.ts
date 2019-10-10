@@ -16,6 +16,7 @@ import { StartInstanceComponent } from './start-instance/start-instance.componen
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
+import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-detail-or-board.component';
 
 
 
@@ -33,6 +34,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
+    TicketDetailOrBoardComponent
   ],
   imports: [
     CommonModule,
@@ -60,6 +62,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TicketPickerComponent,
     StartInstanceComponent,
     ContactPickerComponent,
+    TicketDetailOrBoardComponent
   ]
 })
 export class SharedModule { }

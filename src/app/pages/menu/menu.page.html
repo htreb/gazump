@@ -45,7 +45,6 @@
                 <ion-item
                   *ngFor="let page of pages"
                   routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: true }"
                   [routerLink]="['/', 'group', currentGroup.id, page.url]"
                   [routerDirection]="page.routerDirection"
                   lines="full"

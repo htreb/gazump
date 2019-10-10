@@ -11,6 +11,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
 import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component';
+import { TicketDetailOrBoardComponent } from '../ticket-detail-or-board/ticket-detail-or-board.component';
 
 @Component({
   selector: 'app-chat',
@@ -165,7 +166,21 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     } else {
       this.linkedTickets = initialSelectedTickets;
     }
+  }
 
+  async onLinkedTicketClick(ev, ticket) {
+    const detailsOrBoard = await this.popoverController.create({
+      component: TicketDetailOrBoardComponent,
+      componentProps: {
+        ticket,
+        dismiss
+      },
+      event: ev,
+    });
+    function dismiss() {
+      detailsOrBoard.dismiss();
+    }
+    detailsOrBoard.present();
   }
 
 }

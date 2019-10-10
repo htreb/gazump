@@ -125,7 +125,7 @@ export class BoardService {
    * Returns the current board, state and index within the state of a given snippet.
    * @param snippet the ticket snippet to find
    */
-  findTicketSnippet(snippet) {
+  findTicketSnippet(snippetId) {
     let currentBoardId;
     let currentStateId;
     let currentIndex;
@@ -133,7 +133,7 @@ export class BoardService {
     const allBoards = JSON.parse(JSON.stringify(this.allBoardsSubject.value));
     allBoards.map((board: any) => {
       Object.keys(board.tickets).forEach(state => {
-        const idx = board.tickets[state].findIndex(ticket => ticket.id === snippet.id);
+        const idx = board.tickets[state].findIndex(ticket => ticket.id === snippetId);
         if (idx > -1) {
           currentBoardId = board.id;
           currentStateId = state;
@@ -154,7 +154,7 @@ export class BoardService {
       currentBoardId,
       currentStateId,
       currentIndex,
-    } = this.findTicketSnippet(snippet);
+    } = this.findTicketSnippet(snippet.id);
 
     if (currentStateId === undefined || currentIndex === -1) {
       console.log(`can't find the ticket with id ${snippet.id}`);
@@ -212,7 +212,7 @@ export class BoardService {
     const {
       currentBoardId,
       currentStateId,
-    } = this.findTicketSnippet(snippet);
+    } = this.findTicketSnippet(snippet.id);
 
     return this.db
       .collection('groups')
