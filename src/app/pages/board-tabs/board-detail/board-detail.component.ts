@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { icons } from './icon-list';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
@@ -37,6 +37,7 @@ export class BoardDetailComponent implements OnInit {
   constructor(
     private toastCtrl: ToastController,
     private contactService: ContactService,
+    private alertCtrl: AlertController,
   ) { }
 
   ionViewDidEnter() {
@@ -91,9 +92,18 @@ export class BoardDetailComponent implements OnInit {
     }
   }
 
-  removeState(state) {
+  async removeState(state) {
     // TODO block deleting a state which has tickets on it!
-    this.states = this.states.filter(s => s.id !== state.id);
+    if (this.board.tickets[state.id].length) {
+      const alert = await this.alertCtrl.create({
+        header: 'Warning',
+        message: `You cannot delete a state which currently has tickets in it.`,
+        buttons: ['OK'],
+        });
+      alert.present();
+    } else {
+      this.states = this.states.filter(s => s.id !== state.id);
+    }
   }
 
   reorderStates(ev) {
