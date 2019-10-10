@@ -6,7 +6,7 @@ import {
   AfterViewChecked,
   ViewChildren
 } from '@angular/core';
-import { IonContent, ModalController, PopoverController } from '@ionic/angular';
+import { IonContent, PopoverController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
@@ -20,6 +20,7 @@ import { TicketDetailOrBoardComponent } from '../ticket-detail-or-board/ticket-d
 })
 export class ChatComponent implements OnInit, AfterViewChecked {
   @Input() chatId = '';
+  @Input() closeChat;
   @Input() messageIds: string[] = [];
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChildren('chatMessage') messageElements: any;
@@ -35,7 +36,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   constructor(
     private auth: AuthService,
     private chatService: ChatService,
-    private modalCtrl: ModalController,
     private popoverController: PopoverController,
   ) {}
 
@@ -70,7 +70,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
   }
 
   closePage() {
-    this.modalCtrl.dismiss();
+    this.closeChat();
   }
 
   getMessages(chat: any) {
@@ -107,11 +107,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
 
   messageTrackBy(index, message) {
     return message.id;
-  }
-
-  newDay(message, messageIndex, messages) {
-    // console.log('newDay', message, messageIndex, messages);
-    return null;
   }
 
   // if user is at bottom then keep screen scrolled to bottom.
@@ -173,7 +168,8 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       component: TicketDetailOrBoardComponent,
       componentProps: {
         ticket,
-        dismiss
+        dismiss,
+        closeChat: () => this.closeChat() ,
       },
       event: ev,
     });
@@ -182,5 +178,4 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
     detailsOrBoard.present();
   }
-
 }

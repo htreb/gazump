@@ -31,9 +31,13 @@ export class ListChatsPage {
       component: ChatComponent,
       cssClass: 'full-screen',
       componentProps: {
-        chatId
+        chatId,
+        closeChat,
       }
     });
+    function closeChat() {
+      chatModal.dismiss();
+    }
     return await chatModal.present();
   }
 
