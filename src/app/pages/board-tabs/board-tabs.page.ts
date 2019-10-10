@@ -11,6 +11,8 @@ import { SettingsOption } from 'src/app/shared/settings-list/settings-list.compo
 import { ModalController, AlertController } from '@ionic/angular';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-icon.component';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-board-tabs',
@@ -30,13 +32,15 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     }
   ];
   public displayingBoardTitle: string;
+  public scrollToTicketDetails: any;
 
   private allBoardsSub: Subscription;
 
   constructor(
     private boardService: BoardService,
     private modalController: ModalController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private router: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +50,12 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         this.updateSettingsAndTitle();
       }
     );
+
+    this.router.queryParams.subscribe( params => {
+      if (params.ticket) {
+        this.scrollToTicket(params.ticket);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -166,5 +176,26 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         });
       }
     }
+  }
+
+  scrollToTicket(ticketId) {
+    // subscribe to the allBoardsSubject. Only try to scroll to a ticket once the boards have loaded
+    this.boardService.allBoardsSubject
+      .pipe(
+        takeWhile(boards => boards.loading)
+      ).subscribe(boards => {
+        // allBoards loading now
+      }, err => {
+        // error in allBoards subscription
+      }, () => {
+        // subscription complete. allBoards have loaded now
+        const ticketDetails = this.boardService.findTicketPositionDetails(ticketId);
+        this.displayingBoardId = ticketDetails.currentBoardId;
+        this.scrollToTicketDetails = {
+          ticketId,
+          ...ticketDetails
+        };
+        this.updateSettingsAndTitle();
+      });
   }
 }

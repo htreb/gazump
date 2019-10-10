@@ -7,10 +7,13 @@
   [cdkDropListData]="boardData.states"
   (cdkDropListDropped)="columnDrop($event)"
 >
+<ion-button (click)="scrollToTicket()">
+  scrollToticker;
+</ion-button>
   <ion-card
     #columnElement
-    mode="md"
     *ngFor="let column of boardData.states; trackBy: columTrackBy"
+    mode="md"
     cdkDrag
     (cdkDragStarted)="onDragStart()"
     (cdkDragReleased)="onDragEnd()"
@@ -37,12 +40,14 @@
       class="ticket-drop-zone"
     >
       <ion-card
-        mode="md"
+        #ticketElement
         *ngFor="let ticket of ticketsForState; trackBy: ticketTrackBy"
-        cdkDrag
+        [id]="ticket.id"
+        mode="md"
         color="light"
         class="ticket"
         (click)="openTicketDetail(column, ticket)"
+        cdkDrag
         (cdkDragMoved)="onTicketDrag($event)"
         (cdkDragStarted)="onDragStart()"
         (cdkDragReleased)="onDragEnd()"

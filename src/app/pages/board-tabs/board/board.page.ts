@@ -1,4 +1,4 @@
-import { Component, Input, ViewChildren, ViewChild, Inject, Renderer2, RendererStyleFlags2 } from '@angular/core';
+import { Component, Input, ViewChildren, ViewChild, Inject, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { BoardService } from '../../../services/board.service';
 import {
   moveItemInArray,
@@ -19,7 +19,7 @@ import * as scroll from 'scroll';
 import { DOCUMENT } from '@angular/common';
 
 const distanceFromBoardEdgeToSnapScroll = 30;
-const snapScrollIntervalDuration = 500;
+const snapScrollIntervalDuration = 600;
 
 @Component({
   selector: 'app-board',
@@ -34,11 +34,13 @@ const snapScrollIntervalDuration = 500;
     ])
   ]
 })
-export class BoardPage {
+export class BoardPage implements OnChanges {
   @Input() boardData;
+  @Input() scrollToTicketDetails;
   @Input() showing;
   @ViewChild('boardElement', { static: false }) boardElement: any;
-  @ViewChildren('columnElement') columns: any;
+  @ViewChildren('columnElement') columnElements: any;
+  @ViewChildren('ticketElement') ticketElements: any;
   private scrollingTimeout: any;
   private getNextColumnToScrollToFunc: any;
   private ticketDetailModal: HTMLIonModalElement;
@@ -50,6 +52,17 @@ export class BoardPage {
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const scrollToTicketDetails = changes.scrollToTicketDetails && changes.scrollToTicketDetails.currentValue;
+    if (scrollToTicketDetails &&
+      scrollToTicketDetails.currentBoardId === this.boardData.id) {
+        // scroll after a timeout to give the view time to render.
+        setTimeout(() => {
+          this.scrollToTicket(scrollToTicketDetails.ticketId);
+        }, 600);
+    }
+  }
 
   /**
    *  This is called from the ticket detail component as well so
@@ -248,13 +261,13 @@ export class BoardPage {
    */
   findNextColumnToRight() {
     const boardRect = this.boardElement.nativeElement.getBoundingClientRect();
-    for (const nextCol of this.columns) {
+    for (const nextCol of this.columnElements) {
       const { left, width } = nextCol.el.getBoundingClientRect();
       if (left - boardRect.left > boardRect.width / 2) {
         return {
           col: nextCol.el,
-          leftToCenter: nextCol.el.offsetLeft - (boardRect.width - width) / 2,
-          last: nextCol === this.columns.last,
+          leftToCenter: nextCol.el.offsetLeft - ((boardRect.width - width) / 2),
+          last: nextCol === this.columnElements.last,
         };
       }
     }
@@ -266,18 +279,18 @@ export class BoardPage {
   }
 
   /**
-   * Loop backwards through columns to find first which ends before the middle of the screen
+   * Loop backwards through columns to find first which ends before the middle of the board
    */
   findNextColumnToLeft() {
     const boardRect = this.boardElement.nativeElement.getBoundingClientRect();
-    const columns = this.columns.toArray();
+    const columns = this.columnElements.toArray();
     for (let i = columns.length - 1; i >= 0; i--) {
       const { right, width } = columns[i].el.getBoundingClientRect();
       if (right - boardRect.left < boardRect.width / 2) {
         return {
           col: columns[i].el,
           leftToCenter:
-            columns[i].el.offsetLeft - (boardRect.width - width) / 2,
+            columns[i].el.offsetLeft - ((boardRect.width - width) / 2),
           last: i === 0,
         };
       }
@@ -289,11 +302,55 @@ export class BoardPage {
     };
   }
 
+  /**
+   * By setting and removing 'board-dragging' class shows the cursor as grabbing
+   * angular cdk removed pointer events from dragging elements so this is the easiest way.
+   */
   onDragStart() {
     this.renderer.addClass(this.document.body, 'board-dragging');
   }
 
   onDragEnd() {
     this.renderer.removeClass(this.document.body, 'board-dragging');
+  }
+
+  scrollToTicket(ticketId) {
+    for (const ticket of this.ticketElements) {
+      if (ticket.el.id === ticketId) {
+        const {
+          top: ticketTop,
+          left: ticketLeft,
+          width: ticketWidth,
+          height: ticketHeight
+        } = ticket.el.getBoundingClientRect();
+        const boardEl = this.boardElement.nativeElement;
+        const {
+          top: boardTop,
+          left: boardLeft,
+          width: boardWidth,
+          height: boardHeight,
+        } = boardEl.getBoundingClientRect();
+        // (boardWidth - ticketWidth) / 2) is centered on the screen
+        // minus this from where the ticket left is currently (also minus the boardLeft i.e. if the menu is open)
+        // we're aiming to center on the visible section of board not the screen as a whole.
+        // since scroll left is the absolute amount scrolled from 0, add on the current scrollLeft of the board.
+        scroll.left(
+          boardEl,
+          ticketLeft - (boardLeft + (boardWidth - ticketWidth) / 2) + boardEl.scrollLeft,
+          { duration: 600 },
+          (err, success) => {
+            const ticketContainer = ticket.el.parentElement;
+            // ((boardHeight - ticketHeight) / 2)) is where would center the ticket in the viewport
+            // ticketTop minus this is where the ticket is now relative to that position (+ / -).
+            // if we add that to the current scroll position of the column then we can 'scroll.top' there to center it.
+            scroll.top(
+              ticketContainer,
+              ticketTop - (boardTop + ((boardHeight - ticketHeight) / 2)) + ticketContainer.scrollTop,
+              { duration: 600 },
+              );
+          }
+        );
+      }
+    }
   }
 }

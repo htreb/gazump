@@ -22,6 +22,7 @@
       *ngFor="let board of allBoards; trackBy: boardTrackBy"
       [boardData]='board'
       [showing]='board.id === displayingBoardId'
+      [scrollToTicketDetails]="scrollToTicketDetails"
     >
     </app-board>
 

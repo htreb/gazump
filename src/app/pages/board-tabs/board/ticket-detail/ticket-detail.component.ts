@@ -46,16 +46,20 @@ export class TicketDetailComponent implements OnInit {
   }
 
   async openChat(chatId: string, messageIds?: string[]) {
-    const modal = await this.modalCtrl.create({
+    const chatModal = await this.modalCtrl.create({
       component: ChatComponent,
       cssClass: 'full-screen',
       showBackdrop: false,
       componentProps: {
         chatId,
         messageIds,
+        closeChat,
       }
     });
-    await modal.present();
-    const { data } = await modal.onWillDismiss();
+    function closeChat() {
+      chatModal.dismiss();
+    }
+    await chatModal.present();
+    const { data } = await chatModal.onWillDismiss();
   }
 }
