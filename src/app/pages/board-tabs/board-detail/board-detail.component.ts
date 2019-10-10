@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { icons } from './icon-list';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
@@ -37,7 +37,6 @@ export class BoardDetailComponent implements OnInit {
   constructor(
     private toastCtrl: ToastController,
     private contactService: ContactService,
-    private alertCtrl: AlertController,
   ) { }
 
   ionViewDidEnter() {
@@ -80,7 +79,9 @@ export class BoardDetailComponent implements OnInit {
       return;
     }
     if (this.states.filter(s => s.title === newState).length === 0) {
-      this.states.push({title: newState, color: 'medium', id: this.getId()});
+      const stateId = this.getId();
+      this.states.push({title: newState, color: 'medium', id: stateId});
+      this.board.tickets[stateId] = [];
       this.newStateName = '';
     } else {
       const toast = await this.toastCtrl.create({
@@ -93,14 +94,13 @@ export class BoardDetailComponent implements OnInit {
   }
 
   async removeState(state) {
-    // TODO block deleting a state which has tickets on it!
     if (this.board.tickets[state.id].length) {
-      const alert = await this.alertCtrl.create({
-        header: 'Warning',
-        message: `You cannot delete a state which currently has tickets in it.`,
-        buttons: ['OK'],
-        });
-      alert.present();
+      const toast = await this.toastCtrl.create({
+        message: 'You cannot delete a state which currently has tickets in it.',
+        duration: 3000,
+        color: 'danger'
+      });
+      toast.present();
     } else {
       this.states = this.states.filter(s => s.id !== state.id);
     }
