@@ -5,19 +5,17 @@
   <app-empty-list [customMessage]="'No linked chats'"></app-empty-list>
 </ng-template>
 
-
-
 <ng-container [formGroup]="ticketForm">
   <ion-header no-border>
     <ion-toolbar mode="md">
       <ion-buttons slot="start">
-        <ion-button (click)="closePage()">
+        <ion-button (click)="dismiss()">
           <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
 
-      <ion-buttons slot="end">
-        <ion-button (click)="deleteTicket(ticketForm.value)">
+      <ion-buttons slot="end" *ngIf="ticketId">
+        <ion-button (click)="deleteTicket()">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -99,12 +97,11 @@
         </ng-container>
       </ng-container>
     </ion-list>
-
   </ion-content>
 
   <ion-footer no-border class="ion-padding footer-buttons">
     <ion-button
-      (click)="closePage()"
+      (click)="dismiss()"
       class="footer-button"
       expand="block"
       fill="outline"
@@ -114,7 +111,7 @@
       Close
     </ion-button>
     <ion-button
-      (click)="closePage(true)"
+      (click)="saveTicket()"
       class="footer-button"
       expand="block"
       fill="solid"

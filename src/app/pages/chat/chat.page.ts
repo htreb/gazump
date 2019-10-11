@@ -57,7 +57,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
         this.messageIds = messageIds.split(',');
         setTimeout( _ => {
           this.scrollToMessages(this.messageIds);
-        }, 600);
+        }, 1000);
       }
     });
   }

@@ -43,7 +43,6 @@ export class BoardPage implements OnChanges {
   @ViewChildren('ticketElement') ticketElements: any;
   private scrollingTimeout: any;
   private getNextColumnToScrollToFunc: any;
-  private ticketDetailModal: HTMLIonModalElement;
 
   constructor(
     private boardService: BoardService,
@@ -60,36 +59,8 @@ export class BoardPage implements OnChanges {
         // scroll after a timeout to give the view time to render.
         setTimeout(() => {
           this.scrollToTicket(scrollToTicketDetails.ticketId);
-        }, 600);
+        }, 1000);
     }
-  }
-
-  /**
-   *  This is called from the ticket detail component as well so
-   *  making it a function expression to stop the 'this' from changing
-   */
-  deleteTicket = async ticket => {
-    const alert = await this.alertCtrl.create({
-      header: 'Confirm',
-      message: `Are you sure you want to delete this ticket:
-                <br><br>
-                <b>${ticket.title}</b>
-                <br><br>
-                This cannot be undone.`,
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Ok',
-          handler: () => {
-            this.boardService.deleteTicketSnippet(ticket);
-            this.closeTicketDetailModal();
-          }
-        }
-      ]
-    });
-    await alert.present();
   }
 
   getColumnIds() {
@@ -170,42 +141,26 @@ export class BoardPage implements OnChanges {
     this.updateDb(updatedTickets);
   }
 
-  async openTicketDetail(currentState: any, currentTicketSnippet: any = {}) {
-    this.ticketDetailModal = await this.modalController.create({
+  async openTicketDetail(ticketId?: string, currentStateId?: string) {
+    const ticketDetailModal = await this.modalController.create({
       component: TicketDetailComponent,
       componentProps: {
-        currentTicketSnippet,
-        currentState,
-        completedBy: this.boardData.completedBy,
-        deleteTicket: (ticket) => { this.deleteTicket(ticket); },
-        dismiss: () => { this.closeTicketDetailModal(); },
+        ticketId,
+        currentStateId,
+        boardId: this.boardData.id,
+        dismiss,
       }
     });
-    await this.ticketDetailModal.present();
 
-    const { data } = await this.ticketDetailModal.onWillDismiss();
-    if (data && data.saveTicket) {
-      if (data.ticketFormValue.id) {
-        // updating a ticket which already exists
-        this.boardService.updateTicketSnippet(
-          currentState.id,
-          data.ticketFormValue
-        );
-      } else {
-        this.boardService.addTicketSnippet(
-          this.boardData.id,
-          currentState.id,
-          data.ticketFormValue
-        );
+    function dismiss() {
+      if (typeof ticketDetailModal.dismiss === 'function') {
+        ticketDetailModal.dismiss();
       }
     }
+
+    await ticketDetailModal.present();
   }
 
-  closeTicketDetailModal() {
-    if (typeof this.ticketDetailModal.dismiss === 'function') {
-      this.ticketDetailModal.dismiss();
-    }
-  }
 
   clearScrollTimeout() {
     clearTimeout(this.scrollingTimeout);

@@ -35,7 +35,7 @@ export class BoardService {
         takeUntil(this.auth.loggedOutSubject),
         switchMap(group => {
           if (group.loading) {
-            return of(group);
+            return of({ loading: true });
           }
           if (!group.id) {
             return of([]);
@@ -71,6 +71,13 @@ export class BoardService {
     return this.allBoardsSubject.value.filter(board => board.id === boardId)[0];
   }
 
+  getCompletedBy(boardId: string) {
+    const matchingBoard = this.getOneBoard(boardId);
+    if (matchingBoard) {
+      return matchingBoard.completedBy;
+    }
+    return [];
+  }
   /**
    * Updates the object saved on a board
    * if tickets, this is a new order of each ticket in each column.
@@ -129,6 +136,7 @@ export class BoardService {
     let currentBoardId;
     let currentStateId;
     let currentIndex;
+    let ticketSnippet;
 
     const allBoards = JSON.parse(JSON.stringify(this.allBoardsSubject.value));
     allBoards.map((board: any) => {
@@ -138,6 +146,7 @@ export class BoardService {
           currentBoardId = board.id;
           currentStateId = state;
           currentIndex = idx;
+          ticketSnippet = board.tickets[state][idx];
         }
       });
     });
@@ -146,10 +155,11 @@ export class BoardService {
       currentBoardId,
       currentStateId,
       currentIndex,
+      ticketSnippet,
     };
   }
 
-  updateTicketSnippet(newStateId: string, snippet: any) {
+  updateTicketSnippet(snippet: any, newStateId?: string) {
     const {
       currentBoardId,
       currentStateId,
@@ -173,7 +183,7 @@ export class BoardService {
     const updatedTickets = {};
 
     // if new state is same as current state then replace ticket with new snippet
-    if (currentStateId === newStateId) {
+    if (!newStateId || newStateId === currentStateId) {
       const oldSnippet = allTickets[currentStateId].splice(
         currentIndex,
         1,
@@ -193,8 +203,7 @@ export class BoardService {
     return this.updateBoard(currentBoardId, updatedTickets);
   }
 
-  // TODO just use updateTicketSnippet and remove this?
-  addTicketSnippet(boardId: string, stateId: string, snippet: any) {
+  addTicketSnippet(snippet: any, stateId: string, boardId: string ) {
     snippet = {...snippet, id: this.getId()};
     return this.db
       .collection('groups')
@@ -208,11 +217,12 @@ export class BoardService {
       });
   }
 
-  deleteTicketSnippet(snippet) {
+  deleteTicketSnippet(snippetId) {
     const {
       currentBoardId,
       currentStateId,
-    } = this.findTicketPositionDetails(snippet.id);
+      ticketSnippet
+    } = this.findTicketPositionDetails(snippetId);
 
     return this.db
       .collection('groups')
@@ -220,7 +230,7 @@ export class BoardService {
       .collection('boards')
       .doc(currentBoardId)
       .update({
-        [`tickets.${currentStateId}`]: firebase.firestore.FieldValue.arrayRemove(snippet)
+        [`tickets.${currentStateId}`]: firebase.firestore.FieldValue.arrayRemove(ticketSnippet)
       });
   }
 

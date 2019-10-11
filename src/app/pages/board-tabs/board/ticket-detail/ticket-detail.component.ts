@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChatService } from 'src/app/services/chat.service';
 import { GroupService } from 'src/app/services/group.service';
 import { Router } from '@angular/router';
+import { BoardService } from 'src/app/services/board.service';
 
 @Component({
   selector: 'app-ticket-detail',
@@ -14,16 +15,18 @@ export class TicketDetailComponent implements OnInit {
   public ticketForm: FormGroup;
   public linkedChatsTip = `These are the chats which mention this ticket. Only chats you are a member of will appear here.`;
   public linkedChats$;
-  @Input() currentTicketSnippet;
-  @Input() completedBy;
-  @Input() dismiss;
-  @Input() deleteTicket = () => {};
+  public currentTicketSnippet;
+  public completedBy;
+  @Input() ticketId;
+  @Input() currentStateId;
+  @Input() boardId;
+  @Input() dismiss = () => {};
 
   constructor(
-    private modalCtrl: ModalController,
     private fb: FormBuilder,
     private chatService: ChatService,
     private groupService: GroupService,
+    private boardService: BoardService,
     private router: Router,
     private alertCtrl: AlertController,
   ) {}
@@ -36,18 +39,17 @@ export class TicketDetailComponent implements OnInit {
       completedBy: ['']
     });
 
-    this.ticketForm.patchValue(this.currentTicketSnippet);
-    this.linkedChats$ = this.chatService.findChatsWhichMentionTicket(
-      this.currentTicketSnippet.id
-    );
+    if (this.ticketId) {
+      // Editing a ticket which exists;
+      const ticketDetails = this.boardService.findTicketPositionDetails(this.ticketId);
+      this.currentTicketSnippet = ticketDetails.ticketSnippet;
+      this.currentStateId = ticketDetails.currentStateId;
+      this.boardId = ticketDetails.currentBoardId;
 
-  }
-
-  closePage(saveTicket = false) {
-    this.modalCtrl.dismiss({
-      saveTicket,
-      ticketFormValue: this.ticketForm.value
-    });
+      this.ticketForm.patchValue(this.currentTicketSnippet);
+      this.linkedChats$ = this.chatService.findChatsWhichMentionTicket(this.ticketId);
+    }
+    this.completedBy = this.boardService.getCompletedBy(this.boardId);
   }
 
   async openChat(chatId: string, messageIds?: string[]) {
@@ -85,5 +87,43 @@ export class TicketDetailComponent implements OnInit {
     } else {
       closeAndNavToChat();
     }
+  }
+
+  async saveTicket() {
+    if (this.ticketId) {
+      // updating a ticket which already exists
+      await this.boardService.updateTicketSnippet(
+        this.ticketForm.value
+      );
+    } else {
+      await this.boardService.addTicketSnippet(
+        this.ticketForm.value,
+        this.currentStateId,
+        this.boardId,
+      );
+    }
+
+    this.dismiss();
+  }
+
+  async deleteTicket() {
+    const alert = await this.alertCtrl.create({
+      message: `Are you sure you want to delete this ticket?
+                <br><br>
+                This cannot be undone.`,
+      buttons: [
+        {
+          text: 'Cancel'
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            this.boardService.deleteTicketSnippet(this.ticketId);
+            this.dismiss();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

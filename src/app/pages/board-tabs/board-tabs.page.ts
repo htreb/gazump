@@ -113,7 +113,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
   async deleteBoard(boardId: string, callBack?) {
     const board = this.boardService.getOneBoard(boardId);
     const alert = await this.alertCtrl.create({
-      header: 'Confirm',
       message: `Are you sure you want to delete the board and all its tickets:
                 <br><br>
                 <b>${board.title}</b>

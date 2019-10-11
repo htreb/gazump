@@ -43,7 +43,7 @@
         mode="md"
         color="light"
         class="ticket"
-        (click)="openTicketDetail(column, ticket)"
+        (click)="openTicketDetail(ticket.id)"
         cdkDrag
         (cdkDragMoved)="onTicketDrag($event)"
         (cdkDragStarted)="onDragStart()"
@@ -58,7 +58,7 @@
         fill="clear"
         expand="block"
         color='medium'
-        (click)="openTicketDetail(column)"
+        (click)="openTicketDetail(null, column.id)"
       >
         <ion-icon
           slot="icon-only"

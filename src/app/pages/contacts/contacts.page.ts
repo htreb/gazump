@@ -75,7 +75,6 @@ export class ContactsPage implements OnInit {
 
   async cancelSentRequest(request) {
     const alert = await this.alertCtrl.create({
-      header: 'Confirm',
       message: `Are you sure you want to cancel your contact request to:
                 <br><br>
                 <b>${request.accepterEmail}?</b>`,
@@ -101,7 +100,6 @@ export class ContactsPage implements OnInit {
   async declineContactRequest(request: any) {
     console.log('decline Request', request);
     const alert = await this.alertCtrl.create({
-      header: 'Confirm',
       message: `Are you sure you want to decline the contact request from:
                 <br><br>
                 <b>${request.requesterEmail}?</b>`,

@@ -260,7 +260,6 @@ export class LoginPage implements OnInit {
    */
   async confirmResetPasswordEmail() {
     const alert = await this.alertCtrl.create({
-      header: 'Confirm',
       message: `Are you sure you want to send a reset password email to:
                 <br><br>
                 <b>${this.email}?</b>`,
