@@ -7,7 +7,7 @@ import {
   CdkDragMove
 } from '@angular/cdk/drag-drop';
 import { ModalController, AlertController } from '@ionic/angular';
-import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
+import { TicketDetailComponent } from '../../../shared/ticket-detail/ticket-detail.component';
 import {
   trigger,
   state,

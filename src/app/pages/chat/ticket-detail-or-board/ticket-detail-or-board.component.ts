@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { GroupService } from 'src/app/services/group.service';
+import { ModalController } from '@ionic/angular';
+import { TicketDetailComponent } from '../../../shared/ticket-detail/ticket-detail.component';
 
 @Component({
   selector: 'app-ticket-detail-or-board',
@@ -14,11 +16,27 @@ export class TicketDetailOrBoardComponent {
 
   constructor(
     private groupService: GroupService,
-    private router: Router
+    private router: Router,
+    private modalController: ModalController,
     ) { }
 
-  showTicketDetails() {
-    console.log('show me details');
+
+  async showTicketDetails() {
+    const ticketDetailModal = await this.modalController.create({
+      component: TicketDetailComponent,
+      componentProps: {
+        ticketId: this.ticketId,
+        dismiss,
+      }
+    });
+
+    function dismiss() {
+      if (typeof ticketDetailModal.dismiss === 'function') {
+        ticketDetailModal.dismiss();
+      }
+    }
+
+    await ticketDetailModal.present();
     this.dismiss();
   }
 

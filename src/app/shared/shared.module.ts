@@ -9,13 +9,13 @@ import { EmptyListComponent } from './empty-list/empty-list.component';
 import { TipComponent } from './tip/tip.component';
 import { TextComponent } from './text/text.component';
 import { AutosizeModule } from 'ngx-autosize';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StartInstanceComponent } from './start-instance/start-instance.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
 import { TicketTitlePipe } from './pipes/ticket-title.pipe';
-
+import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 
 
 @NgModule({
@@ -31,6 +31,7 @@ import { TicketTitlePipe } from './pipes/ticket-title.pipe';
     MembersDetailPipe,
     ContactPickerComponent,
     TicketTitlePipe,
+    TicketDetailComponent,
   ],
   imports: [
     CommonModule,
@@ -38,6 +39,7 @@ import { TicketTitlePipe } from './pipes/ticket-title.pipe';
     RouterModule,
     FormsModule,
     AutosizeModule,
+    ReactiveFormsModule,
   ],
   exports: [
     SettingsIconComponent,
@@ -51,12 +53,14 @@ import { TicketTitlePipe } from './pipes/ticket-title.pipe';
     ContactPickerComponent,
     AutosizeModule,
     TicketTitlePipe,
+    TicketDetailComponent,
   ],
   entryComponents: [
     SettingsListComponent,
     TextComponent,
     StartInstanceComponent,
     ContactPickerComponent,
+    TicketDetailComponent
   ]
 })
 export class SharedModule { }

@@ -6,7 +6,6 @@ import { IonicModule } from '@ionic/angular';
 import { BoardTabsPage } from './board-tabs.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BoardPage } from './board/board.page';
-import { TicketDetailComponent } from './board/ticket-detail/ticket-detail.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 
@@ -30,12 +29,10 @@ const routes: Routes = [
   declarations: [
     BoardTabsPage,
     BoardPage,
-    TicketDetailComponent,
     BoardDetailComponent
   ],
   entryComponents: [
     // since these are loaded dynamically without the router they need to be here too
-    TicketDetailComponent,
     BoardDetailComponent
   ]
 
