@@ -52,6 +52,8 @@ export class AuthService {
           console.log('Got no user in the auth service emitting loggedOutSubject...', user);
           this.loggedOutSubject.next();
           this.currentUser.next(null);
+          this.logOut();
+          this.loading = false;
           // this.loggedOutSubject.complete(); // TODO! ticket #23
           return of(null);
         }
