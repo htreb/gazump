@@ -32,4 +32,5 @@ ion-item {
     flex: 1;
     flex-direction: column;
     justify-content: flex-end;
+    padding-bottom: var(--ion-safe-area-bottom, 0);
 }

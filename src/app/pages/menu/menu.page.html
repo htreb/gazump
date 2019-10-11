@@ -33,7 +33,7 @@
             *ngIf="!currentGroup.loading && groupService.showGroupMenuItems"
           >
             <ion-header>
-              <ion-toolbar class="group-title" color="primary">
+              <ion-toolbar class="group-title important-no-padding" color="primary">
                 <ion-item class="ion-text-wrap" lines="none" color="primary">{{
                   currentGroup.title
                 }}</ion-item>
@@ -62,7 +62,7 @@
           </ng-container>
         </ng-container>
 
-        <ion-list class="ion-no-padding ion-no-margin users-items">
+        <ion-toolbar class="users-items" color="transparent">
           <ion-menu-toggle autoHide="false">
             <ion-item
               [routerLink]="['/', 'contacts']"
@@ -79,11 +79,11 @@
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>
           </ion-item>
-          <ion-item tappable (click)="logOut()" lines="full">
+          <ion-item tappable (click)="logOut()" lines="none">
             <ion-label>Logout</ion-label>
             <ion-icon slot="end" name="log-out"></ion-icon>
           </ion-item>
-        </ion-list>
+        </ion-toolbar>
       </div>
     </ion-content>
   </ion-menu>

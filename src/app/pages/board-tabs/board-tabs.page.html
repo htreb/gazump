@@ -29,17 +29,20 @@
   </ion-content>
 
   <ion-footer>
-    <ion-segment mode="ios" [value]="displayingBoardId" scrollable>
-      <ion-segment-button
-        #tabButton
-        *ngFor="let board of allBoards; trackBy: boardTrackBy"
-        [value]="board.id"
-        mode="ios"
-        (ionSelect)="segmentButtonSelected(board.id)"
-      >
-        <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
-        <ion-label class="ion-text-wrap">{{ board.title }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-toolbar color="medium">
+      <ion-segment mode="ios" [value]="displayingBoardId" scrollable>
+        <ion-segment-button
+          #tabButton
+          *ngFor="let board of allBoards; trackBy: boardTrackBy"
+          [value]="board.id"
+          mode="ios"
+          (ionSelect)="segmentButtonSelected(board.id)"
+          class="tab-button"
+        >
+          <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
+          <ion-label class="ion-text-wrap">{{ board.title | truncate }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-toolbar>
   </ion-footer>
 </ng-container>

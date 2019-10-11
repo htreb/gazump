@@ -78,4 +78,18 @@ ion-popover.picker {
     cursor: grabbing !important;
   }
 }
+
+//board-tabs segments
+ion-segment-button {
+  flex: 1; // all buttons same width
+  min-width: 100px;
+  --border-radius: 0px;
+  --border-style: none;
+  max-width: 100% !important;
+}
+
+.important-no-padding {
+  // ios adds a huge margin for that safe iPhone x indent
+  padding: 0 !important
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
