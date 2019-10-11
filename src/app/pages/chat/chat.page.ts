@@ -4,7 +4,8 @@ import {
   ViewChild,
   Input,
   AfterViewChecked,
-  ViewChildren
+  ViewChildren,
+  Renderer2
 } from '@angular/core';
 import { IonContent, PopoverController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
@@ -40,6 +41,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
     private chatService: ChatService,
     private popoverController: PopoverController,
     private route: ActivatedRoute,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit() {
@@ -84,7 +86,11 @@ export class ChatPage implements OnInit, AfterViewChecked {
           this.atBottom = false;
           const scrollEl = await this.content.getScrollElement();
           const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (scrollEl.offsetHeight / 2);
-          this.content.scrollToPoint(0, centeredMsgTop, 1000);
+          await this.content.scrollToPoint(0, centeredMsgTop, 1000);
+          this.renderer.addClass(msg.el, 'shake');
+          setTimeout(() => {
+            this.renderer.removeClass(msg.el, 'shake');
+          }, 1400);
         }
       }
     });
