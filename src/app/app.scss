@@ -58,15 +58,6 @@ ion-popover.picker {
   --max-height: 650px;
 }
 
-ion-modal.full-screen {
-  --height: 100vh;
-  --width: 100vw;
-
-  @media (min-width: 992px) {
-    left: $splitPaneMenuWidth;
-  }
-}
-
 .title { // title for ticket details modal
   textarea {
     --padding-top: 0;
