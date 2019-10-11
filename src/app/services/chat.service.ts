@@ -94,9 +94,9 @@ export class ChatService {
       }
     };
     if (tickets) {
-      tickets.forEach(ticket => {
+      tickets.forEach(ticketId => {
         updateObject[
-          `linkedTickets.${ticket.id}`
+          `linkedTickets.${ticketId}`
         ] = firebase.firestore.FieldValue.arrayUnion({
           message,
           messageId

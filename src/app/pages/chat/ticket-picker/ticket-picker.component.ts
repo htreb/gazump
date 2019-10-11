@@ -52,7 +52,10 @@ export class TicketPickerComponent implements OnInit {
     boards.forEach((board: any) =>
       Object.keys(board.tickets).forEach((state: string) => {
         board.tickets[state] = board.tickets[state].filter(
-          (ticket: any) => ticket.title.toLowerCase().indexOf(searchTerm) > -1
+          (ticket: any) => {
+            return ticket.title.toLowerCase().indexOf(searchTerm) > -1 ||
+                    ticket.description.toLowerCase().indexOf(searchTerm) > -1;
+          }
         );
         if (!board.tickets[state].length) {
           delete board.tickets[state];
@@ -72,22 +75,12 @@ export class TicketPickerComponent implements OnInit {
     }
   }
 
-  ticketSelected(ev, ticket) {
-    const idx = this.findTicket(ticket);
+  ticketSelected(ev, ticketId) {
+    const idx = this.selectedTickets.indexOf(ticketId);
     if (ev.detail.checked && idx === -1) {
-      this.selectedTickets.push(ticket);
+      this.selectedTickets.push(ticketId);
     } else if (!ev.detail.checked && idx > -1) {
       this.selectedTickets.splice(idx, 1);
     }
-  }
-
-  findTicket(ticket) {
-    let idx = -1;
-    this.selectedTickets.forEach((t, i) => {
-      if (t.id === ticket.id) {
-        idx = i;
-      }
-    });
-    return idx;
   }
 }

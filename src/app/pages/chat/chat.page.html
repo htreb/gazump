@@ -69,11 +69,11 @@
                 <div class="ion-padding text">
                   <ion-badge
                     tappable
-                    *ngFor="let ticket of message.tickets"
+                    *ngFor="let ticketId of message.tickets"
                     class="ticket-badge"
-                    (click)="onLinkedTicketClick($event, ticket)"
+                    (click)="onLinkedTicketClick($event, ticketId)"
                   >
-                    {{ ticket.title | truncate }}
+                    {{ ticketId | ticketTitle | async | truncate }}
                   </ion-badge>
                   <div>{{ message.message }}</div>
                   <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
@@ -100,11 +100,11 @@
                 <div class="ion-padding text">
                   <ion-badge
                     tappable
-                    *ngFor="let ticket of message.tickets"
+                    *ngFor="let ticketId of message.tickets"
                     class="ticket-badge"
-                    (click)="onLinkedTicketClick($event, ticket)"
+                    (click)="onLinkedTicketClick($event, ticketId)"
                   >
-                    {{ ticket.title | truncate }}
+                    {{ ticketId | ticketTitle | async | truncate }}
                   </ion-badge>
                   <div>{{ message.message }}</div>
                   <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
@@ -133,8 +133,8 @@
             *ngIf="!!linkedTickets.length"
             class='linked-tickets'
           >
-            <ion-badge *ngFor="let ticket of linkedTickets" class="ticket-badge">
-              {{ ticket.title | truncate }}
+            <ion-badge *ngFor="let ticketId of linkedTickets" class="ticket-badge">
+              {{ ticketId | ticketTitle | async | truncate }}
             </ion-badge>
           </div>
           <ion-buttons slot="end">

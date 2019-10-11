@@ -9,7 +9,7 @@ import { GroupService } from 'src/app/services/group.service';
 })
 export class TicketDetailOrBoardComponent {
 
-  @Input() ticket;
+  @Input() ticketId;
   @Input() dismiss;
 
   constructor(
@@ -33,7 +33,7 @@ export class TicketDetailOrBoardComponent {
       { queryParams:
         {
           ticket:
-          this.ticket.id
+          this.ticketId
         }
       }
     );

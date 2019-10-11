@@ -187,11 +187,11 @@ export class ChatPage implements OnInit, AfterViewChecked {
     }
   }
 
-  async onLinkedTicketClick(ev, ticket) {
+  async onLinkedTicketClick(ev, ticketId) {
     const detailsOrBoard = await this.popoverController.create({
       component: TicketDetailOrBoardComponent,
       componentProps: {
-        ticket,
+        ticketId,
         dismiss,
       },
       event: ev,

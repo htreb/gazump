@@ -14,6 +14,7 @@ import { StartInstanceComponent } from './start-instance/start-instance.componen
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
+import { TicketTitlePipe } from './pipes/ticket-title.pipe';
 
 
 
@@ -29,6 +30,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
+    TicketTitlePipe,
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
     MembersDetailPipe,
     ContactPickerComponent,
     AutosizeModule,
+    TicketTitlePipe,
   ],
   entryComponents: [
     SettingsListComponent,
