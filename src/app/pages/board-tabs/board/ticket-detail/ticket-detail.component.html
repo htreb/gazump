@@ -50,7 +50,7 @@
         >
           <ion-select-option
             *ngFor="let person of completedBy"
-            [value]="person"
+            [value]="person.id"
             >{{ person.name }}</ion-select-option
           >
         </ion-select>
@@ -63,11 +63,11 @@
         "
       >
         <ion-chip
-          *ngFor="let person of this.ticketForm.get('completedBy').value"
+          *ngFor="let personId of this.ticketForm.get('completedBy').value"
           (click)="completedBySelect.open()"
-          [color]="person.color"
+          [color]="completedByObj[personId] && completedByObj[personId]['color'] || 'danger'"
         >
-          <ion-label>{{ person.name }}</ion-label>
+          <ion-label>{{ completedByObj[personId] && completedByObj[personId]['name'] || 'Deleted' }}</ion-label>
         </ion-chip>
       </div>
     </div>

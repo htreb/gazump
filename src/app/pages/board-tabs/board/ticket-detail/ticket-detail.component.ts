@@ -17,6 +17,7 @@ export class TicketDetailComponent implements OnInit {
   public linkedChats$;
   public currentTicketSnippet;
   public completedBy;
+  public completedByObj;
   @Input() ticketId;
   @Input() currentStateId;
   @Input() boardId;
@@ -39,6 +40,8 @@ export class TicketDetailComponent implements OnInit {
       completedBy: ['']
     });
 
+    this.completedBy = this.boardService.getCompletedBy(this.boardId, true);
+    this.completedByObj = this.boardService.getCompletedBy(this.boardId);
     if (this.ticketId) {
       // Editing a ticket which exists;
       const ticketDetails = this.boardService.findTicketPositionDetails(this.ticketId);
@@ -49,7 +52,6 @@ export class TicketDetailComponent implements OnInit {
       this.ticketForm.patchValue(this.currentTicketSnippet);
       this.linkedChats$ = this.chatService.findChatsWhichMentionTicket(this.ticketId);
     }
-    this.completedBy = this.boardService.getCompletedBy(this.boardId);
   }
 
   async openChat(chatId: string, messageIds?: string[]) {

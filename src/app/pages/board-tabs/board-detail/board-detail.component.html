@@ -95,15 +95,12 @@
       </ion-button>
     </ion-item>
 
-    <ion-reorder-group (ionItemReorder)="reorderCompletedBy($event)" disabled="false">
-      <ion-item *ngFor="let cb of completedBy">
-        <ion-input [(ngModel)]="cb.name"></ion-input>
-        <ion-button slot="end"  fill="clear" (click)="removeCompletedBy(cb)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-button>
-        <ion-reorder slot="end"></ion-reorder>
-      </ion-item>
-    </ion-reorder-group>
+    <ion-item *ngFor="let cb of completedBy">
+      <ion-input [(ngModel)]="cb.name"></ion-input>
+      <ion-button slot="end"  fill="clear" (click)="removeCompletedBy(cb)">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
   </div>
 
 </ion-content>

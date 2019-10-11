@@ -71,13 +71,35 @@ export class BoardService {
     return this.allBoardsSubject.value.filter(board => board.id === boardId)[0];
   }
 
-  getCompletedBy(boardId: string) {
+  getCompletedBy(boardId: string, asArray?: boolean): any {
+    let completedByObj = {};
     const matchingBoard = this.getOneBoard(boardId);
     if (matchingBoard) {
-      return matchingBoard.completedBy;
+      completedByObj = matchingBoard.completedBy;
     }
-    return [];
+    if (!asArray) {
+      return completedByObj;
+    } else {
+      // completedBy on the db is an object => completedBy: { id123: {name: '', color: ''}}
+      // map it to an array of {id: 'id123', name: '', color: '' } so it can be looped in the template.
+      // convert it back when leaving with parseCompletedByArrayToObj.
+      if (!completedByObj || Object.keys(completedByObj).length === 0) {
+        return [];
+      }
+      const arr = Object.keys(completedByObj).map(id => ({id, ...completedByObj[id]}));
+      return arr.sort((a, b) => {
+        return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+      });
+    }
   }
+
+parseCompletedByArrayToObj(completedByArr) {
+    return completedByArr.reduce((completedByObj, cb) => {
+      completedByObj[cb.id] = { name: cb.name, color: cb.color };
+      return completedByObj;
+    }, {});
+  }
+
   /**
    * Updates the object saved on a board
    * if tickets, this is a new order of each ticket in each column.

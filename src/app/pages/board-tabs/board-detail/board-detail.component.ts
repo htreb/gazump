@@ -2,7 +2,9 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { icons } from './icon-list';
 import { ToastController } from '@ionic/angular';
 import { ContactService } from 'src/app/services/contact.service';
+import { BoardService } from 'src/app/services/board.service';
 
+const completedByNames = ['Buyers', 'Buyers Solicitors', 'Council', 'Estate Agents', 'Sellers', 'Sellers Solicitors'];
 @Component({
   selector: 'app-board-detail',
   templateUrl: './board-detail.component.html',
@@ -25,19 +27,23 @@ export class BoardDetailComponent implements OnInit {
   ];
 
   newCompletedByName = '';
-  completedBy = [
-    {color: 'medium', id: this.getId(), name: 'Buyers'},
-    {color: 'medium', id: this.getId(), name: 'Buyers Solicitors'},
-    {color: 'medium', id: this.getId(), name: 'Council'},
-    {color: 'medium', id: this.getId(), name: 'Estate Agents'},
-    {color: 'medium', id: this.getId(), name: 'Sellers'},
-    {color: 'medium', id: this.getId(), name: 'Sellers Solicitors'},
-  ];
+  completedBy = completedByNames.reduce((completedArr, currentName) => {
+    completedArr.push({name: currentName, color: 'medium', id: this.getId()});
+    return completedArr;
+  }, []);
+
 
   constructor(
     private toastCtrl: ToastController,
     private contactService: ContactService,
+    private boardService: BoardService,
   ) { }
+
+  ngOnInit() {
+    if (this.board) {
+      this.parseBoardDataToModel(this.board);
+    }
+  }
 
   ionViewDidEnter() {
     this.titleInput.setFocus();
@@ -47,17 +53,11 @@ export class BoardDetailComponent implements OnInit {
     return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
   }
 
-  ngOnInit() {
-    if (this.board) {
-      this.parseBoardDataToModel(this.board);
-    }
-  }
-
   parseBoardDataToModel(boardData) {
     this.title = JSON.parse(JSON.stringify(boardData.title));
     this.contacts = boardData.members.map(memberId => this.contactService.getDetailsFromId(memberId));
     this.states = JSON.parse(JSON.stringify(boardData.states));
-    this.completedBy = JSON.parse(JSON.stringify(boardData.completedBy));
+    this.completedBy = this.boardService.getCompletedBy(boardData.id, true);
   }
 
   parseModelToBoardData() {
@@ -65,7 +65,7 @@ export class BoardDetailComponent implements OnInit {
       members: this.contacts.map(c => c.id),
       title: this.title,
       states: this.states,
-      completedBy: this.completedBy
+      completedBy: this.boardService.parseCompletedByArrayToObj(this.completedBy),
     };
   }
 
@@ -130,9 +130,5 @@ export class BoardDetailComponent implements OnInit {
 
   removeCompletedBy(completedBy: any) {
     this.completedBy = this.completedBy.filter(cb => cb.id !== completedBy.id);
-  }
-
-  reorderCompletedBy(ev) {
-    this.completedBy = ev.detail.complete(this.completedBy);
   }
 }
