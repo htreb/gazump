@@ -61,7 +61,9 @@ export class ChatService {
   subToOneChat(chatId: string) {
     return this.allChatsSubject.pipe(
       map(allChats => {
-        return allChats.filter(chat => chat.id === chatId)[0];
+        return allChats.loading
+        ? allChats
+        : allChats.filter(chat => chat.id === chatId)[0] || {noMatching: true};
       })
     );
   }

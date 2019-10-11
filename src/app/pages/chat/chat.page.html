@@ -1,0 +1,153 @@
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+<ng-template #noMatching>
+  <app-empty-list [customMessage]="'Chat not found'"></app-empty-list>
+</ng-template>
+
+<ng-template #noMessages>
+  <app-empty-list [customMessage]="'No messages'"></app-empty-list>
+</ng-template>
+
+<ng-container *ngIf="chat$ | async as chat; else loading">
+  <ng-container *ngIf="!chat.loading; else loading">
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/group/{{groupService.currentGroupId}}/chats"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ chat.title }}</ion-title>
+        <ion-label class="ion-padding-horizontal">{{ chat.members | membersDetail: true }}</ion-label>
+        <app-settings-icon slot="end"></app-settings-icon>
+      </ion-toolbar>
+    </ion-header>
+
+    <ng-container *ngIf="!chat.noMatching; else noMatching">
+      <ion-content [scrollEvents]="true" (ionScrollEnd)="scrollEnd($event)">
+        <ion-grid
+          *ngIf="getMessages(chat) as messages; else noMessages"
+          class="message-area ion-no-padding"
+        >
+          <ng-container
+            *ngFor="let message of messages; let i = index; trackBy: messageTrackBy"
+          >
+            <ion-item-divider
+              *ngIf="
+                i === 0 ||
+                (message.createdAt &&
+                  messages[i - 1].createdAt &&
+                  (message.createdAt.seconds * 1000 | date: 'd MMMM y') !==
+                    (messages[i - 1].createdAt.seconds * 1000 | date: 'd MMMM y'))
+              "
+              sticky="true;"
+              class="date-divider"
+              [ngClass]="{ show: message.createdAt }"
+            >
+              <ion-label class="date-label">
+                {{ message.createdAt?.seconds * 1000 | date: 'd MMMM y' }}
+              </ion-label>
+            </ion-item-divider>
+
+            <ion-row class="ion-padding-horizontal" [id]="message.id" #chatMessage>
+              <ion-col
+                size="9"
+                size-md="6"
+                *ngIf="message.from !== currentUserId"
+                class="message other-message"
+              >
+                <div class="details">
+                  <ion-note
+                    [ngClass]="{ show: message.createdAt }"
+                    class="time-stamp"
+                    >{{
+                      message.createdAt?.seconds * 1000 | date: 'h:mma' | lowercase
+                    }}</ion-note
+                  >
+                  <ion-text class="name">{{ message.senderName }}</ion-text>
+                </div>
+                <div class="ion-padding text">
+                  <ion-badge
+                    tappable
+                    *ngFor="let ticket of message.tickets"
+                    class="ticket-badge"
+                    (click)="onLinkedTicketClick($event, ticket)"
+                  >
+                    {{ ticket.title | truncate }}
+                  </ion-badge>
+                  <div>{{ message.message }}</div>
+                  <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+                </div>
+              </ion-col>
+
+              <ion-col
+                offset="3"
+                offset-md="6"
+                size="9"
+                size-md="6"
+                *ngIf="message.from === currentUserId"
+                class="message my-message"
+              >
+                <div class="details">
+                  <ion-note
+                    [ngClass]="{ show: message.createdAt }"
+                    class="time-stamp"
+                    >{{
+                      message.createdAt?.seconds * 1000 | date: 'h:mma' | lowercase
+                    }}</ion-note
+                  >
+                </div>
+                <div class="ion-padding text">
+                  <ion-badge
+                    tappable
+                    *ngFor="let ticket of message.tickets"
+                    class="ticket-badge"
+                    (click)="onLinkedTicketClick($event, ticket)"
+                  >
+                    {{ ticket.title | truncate }}
+                  </ion-badge>
+                  <div>{{ message.message }}</div>
+                  <ion-img *ngIf="message.file" [src]="message.file"></ion-img>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ng-container>
+        </ion-grid>
+      </ion-content>
+
+      <ion-footer>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="linkSomething($event)" color="primary">
+              <ion-icon slot="icon-only" name="link"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-textarea
+            #typeMessageArea
+            [(ngModel)]="message"
+            class="ion-no-margin type-message-area"
+            autosize
+          >
+          </ion-textarea>
+          <div
+            *ngIf="!!linkedTickets.length"
+            class='linked-tickets'
+          >
+            <ion-badge *ngFor="let ticket of linkedTickets" class="ticket-badge">
+              {{ ticket.title | truncate }}
+            </ion-badge>
+          </div>
+          <ion-buttons slot="end">
+            <ion-button
+              (click)="sendMessage()"
+              color="primary"
+              [disabled]="!message.trim()"
+            >
+              <ion-icon slot="icon-only" name="send"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
+    </ng-container>
+  </ng-container>
+</ng-container>

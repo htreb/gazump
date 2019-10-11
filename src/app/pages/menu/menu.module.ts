@@ -25,6 +25,10 @@ const routes: Routes = [
         loadChildren: () => import('../list-chats/list-chats.module').then(m => m.ListChatsPageModule)
       },
       {
+        path: 'group/:groupId/chats/:chatId',
+        loadChildren: () => import('../chat/chat.module').then(m => m.ChatPageModule)
+      },
+      {
         path: 'contacts',
         loadChildren: () => import('../contacts/contacts.module').then(m => m.ContactsPageModule)
       },

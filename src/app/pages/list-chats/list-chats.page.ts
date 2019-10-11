@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
-import { ChatComponent } from 'src/app/shared/chat/chat.component';
 import { StartInstanceComponent } from 'src/app/shared/start-instance/start-instance.component';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list-chats',
@@ -23,23 +23,10 @@ export class ListChatsPage {
 
   constructor(
     private chatService: ChatService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
-
-  async showChat(chatId: string) {
-    const chatModal = await this.modalController.create({
-      component: ChatComponent,
-      cssClass: 'full-screen',
-      componentProps: {
-        chatId,
-        closeChat,
-      }
-    });
-    function closeChat() {
-      chatModal.dismiss();
-    }
-    return await chatModal.present();
-  }
 
   async startChat() {
     let startChatModal: HTMLIonModalElement;
@@ -51,8 +38,8 @@ export class ListChatsPage {
     };
 
     const startInstance = async (title, contacts) => {
-      const newChat = await this.chatService.startChat(title,  contacts);
-      await this.showChat(newChat.id);
+      const newChat = await this.chatService.startChat(title, contacts);
+      await this.router.navigate([newChat.id], { relativeTo: this.route });
       closeInstance();
     };
 

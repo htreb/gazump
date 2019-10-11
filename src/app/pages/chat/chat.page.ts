@@ -10,57 +10,58 @@ import { IonContent, PopoverController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
-import { TicketPickerComponent } from '../ticket-picker/ticket-picker.component';
-import { TicketDetailOrBoardComponent } from '../ticket-detail-or-board/ticket-detail-or-board.component';
+import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
+import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-detail-or-board.component';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { GroupService } from 'src/app/services/group.service';
 
 @Component({
   selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+  templateUrl: './chat.page.html',
+  styleUrls: ['./chat.page.scss']
 })
-export class ChatComponent implements OnInit, AfterViewChecked {
-  @Input() chatId = '';
-  @Input() closeChat;
+export class ChatPage implements OnInit, AfterViewChecked {
   @Input() messageIds: string[] = [];
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChildren('chatMessage') messageElements: any;
   @ViewChild('typeMessageArea', { static: false }) typeMessageArea: any;
 
+  private chatId = '';
   public chat$: Observable<any>;
   public currentUserId = this.auth.currentUser.value.id;
   public message = '';
-  linkedTickets = [];
+  public linkedTickets = [];
   private atBottom = true;
   private scrolledToHighlightedMessage = false;
 
   constructor(
+    public groupService: GroupService,
     private auth: AuthService,
     private chatService: ChatService,
     private popoverController: PopoverController,
+    private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
-    this.chat$ = this.chatService.subToOneChat(this.chatId);
 
-    if (this.messageIds.length) {
-      setTimeout( _ => {
-        this.messageElements.forEach(async msg => {
-          if (this.messageIds.indexOf(msg.el.id) > -1) {
-            if (!this.scrolledToHighlightedMessage) {
-              this.scrolledToHighlightedMessage = true;
-              this.atBottom = false;
-              const scrollEl = await this.content.getScrollElement();
-              const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (scrollEl.offsetHeight / 2);
-              this.content.scrollToPoint(0, centeredMsgTop, 1000);
-            }
-          }
-          });
-      }, 500);
-    }
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      this.chatId = params.get('chatId');
+      this.chat$ = this.chatService.subToOneChat(this.chatId);
+    });
+
+    this.route.queryParams.subscribe((queries: any) => {
+      const messageIds = queries.messageIds;
+      if (messageIds) {
+        this.messageIds = messageIds.split(',');
+        setTimeout( _ => {
+          this.scrollToMessages(this.messageIds);
+        }, 600);
+      }
+    });
   }
 
   ionViewDidEnter() {
-    this.typeMessageArea.setFocus();
+    this.focusTypingArea();
   }
 
   ngAfterViewChecked(): void {
@@ -69,8 +70,24 @@ export class ChatComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  closePage() {
-    this.closeChat();
+  focusTypingArea() {
+    if (this.typeMessageArea) {
+      this.typeMessageArea.setFocus();
+    }
+  }
+
+  scrollToMessages(messageIds: string[]) {
+    this.messageElements.forEach(async msg => {
+      if (this.messageIds.indexOf(msg.el.id) > -1) {
+        if (!this.scrolledToHighlightedMessage) {
+          this.scrolledToHighlightedMessage = true;
+          this.atBottom = false;
+          const scrollEl = await this.content.getScrollElement();
+          const centeredMsgTop = msg.el.offsetTop + (msg.el.offsetHeight / 2) - (scrollEl.offsetHeight / 2);
+          this.content.scrollToPoint(0, centeredMsgTop, 1000);
+        }
+      }
+    });
   }
 
   getMessages(chat: any) {
@@ -142,6 +159,7 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       this.message = msg;
       this.linkedTickets = tickets;
     }
+    this.focusTypingArea();
   }
 
   async linkSomething(ev: any) {
@@ -169,7 +187,6 @@ export class ChatComponent implements OnInit, AfterViewChecked {
       componentProps: {
         ticket,
         dismiss,
-        closeChat: () => this.closeChat() ,
       },
       event: ev,
     });

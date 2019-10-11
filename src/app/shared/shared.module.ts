@@ -9,14 +9,11 @@ import { EmptyListComponent } from './empty-list/empty-list.component';
 import { TipComponent } from './tip/tip.component';
 import { TextComponent } from './text/text.component';
 import { AutosizeModule } from 'ngx-autosize';
-import { ChatComponent } from './chat/chat.component';
 import { FormsModule } from '@angular/forms';
-import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
 import { StartInstanceComponent } from './start-instance/start-instance.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
-import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-detail-or-board.component';
 
 
 
@@ -28,13 +25,10 @@ import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-de
     EmptyListComponent,
     TipComponent,
     TextComponent,
-    ChatComponent,
-    TicketPickerComponent,
     StartInstanceComponent,
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
-    TicketDetailOrBoardComponent
   ],
   imports: [
     CommonModule,
@@ -49,20 +43,17 @@ import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-de
     EmptyListComponent,
     TipComponent,
     TextComponent,
-    ChatComponent,
     StartInstanceComponent,
     TruncatePipe,
     MembersDetailPipe,
     ContactPickerComponent,
+    AutosizeModule,
   ],
   entryComponents: [
     SettingsListComponent,
     TextComponent,
-    ChatComponent,
-    TicketPickerComponent,
     StartInstanceComponent,
     ContactPickerComponent,
-    TicketDetailOrBoardComponent
   ]
 })
 export class SharedModule { }

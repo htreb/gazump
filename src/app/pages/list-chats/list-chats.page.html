@@ -21,8 +21,9 @@
     <ion-content *ngIf="chats.length; else noChats">
       <ion-item
         *ngFor="let chat of chats"
+        [routerLink]="[chat.id]"
+        routerDirection="forward"
         button
-        (click)="showChat(chat.id)"
       >
         <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
         <ion-note slot='end' color='primary'>{{ chat.members | membersDetail }}</ion-note>

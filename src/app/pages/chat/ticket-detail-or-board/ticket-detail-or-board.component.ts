@@ -11,7 +11,6 @@ export class TicketDetailOrBoardComponent {
 
   @Input() ticket;
   @Input() dismiss;
-  @Input() closeChat;
 
   constructor(
     private groupService: GroupService,
@@ -23,10 +22,22 @@ export class TicketDetailOrBoardComponent {
     this.dismiss();
   }
 
-  showTicketOnBoard() {
-    this.router.navigate(['/', 'group', this.groupService.currentGroupId], { queryParams: { ticket: this.ticket.id } });
+  async showTicketOnBoard() {
+    await this.router.navigate(
+      [
+        '/',
+        'group',
+        this.groupService.currentGroupId,
+        'boards'
+      ],
+      { queryParams:
+        {
+          ticket:
+          this.ticket.id
+        }
+      }
+    );
     this.dismiss();
-    this.closeChat();
   }
 
 }

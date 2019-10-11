@@ -84,9 +84,7 @@ export class BoardPage implements OnChanges {
           text: 'Ok',
           handler: () => {
             this.boardService.deleteTicketSnippet(ticket);
-            if (this.ticketDetailModal) {
-              this.ticketDetailModal.dismiss();
-            }
+            this.closeTicketDetailModal();
           }
         }
       ]
@@ -179,7 +177,8 @@ export class BoardPage implements OnChanges {
         currentTicketSnippet,
         currentState,
         completedBy: this.boardData.completedBy,
-        deleteTicket: this.deleteTicket
+        deleteTicket: (ticket) => { this.deleteTicket(ticket); },
+        dismiss: () => { this.closeTicketDetailModal(); },
       }
     });
     await this.ticketDetailModal.present();
@@ -199,6 +198,12 @@ export class BoardPage implements OnChanges {
           data.ticketFormValue
         );
       }
+    }
+  }
+
+  closeTicketDetailModal() {
+    if (typeof this.ticketDetailModal.dismiss === 'function') {
+      this.ticketDetailModal.dismiss();
     }
   }
 
