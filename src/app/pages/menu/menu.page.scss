@@ -4,30 +4,6 @@
     flex-direction: column;
 }
 
-.all-groups-item .active {
-    .back-icon {
-        display: none;
-    }
-}
-
-.menu-items, .users-items {
-    background: transparent;
-}
-
-ion-item {
-    --background: transparent;
-
-    &.active {
-        background: var(--ion-color-primary);
-        --color: var(--ion-color-primary-contrast);
-        font-weight: bold;
-
-        .menu-icon {
-            color: var(--ion-color-primary-contrast);
-        }
-    }
-}
-
 .users-items {
     display: flex;
     flex: 1;

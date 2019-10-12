@@ -16,14 +16,16 @@
 
         <ion-menu-toggle autoHide="false" class='all-groups-item'>
           <ion-item
-            routerLink="/"
-            routerDirection="root"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
             lines="full"
             detail="false"
+            routerLink="/"
+            routerDirection="root"
+            routerLinkActive
+            [routerLinkActiveOptions]="{ exact: true }"
+            #allGroupsRLA="routerLinkActive"
+            [color]="allGroupsRLA.isActive ? 'primary' : 'tertiary'"
           >
-            <ion-icon slot="start" name="arrow-back" class='back-icon'></ion-icon>
+            <ion-icon *ngIf="!allGroupsRLA.isActive" slot="start" name="arrow-back" class='back-icon'></ion-icon>
             <ion-label>All groups</ion-label>
           </ion-item>
         </ion-menu-toggle>
@@ -44,11 +46,13 @@
               <ion-menu-toggle autoHide="false">
                 <ion-item
                   *ngFor="let page of pages"
-                  routerLinkActive="active"
-                  [routerLink]="['/', 'group', currentGroup.id, page.url]"
-                  [routerDirection]="page.routerDirection"
                   lines="full"
                   detail="false"
+                  [routerLink]="['/', 'group', currentGroup.id, page.url]"
+                  [routerDirection]="page.routerDirection"
+                  routerLinkActive
+                  #rla="routerLinkActive"
+                  [color]="rla.isActive ? 'primary' : 'tertiary'"
                 >
                   <ion-icon
                     slot="start"
@@ -66,8 +70,9 @@
           <ion-menu-toggle autoHide="false">
             <ion-item
               [routerLink]="['/', 'contacts']"
-              routerLinkActive="active"
-              [routerLinkActiveOptions]="{ exact: true }"
+              routerLinkActive
+              #contactsRLA="routerLinkActive"
+              [color]="contactsRLA.isActive ? 'primary' : 'tertiary'"
               lines="full"
               detail="false"
             >
@@ -75,11 +80,23 @@
               <ion-icon slot="end" name="contacts" class="menu-icon"></ion-icon>
             </ion-item>
           </ion-menu-toggle>
-          <ion-item tappable (click)="showSettings()" lines="full" detail="false">
+          <ion-item
+            tappable
+            (click)="showSettings()"
+            lines="full"
+            detail="false"
+            color="tertiary"
+          >
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>
           </ion-item>
-          <ion-item tappable (click)="logOut()" lines="none" detail="false">
+          <ion-item
+            tappable
+            (click)="logOut()"
+            lines="none"
+            detail="false"
+            color="tertiary"
+          >
             <ion-label>Logout</ion-label>
             <ion-icon slot="end" name="log-out"></ion-icon>
           </ion-item>
