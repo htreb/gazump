@@ -92,4 +92,15 @@ ion-segment-button {
   // ios adds a huge margin for that safe iPhone x indent
   padding: 0 !important
 }
+
+*, ion-item {
+  // toolbar and ion-content inner scroll are inside shadow doms without css variables
+  // for transition. Cannot animate their theme switch. ion-item looks terrible lagging behind,
+  // no transitions until that's fixed.
+  --transition: var(--theme-switch-transition);
+  transition: var(--theme-switch-transition) !important;
+}
+ion-popover {
+  --background: var(--ion-background-color);
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////

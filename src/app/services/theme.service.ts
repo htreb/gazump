@@ -7,68 +7,48 @@ import { BehaviorSubject } from 'rxjs';
 const transition = 'background-color 0ms';
 
 const defaults = {
-    icon: 'cloudy',
+    icon: 'partly-sunny',
     primary: '#3880ff',
-    secondary: '#0cd1e8',
-    tertiary: '#7044ff',
+    secondary: '#fefefe',
+    tertiary: '#dadada',
     success: '#10dc60',
     warning: '#ffce00',
     danger: '#f04141',
-    dark: '#222428',
-    medium: '#989aa2',
-    light: '#f4f5f8'
+    dark: '#eee',
+    medium: '#bbb',
+    light: '#fff'
   };
 
 const themes = [
   {
     name: 'Dark',
-    icon: 'basket',
-    primary: '#F39C6B',
-    // secondary: '4D9078',
-    // tertiary: 'BFFFF1',
-    light: '#5D5877',
-    medium: '#312F3D',
-    dark: '#46425B'
+    icon: 'moon',
+    primary: '#2C423F',
+    secondary: '#829191',
+    tertiary: '#7C878C',
+    light: '#4C5B61',
+    medium: '#949B96',
+    dark: '#C5C5C5',
   },
   {
-    name: 'Sea',
-    icon: 'basketball',
-    primary: '#349681',
-    // secondary: '#4D9078',
-    // tertiary: 'BFFFF1',
-    light: '#7CFFE2',
-    medium: '#74F2D6',
-    dark: '#003327'
+    name: 'Light',
+    icon: 'sunny',
+    primary: '#FFB627',
+    secondary: '#FFCA71',
+    tertiary: '#E2991D',
+    light: '#FFC971',
+    medium: '#FF9505',
+    dark: '#CC5803',
   },
   {
     name: 'Autumn',
-    icon: 'partly-sunny',
+    icon: 'leaf',
     primary: '#F39C6B',
     secondary: '#4D9078',
-    tertiary: '#B4436C',
-    light: '#FDE8DF',
-    medium: '#FCD0A2',
-    dark: '#B89876'
-  },
-  {
-    name: 'Night',
-    icon: 'moon',
-    primary: '#8CBA80',
-    secondary: '#FCFF6C',
-    tertiary: '#FE5F55',
-    medium: '#596774',
-    dark: '#7A8590',
-    light: '#495867'
-  },
-  {
-    name: 'Neon',
-    icon: 'flash',
-    primary: '#39BFBD',
-    secondary: '#4CE0B3',
-    tertiary: '#FF5E79',
-    light: '#F4EDF2',
-    medium: '#B682A5',
-    dark: '#34162A'
+    tertiary: '#BFFFF1',
+    light: '#5D5877',
+    medium: '#312F3D',
+    dark: '#46425B'
   },
   {
     name: 'Default',
@@ -77,8 +57,9 @@ const themes = [
   },
 ];
 
-function CSSTextGenerator(colors, fromStorage = false) {
-  colors = { ...defaults, ...colors };
+function CSSTextGenerator(themeName, fromStorage = false) {
+  const matchingTheme = themes.find(t => t.name === themeName);
+  const  colors = { ...defaults, ...matchingTheme };
 
   const {
     primary,
@@ -107,14 +88,11 @@ function CSSTextGenerator(colors, fromStorage = false) {
     --ion-text-color: ${contrast(light).hex()};
     --ion-text-color-rgb: ${contrast(light).rgb().array()};
     --ion-background-color: ${light};
-    --ion-overlay-background-color: ${light};
-    --ion-tab-bar-background: ${light};
-    --ion-tab-bar-color: ${dark};
-    --ion-item-color: ${contrast(light).hex()};
-    --ion-item-background: ${light};
-    --ion-item-background-hover: ${primary};
-    --ion-item-background-focused: ${primary};
-    --ion-item-background-activated: ${primary};
+    --ion-overlay-background-color: ${Color(light).darken(shadeRatio).hex()};
+
+    --ion-item-background-activated: ${Color(tertiary).darken(shadeRatio).hex()};
+    --ion-item-background-hover: ${tertiary};
+
 
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${Color(primary).rgb().array()};
@@ -182,58 +160,44 @@ function contrast(color, ratio = 3) {
 })
 export class ThemeService {
 
-  public nextTheme$ = new BehaviorSubject<any>({ loading: true });
+  public nextThemeIcon$ = new BehaviorSubject<any>('');
+  private currentTheme = 'default';
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private storage: Storage
   ) {
-    this.storedTheme.then(theme => {
-      this.setTheme(theme, true);
-    });
-    this.getNextTheme();
+    this.setInitialTheme();
+  }
+
+  async setInitialTheme() {
+    const savedThemeName = await this.storage.get('theme');
+    this.setTheme(savedThemeName, true);
   }
 
   // Override all global variables with a new theme
-  setTheme(theme, fromStorage = false) {
-    const cssText = CSSTextGenerator(theme, fromStorage);
-    this.setGlobalCSS(cssText);
+  async setTheme(themeName, fromStorage = false) {
+    const cssText = CSSTextGenerator(themeName, fromStorage);
+    this.document.documentElement.style.cssText = cssText;
+    this.currentTheme = themeName;
     if (!fromStorage) {
-      return this.storedTheme = theme;
+      // if not setting from storage (on app start)
+      // then save it for next time
+      await this.storage.set('theme', themeName);
     }
-    return Promise.resolve();
-  }
 
-  // Define a single CSS variable
-  setVariable(name, value) {
-    this.document.documentElement.style.setProperty(name, value);
-  }
-
-  private setGlobalCSS(css: string) {
-    this.document.documentElement.style.cssText = css;
-  }
-
-  get storedTheme() {
-    return this.storage.get('theme');
-  }
-
-  set storedTheme(theme) {
-    this.storage.set('theme', theme).then(() => this.getNextTheme);
+    const nextTheme = this.getNextTheme();
+    this.nextThemeIcon$.next(nextTheme.icon);
   }
 
   getNextTheme() {
-    return this.storedTheme.then(currentTheme => {
-      let currentIndex = -1;
-      if (currentTheme && currentTheme.name) {
-        currentIndex = themes.findIndex(t => t.name === currentTheme.name);
-      }
-      const nextIndex = currentIndex + 1 >= themes.length ? 0 : currentIndex + 1 ;
-      this.nextTheme$.next(themes[nextIndex]);
-      return themes[nextIndex];
-    });
+    const currentIndex = themes.findIndex(t => t.name === this.currentTheme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    return themes[nextIndex];
   }
 
-  toggleThemes() {
-    return this.getNextTheme().then(t => this.setTheme(t));
+  async toggleThemes() {
+    const nextTheme = await this.getNextTheme();
+    this.setTheme(nextTheme.name);
   }
 }
