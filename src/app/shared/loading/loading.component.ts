@@ -11,7 +11,7 @@ import {
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
   animations: [
-    trigger('fadeIn', [
+    trigger('fadeInOut', [
       state('*', style({ opacity: 1 })),
       state('void', style({ opacity: 0 })),
       transition('void => *', [animate('0.3s 0.0s ease-out')]),
