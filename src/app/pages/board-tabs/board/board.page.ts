@@ -168,8 +168,7 @@ export class BoardPage implements OnChanges {
   }
 
   scrollToNextColRecursively() {
-    // it's async below don't want to queue this a bunch of times before it actually gets to the timeout
-    // block it now.
+    // don't want to queue this a bunch of times
     this.scrollingTimeout = true;
 
     if (this.getNextColumnToScrollToFunc) {
@@ -177,7 +176,7 @@ export class BoardPage implements OnChanges {
       scroll.left(
         this.boardElement.nativeElement,
         nextCol.leftToCenter,
-        // { duration: snapScrollIntervalDuration }
+        { duration: snapScrollIntervalDuration }
       );
 
       if (nextCol.last) {
@@ -233,7 +232,7 @@ export class BoardPage implements OnChanges {
     }
     return {
       col: null,
-      leftToCenter: 0,
+      leftToCenter: this.boardElement.nativeElement.scrollWidth,
       last: true,
     };
   }
