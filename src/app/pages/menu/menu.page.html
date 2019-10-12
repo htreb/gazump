@@ -1,7 +1,7 @@
 <ion-split-pane>
   <ion-menu class="menu-container" contentId="content" swipe-gesture="false">
-    <ion-header>
-      <ion-toolbar color="secondary">
+    <ion-header mode='md'>
+      <ion-toolbar color="secondary" mode='md'>
         <ion-title>Menu</ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="themeService.toggleThemes()">
@@ -34,7 +34,7 @@
           <ng-container
             *ngIf="!currentGroup.loading && groupService.showGroupMenuItems"
           >
-            <ion-header>
+            <ion-header mode='md'>
               <ion-toolbar class="group-title important-no-padding" color="secondary">
                 <ion-item class="ion-text-wrap" lines="none" color="secondary">{{
                   currentGroup.title

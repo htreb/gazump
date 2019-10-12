@@ -26,7 +26,7 @@
         [routerLink]="['/group', group.id]"
       >
         <ion-text class="ion-text-wrap">{{ group.title }}</ion-text>
-        <ion-note slot='end' color='primary'>{{ group.members | membersDetail }}</ion-note>
+        <ion-note slot='end' color='secondary'>{{ group.members | membersDetail }}</ion-note>
       </ion-item>
     </ion-content><!-- check that we have some groups -->
   </ng-container><!-- check we are not loading them still -->

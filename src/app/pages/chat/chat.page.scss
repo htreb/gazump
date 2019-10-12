@@ -8,6 +8,11 @@ $textBorderRadius: 16px;
         opacity: 1;
     }
 }
+
+.date-divider {
+    border-bottom: 1px solid var(--ion-color-light-shade);
+}
+
 .text {
     white-space: pre-wrap;
 }
@@ -47,6 +52,9 @@ $textBorderRadius: 16px;
 .type-message-area {
     max-height: 50vh;
     overflow: scroll;
+    margin: 5px;
+    background: var(--ion-color-light-tint);
+    color: var(--ion-color-light-contrast);
 }
 
 .linked-tickets {
