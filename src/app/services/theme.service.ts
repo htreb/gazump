@@ -21,30 +21,25 @@ const defaults = {
 
 const themes = [
   {
-    name: 'Default',
-    icon: defaults.icon,
-    // colors auto filled inside CSSTextGenerator
+    name: 'Dark',
+    icon: 'basket',
+    primary: '#F39C6B',
+    // secondary: '4D9078',
+    // tertiary: 'BFFFF1',
+    light: '#5D5877',
+    medium: '#312F3D',
+    dark: '#46425B'
   },
-      {
-        name: 'Dark',
-        icon: 'basket',
-        primary: '#F39C6B',
-        // secondary: '4D9078',
-        // tertiary: 'BFFFF1',
-        light: '#5D5877',
-        medium: '#312F3D',
-        dark: '#46425B'
-      },
-      {
-        name: 'Sea',
-        icon: 'basketball',
-        primary: '#349681',
-        // secondary: '#4D9078',
-        // tertiary: 'BFFFF1',
-        light: '#7CFFE2',
-        medium: '#74F2D6',
-        dark: '#003327'
-      },
+  {
+    name: 'Sea',
+    icon: 'basketball',
+    primary: '#349681',
+    // secondary: '#4D9078',
+    // tertiary: 'BFFFF1',
+    light: '#7CFFE2',
+    medium: '#74F2D6',
+    dark: '#003327'
+  },
   {
     name: 'Autumn',
     icon: 'partly-sunny',
@@ -74,7 +69,12 @@ const themes = [
     light: '#F4EDF2',
     medium: '#B682A5',
     dark: '#34162A'
-  }
+  },
+  {
+    name: 'Default',
+    icon: defaults.icon,
+    // colors auto filled inside CSSTextGenerator
+  },
 ];
 
 function CSSTextGenerator(colors, fromStorage = false) {
