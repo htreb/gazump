@@ -30,7 +30,7 @@
 </ng-container>
 
 <ion-footer>
-  <ion-toolbar color='secondary' mode='md'>
+  <ion-toolbar color='medium' mode='md'>
     <ion-segment
       *ngIf="!allBoards.loading"
       mode="ios"
@@ -44,7 +44,6 @@
         [value]="board.id"
         mode="ios"
         (ionSelect)="segmentButtonSelected(board.id)"
-        class="tab-button"
       >
         <ion-icon name='{{ board.icon || "clipboard" }}'></ion-icon>
         <ion-label class="ion-text-wrap">{{ board.title | truncate }}</ion-label>

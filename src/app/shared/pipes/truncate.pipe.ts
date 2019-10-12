@@ -10,7 +10,7 @@ export class TruncatePipe implements PipeTransform {
     trail: string = '...'
   ): string {
     return textToTruncate.length > maxLength
-      ? textToTruncate.substring(0, maxLength) + trail
+      ? textToTruncate.substring(0, maxLength).trim() + trail
       : textToTruncate;
   }
 }

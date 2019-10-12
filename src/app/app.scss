@@ -96,9 +96,10 @@ ion-segment-button {
 *, ion-item {
   // toolbar and ion-content inner scroll are inside shadow doms without css variables
   // for transition. Cannot animate their theme switch. ion-item looks terrible lagging behind,
-  // no transitions until that's fixed.
+  // no transitions until that's fixed. Be careful about overriding transition animations of board tickets
   --transition: var(--theme-switch-transition);
 }
+
 ion-popover {
   --background: var(--ion-background-color);
 }

@@ -146,7 +146,7 @@ function CSSTextGenerator(themeName, fromStorage = false) {
     --ion-color-light-tint: ${Color(light).lighten(tintRatio).hex()};`;
 }
 
-function contrast(color, ratio = 10) {
+function contrast(color, ratio = 5) {
   color = Color(color);
   return color.isDark() ? color.lighten(ratio) : color.darken(ratio);
 }
