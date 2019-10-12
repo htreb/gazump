@@ -28,6 +28,8 @@ export class ChatService {
     this.chatsSub = this.db
       .collection('chats', ref =>
         ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+        .orderBy('lastUpdated', 'desc')
+
       )
       .valueChanges({ idField: 'id' })
       .subscribe((chats: any) => {
@@ -79,7 +81,8 @@ export class ChatService {
       groupId: this.groupService.currentGroupId,
       members: allMemberIds,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      linkedTickets: {}
+      linkedTickets: {},
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
     });
   }
 
@@ -91,7 +94,8 @@ export class ChatService {
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         message,
         tickets
-      }
+      },
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
     };
     if (tickets) {
       tickets.forEach(ticketId => {
