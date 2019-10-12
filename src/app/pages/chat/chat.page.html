@@ -24,7 +24,11 @@
     </ion-header>
 
     <ng-container *ngIf="!chat.noMatching; else noMatching">
-      <ion-content [scrollEvents]="true" (ionScrollEnd)="scrollEnd($event)">
+      <ion-content
+        [scrollEvents]="true"
+        (ionScrollEnd)="onScrollEnd($event)"
+        (ionScrollStart)="onScrollStart($event)"
+      >
         <ion-grid
           *ngIf="getMessages(chat) as messages; else noMessages"
           class="message-area ion-no-padding"

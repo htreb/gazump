@@ -35,6 +35,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
   public linkedTickets = [];
   private atBottom = true;
   private scrolledToHighlightedMessage = false;
+  private scrollEl;
 
   constructor(
     public groupService: GroupService,
@@ -125,14 +126,17 @@ export class ChatPage implements OnInit, AfterViewChecked {
     return message.id;
   }
 
-  // if user is at bottom then keep screen scrolled to bottom.
-  // if not (reading something further up) then do not auto scroll screen.
-  async scrollEnd(ev) {
-    // set to false now or it will have already snapped to the bottom before async gets the scrollEl.
-    this.atBottom = false;
-    const scrollEl = await this.content.getScrollElement();
-    this.atBottom =
-      scrollEl.scrollHeight - scrollEl.scrollTop - scrollEl.offsetHeight <= 0;
+  async onScrollStart() {
+    // update the scrollEl so we can be sure we have for the scroll end
+    // when getting it async in the onScrollEnd there's a race condition
+    // with the afterViewChecked keeping the page at the bottom.
+    this.scrollEl = await this.content.getScrollElement();
+  }
+
+  onScrollEnd(ev) {
+    // if user is at bottom then keep screen scrolled to bottom.
+    // if not (reading something further up) then do not auto scroll screen.
+    this.atBottom = this.scrollEl.scrollHeight - this.scrollEl.scrollTop - this.scrollEl.offsetHeight <= 0;
   }
 
   scrollToBottom(duration = 0) {
