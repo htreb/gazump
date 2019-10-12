@@ -23,32 +23,32 @@ const themes = [
   {
     name: 'Dark',
     icon: 'moon',
-    primary: '#2C423F',
-    secondary: '#829191',
-    tertiary: '#7C878C',
-    light: '#4C5B61',
-    medium: '#949B96',
-    dark: '#C5C5C5',
+    primary: '#00BDE2',
+    secondary: '#4151c4',
+    tertiary: '#1da4a7',
+    light: '#0A0A0B',
+    medium: '#38353D',
+    dark: '#44404A',
   },
   {
     name: 'Light',
     icon: 'sunny',
-    primary: '#CC5803',
-    secondary: '#FF9505',
-    tertiary: '#FFB627',
+    primary: '#4C3819',
+    secondary: '#D1A153',
+    tertiary: '#FFC971',
     light: '#FCDCBA',
-    dark: '#FFC971',
+    dark: '#FFD89B',
     medium: '#FCD0A2',
   },
   {
     name: 'Autumn',
     icon: 'leaf',
-    primary: '#F39C6B',
-    secondary: '#4D9078',
-    tertiary: '#BFFFF1',
-    light: '#5D5877',
-    medium: '#312F3D',
-    dark: '#46425B'
+    primary: '#3880ff',
+    secondary: '#4C4C4C',
+    tertiary: '#636363',
+    light: '#D1D1D1',
+    medium: '#DBDBDB',
+    dark: '#efefef'
   },
   {
     name: 'Default',
@@ -89,10 +89,6 @@ function CSSTextGenerator(themeName, fromStorage = false) {
     --ion-text-color-rgb: ${contrast(light).rgb().array()};
     --ion-background-color: ${light};
     --ion-overlay-background-color: ${Color(light).darken(shadeRatio).hex()};
-
-    --ion-item-background-activated: ${Color(tertiary).darken(shadeRatio).hex()};
-    --ion-item-background-hover: ${tertiary};
-
 
     --ion-color-primary: ${primary};
     --ion-color-primary-rgb: ${Color(primary).rgb().array()};
@@ -150,7 +146,7 @@ function CSSTextGenerator(themeName, fromStorage = false) {
     --ion-color-light-tint: ${Color(light).lighten(tintRatio).hex()};`;
 }
 
-function contrast(color, ratio = 3) {
+function contrast(color, ratio = 10) {
   color = Color(color);
   return color.isDark() ? color.lighten(ratio) : color.darken(ratio);
 }
