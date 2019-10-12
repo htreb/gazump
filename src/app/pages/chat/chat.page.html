@@ -13,7 +13,7 @@
 <ng-container *ngIf="chat$ | async as chat; else loading">
   <ng-container *ngIf="!chat.loading; else loading">
     <ion-header>
-      <ion-toolbar color="primary">
+      <ion-toolbar color="secondary">
         <ion-buttons slot="start">
             <ion-back-button defaultHref="/group/{{groupService.currentGroupId}}/chats"></ion-back-button>
         </ion-buttons>

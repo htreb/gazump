@@ -24,8 +24,8 @@ $textBorderRadius: 16px;
         }
     }
     .text {
-        background: var(--ion-color-primary);
-        color: var(--ion-color-primary-contrast);
+        background: var(--ion-color-tertiary);
+        color: var(--ion-color-tertiary-contrast);
         border-radius: 0px $textBorderRadius $textBorderRadius $textBorderRadius;
     }
 }
@@ -38,8 +38,8 @@ $textBorderRadius: 16px;
         }
     }
     .text {
-        background: var(--ion-color-medium);
-        color: var(--ion-color-medium-contrast);
+        background: var(--ion-color-dark);
+        color: var(--ion-color-dark-contrast);
         border-radius: $textBorderRadius 0px $textBorderRadius $textBorderRadius;
     }
 }

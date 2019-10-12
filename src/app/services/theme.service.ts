@@ -33,12 +33,12 @@ const themes = [
   {
     name: 'Light',
     icon: 'sunny',
-    primary: '#FFB627',
-    secondary: '#FFCA71',
-    tertiary: '#E2991D',
-    light: '#FFC971',
-    medium: '#FF9505',
-    dark: '#CC5803',
+    primary: '#CC5803',
+    secondary: '#FF9505',
+    tertiary: '#FFB627',
+    light: '#FCDCBA',
+    dark: '#FFC971',
+    medium: '#FCD0A2',
   },
   {
     name: 'Autumn',
