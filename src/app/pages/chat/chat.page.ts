@@ -15,6 +15,7 @@ import { TicketPickerComponent } from './ticket-picker/ticket-picker.component';
 import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-detail-or-board.component';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { GroupService } from 'src/app/services/group.service';
+import { ContactService } from 'src/app/services/contact.service';
 
 @Component({
   selector: 'app-chat',
@@ -42,6 +43,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
     private popoverController: PopoverController,
     private route: ActivatedRoute,
     private renderer: Renderer2,
+    private contactService: ContactService,
   ) {}
 
   ngOnInit() {
@@ -101,19 +103,10 @@ export class ChatPage implements OnInit, AfterViewChecked {
       return false;
     }
 
-    function getSenderName(senderId: string) {
-      return (
-        (chat &&
-          chat.members &&
-          chat.members[senderId] &&
-          chat.members[senderId].userName) ||
-        'Unknown'
-      );
-    }
     const messages = Object.entries(chat.messages).map(([key, value]: any) => ({
       ...value,
       id: key,
-      senderName: getSenderName(value.from)
+      senderName: this.contactService.getDetailsFromId(value.from).userName
     }));
     messages.sort((a: any, b: any) => {
       if (!a.createdAt) {
