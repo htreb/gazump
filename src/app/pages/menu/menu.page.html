@@ -11,7 +11,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content forceOverscroll="false" color="medium">
+    <ion-content forceOverscroll="false" color='secondary'>
       <div class="menu">
 
         <ion-menu-toggle autoHide="false" class='all-groups-item'>
@@ -62,7 +62,7 @@
           </ng-container>
         </ng-container>
 
-        <ion-toolbar class="users-items" color="transparent">
+        <ion-toolbar class="users-items" color='transparent'>
           <ion-menu-toggle autoHide="false">
             <ion-item
               [routerLink]="['/', 'contacts']"
@@ -75,11 +75,11 @@
               <ion-icon slot="end" name="contacts" class="menu-icon"></ion-icon>
             </ion-item>
           </ion-menu-toggle>
-          <ion-item tappable (click)="showSettings()" lines="full">
+          <ion-item tappable (click)="showSettings()" lines="full" detail="false">
             <ion-label>Settings</ion-label>
             <ion-icon slot="end" name="settings"></ion-icon>
           </ion-item>
-          <ion-item tappable (click)="logOut()" lines="none">
+          <ion-item tappable (click)="logOut()" lines="none" detail="false">
             <ion-label>Logout</ion-label>
             <ion-icon slot="end" name="log-out"></ion-icon>
           </ion-item>

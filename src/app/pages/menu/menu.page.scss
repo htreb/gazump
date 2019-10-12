@@ -20,6 +20,7 @@ ion-item {
     &.active {
         background: var(--ion-color-primary);
         --color: var(--ion-color-primary-contrast);
+        font-weight: bold;
 
         .menu-icon {
             color: var(--ion-color-primary-contrast);
