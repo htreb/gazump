@@ -110,7 +110,7 @@ export class AuthService {
             role: 'USER', // TODO some way of giving users another role
             permissions: [],
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            userName: 'colin' // TODO some way of letting users change their userName
+            userName: email.substr(0, email.indexOf('@')) // TODO some way of letting users change their userName
           })
         ).pipe( // TODO does the set above this not return this info?
           switchMap(() => {
