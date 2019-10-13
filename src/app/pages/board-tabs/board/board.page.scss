@@ -36,9 +36,20 @@ $boardPadding: 8px;
 .ticket {
     transition: none; // ios adds an ugly bounce if this isn't here
     max-height: 300px;
+    cursor: pointer;
+
+    .ticket-drag-handle {
+        height: 20px;
+        width: 20px;
+    }
 
     .title, .description {
+        margin-top: 0;
         white-space: pre-wrap;
+    }
+
+    .description {
+        font-size: 0.8em;
     }
 }
 
@@ -63,7 +74,7 @@ $boardPadding: 8px;
     opacity: 0;
 }
 
-.ticket,
+.ticket-drag-handle,
 .drag-handle {
     cursor: grab;
 

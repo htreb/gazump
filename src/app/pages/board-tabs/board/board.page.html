@@ -49,8 +49,13 @@
         (cdkDragStarted)="onDragStart()"
         (cdkDragReleased)="onDragEnd()"
       >
+
+        <div cdkDragHandle class="ion-margin ticket-drag-handle">
+          <ion-icon src="/assets/icons/drag.svg" class="ticket-drag-handle"></ion-icon>
+        </div>
         <div class="ion-margin title">{{ ticket.title }}</div>
         <div class="ion-margin description">{{ ticket.description }}</div>
+
       </ion-card>
     </div>
     <ion-footer mode="md">
