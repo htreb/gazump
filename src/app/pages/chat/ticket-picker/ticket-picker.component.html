@@ -14,7 +14,7 @@
 
   <ng-container *ngIf="filteredBoards$ | async as filteredBoards">
     <ng-container *ngIf="!filteredBoards.loading; else loading">
-      <ion-list
+      <ion-content
         *ngIf="filteredBoards.length; else noTickets"
         class="ion-no-margin ion-no-padding ticket-list"
       >
@@ -37,7 +37,7 @@
             </ion-item>
           </ion-list>
         </ng-container>
-      </ion-list>
+      </ion-content>
     </ng-container>
   </ng-container>
 
