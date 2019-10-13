@@ -25,7 +25,7 @@
           <ion-text>
             <h2>{{ receivedRequest.requesterUserName }}</h2>
           </ion-text>
-          <ion-text color="medium">
+          <ion-text>
             <p>{{ receivedRequest.requesterEmail }}</p>
           </ion-text>
         </ion-label>
@@ -65,12 +65,12 @@
       <ion-list-header>Sent requests</ion-list-header>
       <ion-item *ngFor="let sentRequest of sentRequests">
         <ion-label class="ion-text-wrap">
-          <ion-text color="medium">
+          <ion-text>
             <p>{{ sentRequest.email }}</p>
           </ion-text>
         </ion-label>
         <div slot="end" class="ion-margin button-container">
-          <ion-button color="medium" (click)="cancelSentRequest(sentRequest)">
+          <ion-button color="dark" (click)="cancelSentRequest(sentRequest)">
             Cancel
           </ion-button>
         </div>
@@ -88,7 +88,7 @@
               <ion-text>
                 <h2>{{ contact.userName }}</h2>
               </ion-text>
-              <ion-text color="medium">
+              <ion-text>
                 <p>{{ contact.email }}</p>
               </ion-text>
             </ion-label>
