@@ -96,9 +96,12 @@ export class GroupService {
         .subscribe(allGroups => {
           if (!allGroups.loading) {
             const matchingGroup =
-              allGroups.filter(group => group.id === id)[0] || {};
-            // only emit a change if we actually have a different group.
-            if (!isEqual(this.currentGroupSubject.value, matchingGroup)) {
+              allGroups.filter(group => group.id === id)[0];
+            if (!matchingGroup) {
+              // user is not a member of that group.
+              this.router.navigateByUrl('/');
+            } else if (!isEqual(this.currentGroupSubject.value, matchingGroup)) {
+              // only emit a change if we actually have a different group.
               this.currentGroupSubject.next(matchingGroup);
             }
           }
