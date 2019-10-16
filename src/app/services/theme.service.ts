@@ -9,14 +9,14 @@ const transition = 'background-color 0ms';
 const defaults = {
     icon: 'partly-sunny',
     primary: '#3880ff',
-    secondary: '#aaa',
-    tertiary: '#dadada',
+    secondary: '#4C4C4C',
+    tertiary: '#636363',
     success: '#10dc60',
     warning: '#ffce00',
     danger: '#f04141',
-    dark: '#eee',
-    medium: '#bbb',
-    light: '#fff'
+    light: '#D1D1D1',
+    medium: '#DBDBDB',
+    dark: '#efefef'
   };
 
 const themes = [
@@ -39,16 +39,6 @@ const themes = [
     dark: '#FCDCBA',
     medium: '#FCD0A2',
     light: '#FFD89B',
-  },
-  {
-    name: 'Autumn',
-    icon: 'umbrella',
-    primary: '#3880ff',
-    secondary: '#4C4C4C',
-    tertiary: '#636363',
-    light: '#D1D1D1',
-    medium: '#DBDBDB',
-    dark: '#efefef'
   },
   {
     name: 'Basketball',
