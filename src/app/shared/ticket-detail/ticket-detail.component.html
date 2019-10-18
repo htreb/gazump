@@ -72,7 +72,7 @@
       </div>
     </div>
 
-    <div class="section">
+    <div class="section" *ngIf="ticketId">
       <ion-item lines="none">
         <app-tip [text]="linkedChatsTip" slot="end"></app-tip>
       </ion-item>
