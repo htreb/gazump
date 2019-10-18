@@ -12,16 +12,16 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     this.auth.loading = true;
-    console.log(`starting authGuard userDoc is`, this.auth.userDocSubject.value);
+    console.log(`starting authGuard userDoc is`, this.auth.userDoc$.value);
 
     const foundUserDoc$ = new Subject<boolean>();
-    this.auth.userDocSubject.pipe(
+    this.auth.userDoc$.pipe(
       takeWhile(userDoc => {
         console.log(`in auth guard takeWhile, current userDoc`, userDoc);
         return userDoc.loading;
       }),
       finalize(() => {
-        const docExists = !!this.auth.userDocSubject.value;
+        const docExists = !!this.auth.userDoc$.value;
         console.log(`finalize in authGuard userDoc val is ${docExists}`);
         if (!docExists) {
           this.auth.logOut();

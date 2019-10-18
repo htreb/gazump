@@ -18,7 +18,7 @@ export class ChatService {
     private auth: AuthService,
     private groupService: GroupService
   ) {
-    this.auth.userIdSubject.subscribe(userId => {
+    this.auth.userId$.subscribe(userId => {
       console.log(`boardService userId subscribe ${userId}`);
       if (userId.loading) {
         return;
@@ -83,7 +83,7 @@ export class ChatService {
   }
 
   startChat(title: string, membersWithoutMe: any) {
-    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.userIdSubject.value ];
+    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.userId$.value ];
     return this.db.collection('chats').add({
       title,
       groupId: this.groupService.currentGroupId,
@@ -98,7 +98,7 @@ export class ChatService {
     const messageId = this.getId();
     const updateObject: any = {
       [`messages.${messageId}`]: {
-        from: this.auth.userIdSubject.value,
+        from: this.auth.userId$.value,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         message,
         tickets

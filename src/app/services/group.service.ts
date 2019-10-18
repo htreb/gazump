@@ -41,7 +41,7 @@ export class GroupService {
     // so set initial group here.
     updateCurrentGroupSubjectFromUrl(this.router.url);
 
-    this.auth.userIdSubject.subscribe(userId => {
+    this.auth.userId$.subscribe(userId => {
       console.log(`groupService userId subscribe ${userId}`);
       if (userId.loading) {
         return;
@@ -121,7 +121,7 @@ export class GroupService {
    * @param users array of user detail objects
    */
   createGroup(title: string, users: any) {
-    const allUserIds = [...users.map(u => u.id), this.auth.userIdSubject.value ];
+    const allUserIds = [...users.map(u => u.id), this.auth.userId$.value ];
     return this.db.collection('groups').add({
       title,
       members: allUserIds,

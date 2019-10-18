@@ -19,7 +19,7 @@ export class BoardService {
     private db: AngularFirestore,
     private auth: AuthService,
   ) {
-    this.auth.userIdSubject.subscribe(userId => {
+    this.auth.userId$.subscribe(userId => {
       console.log(`boardService userId subscribe ${userId}`);
       if (userId.loading) {
         return;

@@ -18,14 +18,14 @@ export class ContactService {
 
   getMe() {
     return {
-      id: this.auth.userIdSubject.value,
-      userName: this.auth.userDocSubject.value.userName,
-      email: this.auth.userDocSubject.value.email
+      id: this.auth.userId$.value,
+      userName: this.auth.userDoc$.value.userName,
+      email: this.auth.userDoc$.value.email
     };
   }
 
   getUsersContacts() {
-    return this.auth.userDocSubject.pipe(
+    return this.auth.userDoc$.pipe(
       map(userDoc => {
         const users = Object.keys(userDoc.connections).map(id => {
           return {
@@ -48,7 +48,7 @@ export class ContactService {
         );
 
         const filteredUsers = allUsers.filter(
-          user => user.id && user.id !== this.auth.userIdSubject.value
+          user => user.id && user.id !== this.auth.userId$.value
         );
 
         return filteredUsers.sort((a, b) => {
@@ -60,12 +60,12 @@ export class ContactService {
 
   getDetailsFromId(id: string) {
     if (
-      this.auth.userDocSubject.value &&
-      this.auth.userDocSubject.value.connections &&
-      this.auth.userDocSubject.value.connections[id]
+      this.auth.userDoc$.value &&
+      this.auth.userDoc$.value.connections &&
+      this.auth.userDoc$.value.connections[id]
     ) {
-      return { id, ...this.auth.userDocSubject.value.connections[id] };
-    } else if (id === this.auth.userIdSubject.value) {
+      return { id, ...this.auth.userDoc$.value.connections[id] };
+    } else if (id === this.auth.userId$.value) {
       return this.getMyDetails();
     }
     return { userName: 'Unknown', email: 'Unknown' };
@@ -73,14 +73,14 @@ export class ContactService {
 
   getMyDetails() {
     return {
-      id: this.auth.userIdSubject.value,
+      id: this.auth.userId$.value,
       userName: 'You',
-      email: this.auth.userDocSubject.value.email
+      email: this.auth.userDoc$.value.email
     };
   }
 
   getSentRequests() {
-    return this.auth.userDocSubject.pipe(
+    return this.auth.userDoc$.pipe(
       map(userDoc => userDoc.contactRequests || []));
   }
 
@@ -92,7 +92,7 @@ export class ContactService {
    */
   async sendRequest(email) {
     // TODO Cloud function will pick up a change here and submit request to user if they exist
-    if (email === this.auth.userDocSubject.value.email) {
+    if (email === this.auth.userDoc$.value.email) {
       throw new Error(`You can't add yourself`);
     }
     let requestError;
@@ -114,14 +114,14 @@ export class ContactService {
         .collection('contactRequests')
         .add({
           accepterEmail: email,
-          requester: this.auth.userIdSubject.value,
-          requesterUserName: this.auth.userDocSubject.value.userName,
-          requesterEmail: this.auth.userDocSubject.value.email,
+          requester: this.auth.userId$.value,
+          requesterUserName: this.auth.userDoc$.value.userName,
+          requesterEmail: this.auth.userDoc$.value.email,
           declined: false,
         });
 
       this.db.collection('users')
-        .doc(this.auth.userIdSubject.value)
+        .doc(this.auth.userId$.value)
         .update({
           contactRequests: firebase.firestore.FieldValue.arrayUnion({
             email,
@@ -136,7 +136,7 @@ export class ContactService {
     const batch = this.db.firestore.batch();
 
     batch.delete(this.db.collection('contactRequests').doc(request.requestId).ref);
-    batch.update(this.db.collection('users').doc(this.auth.userIdSubject.value).ref, {
+    batch.update(this.db.collection('users').doc(this.auth.userId$.value).ref, {
       contactRequests: firebase.firestore.FieldValue.arrayRemove(request),
     });
 
@@ -146,7 +146,7 @@ export class ContactService {
   getReceivedRequests() {
     return this.db
       .collection('contactRequests', ref => ref
-      .where('accepterEmail', '==', this.auth.userDocSubject.value.email)
+      .where('accepterEmail', '==', this.auth.userDoc$.value.email)
       .where('declined', '==', false))
       .valueChanges({ idField: 'id' });
   }
@@ -162,7 +162,7 @@ export class ContactService {
       .collection('contactRequests')
       .doc(receivedRequest.id)
       .update({
-        accepter: this.auth.userIdSubject.value,
+        accepter: this.auth.userId$.value,
       });
   }
 

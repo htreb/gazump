@@ -12,17 +12,17 @@ import { Router } from '@angular/router';
 export class AuthService {
 
   private showPageLoadingSpinner = false;
-  authSub: Subscription;
-  userDocSub: Subscription;
-  userDocSubject = new BehaviorSubject<any>({ loading: true });
-  userIdSubject = new BehaviorSubject<any>({ loading: true });
+  authStateSubscription: Subscription;
+  userDocSubscription: Subscription;
+  userDoc$ = new BehaviorSubject<any>({ loading: true });
+  userId$ = new BehaviorSubject<any>({ loading: true });
 
   constructor(
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
     private router: Router
   ) {
-    this.authSub = this.authState().subscribe();
+    this.authStateSubscription = this.authState().subscribe();
   }
 
   get loading() {
@@ -34,17 +34,17 @@ export class AuthService {
   }
 
   setSubjectsToLoading() {
-    this.userDocSubject.next({ loading: true });
-    this.userIdSubject.next({ loading: true });
+    this.userDoc$.next({ loading: true });
+    this.userId$.next({ loading: true });
   }
 
   authState() {
     return this.afAuth.authState.pipe(tap(user => {
       if (user) {
-        this.userIdSubject.next(user.uid);
+        this.userId$.next(user.uid);
         return this.subToUserDoc(user.uid);
       } else {
-        this.userIdSubject.next(false);
+        this.userId$.next(false);
         return this.unSubFromUserDoc();
       }
     }));
@@ -55,22 +55,22 @@ export class AuthService {
    * an observable containing the id in the database.
    */
   subToUserDoc(userId: string) {
-    if (this.userDocSub) {
+    if (this.userDocSubscription) {
       return;
     }
-    this.userDocSub = this.db
+    this.userDocSubscription = this.db
       .collection('users')
       .doc(userId)
       .valueChanges()
-      .subscribe(userDoc => this.userDocSubject.next({ ...userDoc, id: userId }));
+      .subscribe(userDoc => this.userDoc$.next({ ...userDoc, id: userId }));
   }
 
   unSubFromUserDoc() {
-    if (this.userDocSub && this.userDocSub.unsubscribe) {
-      this.userDocSub.unsubscribe();
+    if (this.userDocSubscription && this.userDocSubscription.unsubscribe) {
+      this.userDocSubscription.unsubscribe();
     }
-    this.userDocSub = null;
-    this.userDocSubject.next(false);
+    this.userDocSubscription = null;
+    this.userDoc$.next(false);
   }
 
   /**
