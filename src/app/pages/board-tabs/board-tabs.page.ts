@@ -12,7 +12,8 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-icon.component';
 import { ActivatedRoute } from '@angular/router';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-board-tabs',
@@ -100,13 +101,16 @@ export class BoardTabsPage implements OnInit, OnDestroy {
           icon: 'trash',
           func: () => this.deleteBoard(this.displayingBoardId)
         },
+      ]);
+
+      if (!environment.production) {
         // TODO delete this!
-        {
+        this.settingsOptions.push({
           title: `Dummy tickets for "${currentBoard.title}"`,
           icon: 'construct',
           func: () => this.boardService.makeDummyTickets(this.displayingBoardId)
-        }
-      ]);
+        });
+      }
     }
   }
 
