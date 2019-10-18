@@ -194,6 +194,8 @@ export class ChatPage implements OnInit, AfterViewChecked {
       event: ev,
     });
     function dismiss() {
+      // reset this flag when leaving the chat view so we can scroll back to a ticket again
+      this.scrolledToHighlightedMessage = false;
       detailsOrBoard.dismiss();
     }
     detailsOrBoard.present();

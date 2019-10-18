@@ -88,6 +88,7 @@
               </ion-item-divider>
               <ion-item
                 *ngFor="let message of chat.linkedTickets[currentTicketSnippet.id]"
+                tappable
                 (click)="openChat(chat.id, [message.messageId])"
               >
                 {{ message.message }}

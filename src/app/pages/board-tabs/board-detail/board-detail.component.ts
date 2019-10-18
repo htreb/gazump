@@ -94,7 +94,7 @@ export class BoardDetailComponent implements OnInit {
   }
 
   async removeState(state) {
-    if (this.board.tickets[state.id].length) {
+    if (this.board && this.board.tickets[state.id].length) {
       const toast = await this.toastCtrl.create({
         message: 'You cannot delete a state which currently has tickets in it.',
         duration: 3000,

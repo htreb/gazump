@@ -311,10 +311,8 @@ export class BoardPage implements OnChanges {
                 setTimeout(() => {
                   this.renderer.removeClass(ticket.el, 'shake');
                 }, 1400);
-              }
-              );
-          }
-        );
+              });
+          });
       }
     }
   }
