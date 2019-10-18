@@ -110,24 +110,29 @@ export class ContactService {
     if (requestError) {
       throw new Error(requestError);
     } else {
-      const request = await this.db
-        .collection('contactRequests')
-        .add({
+      const newRequestId = this.db.createId();
+      const batch = this.db.firestore.batch();
+      batch.set(
+        this.db.collection('contactRequests').doc(newRequestId).ref,
+        {
           accepterEmail: email,
           requester: this.auth.userId$.value,
           requesterUserName: this.auth.userDoc$.value.userName,
           requesterEmail: this.auth.userDoc$.value.email,
           declined: false,
         });
-
-      this.db.collection('users')
-        .doc(this.auth.userId$.value)
-        .update({
-          contactRequests: firebase.firestore.FieldValue.arrayUnion({
-            email,
-            requestId: request.id,
+      batch.update(
+        this.db.collection('users')
+        .doc(this.auth.userId$.value).ref,
+        {
+          contactRequests: firebase.firestore.FieldValue.arrayUnion(
+          {
+              email,
+              requestId: newRequestId,
           })
         });
+
+      return batch.commit();
     }
   }
 
@@ -140,7 +145,7 @@ export class ContactService {
       contactRequests: firebase.firestore.FieldValue.arrayRemove(request),
     });
 
-    batch.commit();
+    return batch.commit();
   }
 
   getReceivedRequests() {
