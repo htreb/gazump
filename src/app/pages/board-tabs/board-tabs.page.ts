@@ -12,7 +12,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
 import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-icon.component';
 import { ActivatedRoute } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, finalize } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -184,20 +184,18 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     // subscribe to the allBoardsSubject. Only try to scroll to a ticket once the boards have loaded
     this.boardService.allBoardsSubject
       .pipe(
-        takeWhile(boards => boards.loading)
-      ).subscribe(boards => {
-        // allBoards loading now
-      }, err => {
-        // error in allBoards subscription
-      }, () => {
-        // subscription complete. allBoards have loaded now
-        const ticketDetails = this.boardService.findTicketPositionDetails(ticketId);
-        this.displayingBoardId = ticketDetails.currentBoardId;
-        this.scrollToTicketDetails = {
-          ticketId,
-          ...ticketDetails
-        };
-        this.updateSettingsAndTitle();
-      });
+        takeWhile(boards => boards.loading),
+        finalize(() => {
+          // subscription complete. allBoards have loaded now
+          console.log('board-tabs boards loaded, setting scroll details now');
+          const ticketDetails = this.boardService.findTicketPositionDetails(ticketId);
+          this.displayingBoardId = ticketDetails.currentBoardId;
+          this.scrollToTicketDetails = {
+            ticketId,
+            ...ticketDetails
+          };
+          this.updateSettingsAndTitle();
+        })
+      ).subscribe();
   }
 }
