@@ -18,11 +18,11 @@ export const unsubscribeFromTopic = functions.https.onCall(
 export const sendOnFirestoreCreate = functions.firestore
     .document('contactRequests/{contactId}')
     .onCreate(async snapshot => {
-        const request = snapshot.data();
+        const request = snapshot.data() || {};
 
         const notification: admin.messaging.Notification = {
-            title: 'New Contact request!',
-            body: request.email,
+            title: 'New Contact Request!',
+            body: request.requesterEmail,
     }
 
     const payload: admin.messaging.Message = {
