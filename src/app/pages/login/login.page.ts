@@ -101,6 +101,8 @@ export class LoginPage implements OnInit {
         }
       }, 500);
     });
+
+    this.auth.logOut();
   }
 
   clearFormErrorsAndTimeout() {
@@ -195,7 +197,7 @@ export class LoginPage implements OnInit {
    */
   async logIn() {
     this.auth.loading = true;
-    this.auth.logIn(this.email, this.password).subscribe(
+    this.auth.logIn(this.email, this.password).then(
       user => {
         this.router.navigateByUrl('/groups');
       },
@@ -216,8 +218,8 @@ export class LoginPage implements OnInit {
    */
   async signUp() {
     this.auth.loading = true;
-    this.auth.signUp(this.email, this.password).subscribe(
-      user => {
+    this.auth.signUp(this.email, this.password).then(
+      () => {
         this.router.navigateByUrl('/groups');
       },
       async err => {

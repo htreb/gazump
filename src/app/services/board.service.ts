@@ -19,20 +19,25 @@ export class BoardService {
     private db: AngularFirestore,
     private auth: AuthService,
   ) {
-    this.subToGroupBoards();
+    this.auth.userIdSubject.subscribe(userId => {
+      console.log(`boardService userId subscribe ${userId}`);
+      if (userId.loading) {
+        return;
+      }
+      return userId ? this.subToGroupBoards(userId) : this.unSubFromGroupBoards();
+    });
   }
 
   /**
    * subscribes to all the boards the user is member of under the current group
    */
-  subToGroupBoards() {
-    // TODO make sure this subscription is cleaning up after itself and unsubscribing when changing groups
+  subToGroupBoards(userId) {
+    console.log(`subToGroupBoards, ${this.boardsSub}`);
     if (this.boardsSub) {
       return;
     }
     this.boardsSub = this.groupService.currentGroupSubject
       .pipe(
-        takeUntil(this.auth.loggedOutSubject),
         switchMap(group => {
           if (group.loading) {
             return of({ loading: true });
@@ -45,7 +50,7 @@ export class BoardService {
             .collection('groups')
             .doc(group.id)
             .collection('boards', ref =>
-              ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+              ref.where('members', 'array-contains', userId)
               .orderBy('createdAt')
             )
             .valueChanges({ idField: 'id' });
@@ -57,6 +62,7 @@ export class BoardService {
   }
 
   unSubFromGroupBoards() {
+    console.log('logging out of users boards');
     if (this.boardsSub && this.boardsSub.unsubscribe) {
       this.boardsSub.unsubscribe();
     }

@@ -18,16 +18,23 @@ export class ChatService {
     private auth: AuthService,
     private groupService: GroupService
   ) {
-    this.subscribeToChats();
+    this.auth.userIdSubject.subscribe(userId => {
+      console.log(`boardService userId subscribe ${userId}`);
+      if (userId.loading) {
+        return;
+      }
+      return userId ? this.subscribeToChats(userId) : this.unSubFromChats();
+    });
   }
 
-  subscribeToChats() {
+  subscribeToChats(userId) {
+    console.log(`subToChats, ${this.chatsSub}`);
     if (this.chatsSub) {
       return;
     }
     this.chatsSub = this.db
       .collection('chats', ref =>
-        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+        ref.where('members', 'array-contains', userId)
         .orderBy('lastUpdated', 'desc')
 
       )
@@ -38,6 +45,7 @@ export class ChatService {
   }
 
   unSubFromChats() {
+    console.log('logging out of users chats');
     if (this.chatsSub && this.chatsSub.unsubscribe) {
       this.chatsSub.unsubscribe();
     }
@@ -65,7 +73,7 @@ export class ChatService {
       map(allChats => {
         return allChats.loading
         ? allChats
-        : allChats.filter(chat => chat.id === chatId)[0] || {noMatching: true};
+        : allChats.filter(chat => chat.id === chatId)[0] || { noMatching: true };
       })
     );
   }
@@ -75,7 +83,7 @@ export class ChatService {
   }
 
   startChat(title: string, membersWithoutMe: any) {
-    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.currentUser.value.id ];
+    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.userIdSubject.value ];
     return this.db.collection('chats').add({
       title,
       groupId: this.groupService.currentGroupId,
@@ -90,7 +98,7 @@ export class ChatService {
     const messageId = this.getId();
     const updateObject: any = {
       [`messages.${messageId}`]: {
-        from: this.auth.currentUser.value.id,
+        from: this.auth.userIdSubject.value,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         message,
         tickets

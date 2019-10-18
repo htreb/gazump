@@ -14,18 +14,18 @@ export class ProfilePage implements OnInit {
   constructor(private auth: AuthService, private toastCtrl: ToastController) { }
 
   ngOnInit() {
-    this.userName = this.auth.currentUser.value.userName;
+    // this.userName = this.auth.currentUser.value.userName;
   }
 
   updateName() {
-    this.auth.updateUserName(this.userName).then(async () => {
-      const toast = await this.toastCtrl.create({
-        duration: 3000,
-        color: 'success',
-        message: `Successfully updated your name to ${this.userName}`
-      });
-      toast.present();
-    });
+    // this.auth.updateUserName(this.userName).then(async () => {
+    //   const toast = await this.toastCtrl.create({
+    //     duration: 3000,
+    //     color: 'success',
+    //     message: `Successfully updated your name to ${this.userName}`
+    //   });
+    //   toast.present();
+    // });
   }
 
 

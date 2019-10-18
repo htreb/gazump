@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { GroupService } from 'src/app/services/group.service';
 import { Observable } from 'rxjs';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
@@ -11,7 +11,7 @@ import { ModalController } from '@ionic/angular';
   templateUrl: './list-groups.page.html',
   styleUrls: ['./list-groups.page.scss'],
 })
-export class ListGroupsPage implements OnInit {
+export class ListGroupsPage {
 
   public groups$: Observable<any> = this.groupService.allGroupsSubject;
   public settingsOptions: SettingsOption[] = [
@@ -27,10 +27,6 @@ export class ListGroupsPage implements OnInit {
     private router: Router,
     private modalController: ModalController,
     ) { }
-
-  ngOnInit() {
-    this.groupService.subscribeToUsersGroups();
-  }
 
   ionViewWillEnter() {
     this.groupService.showGroupMenuItems = false;

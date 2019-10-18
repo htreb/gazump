@@ -18,14 +18,14 @@ export class ContactService {
 
   getMe() {
     return {
-      id: this.auth.currentUser.value.id,
-      userName: this.auth.currentUser.value.userName,
-      email: this.auth.currentUser.value.email
+      id: this.auth.userIdSubject.value,
+      userName: this.auth.userDocSubject.value.userName,
+      email: this.auth.userDocSubject.value.email
     };
   }
 
   getUsersContacts() {
-    return this.auth.currentUser.pipe(
+    return this.auth.userDocSubject.pipe(
       map(userDoc => {
         const users = Object.keys(userDoc.connections).map(id => {
           return {
@@ -34,7 +34,7 @@ export class ContactService {
           };
         });
         return users.sort((a, b) => {
-          return a.userName < b.userName ? -1 : 1;
+          return a.userName.toLowerCase() < b.userName.toLowerCase() ? -1 : 1;
         });
       })
     );
@@ -43,43 +43,44 @@ export class ContactService {
   getGroupContacts() {
     return this.groupService.currentGroupSubject.pipe(
       map(currentGroup => {
-        if (!currentGroup.members) {
-          return [];
-        }
         const allUsers = currentGroup.members.map(
           contactId => this.getDetailsFromId(contactId)
         );
 
         const filteredUsers = allUsers.filter(
-          user => user.id && user.id !== this.auth.currentUser.value.id
+          user => user.id && user.id !== this.auth.userIdSubject.value
         );
 
         return filteredUsers.sort((a, b) => {
-          return a.userName < b.userName ? -1 : 1;
+          return a.userName.toLowerCase() < b.userName.toLowerCase() ? -1 : 1;
         });
       })
     );
   }
 
-  getDetailsFromId(id: string, getMe = false) {
+  getDetailsFromId(id: string) {
     if (
-      this.auth.currentUser.value &&
-      this.auth.currentUser.value.connections &&
-      this.auth.currentUser.value.connections[id]
+      this.auth.userDocSubject.value &&
+      this.auth.userDocSubject.value.connections &&
+      this.auth.userDocSubject.value.connections[id]
     ) {
-      return { id, ...this.auth.currentUser.value.connections[id] };
-    } else if (id === this.auth.currentUser.value.id || getMe) {
-      return {
-        id: this.auth.currentUser.value.id,
-        userName: 'You',
-        email: this.auth.currentUser.value.email
-      };
+      return { id, ...this.auth.userDocSubject.value.connections[id] };
+    } else if (id === this.auth.userIdSubject.value) {
+      return this.getMyDetails();
     }
     return { userName: 'Unknown', email: 'Unknown' };
   }
 
+  getMyDetails() {
+    return {
+      id: this.auth.userIdSubject.value,
+      userName: 'You',
+      email: this.auth.userDocSubject.value.email
+    };
+  }
+
   getSentRequests() {
-    return this.auth.currentUser.pipe(
+    return this.auth.userDocSubject.pipe(
       map(userDoc => userDoc.contactRequests || []));
   }
 
@@ -91,7 +92,7 @@ export class ContactService {
    */
   async sendRequest(email) {
     // TODO Cloud function will pick up a change here and submit request to user if they exist
-    if (email === this.auth.currentUser.value.email) {
+    if (email === this.auth.userDocSubject.value.email) {
       throw new Error(`You can't add yourself`);
     }
     let requestError;
@@ -113,14 +114,14 @@ export class ContactService {
         .collection('contactRequests')
         .add({
           accepterEmail: email,
-          requester: this.auth.currentUser.value.id,
-          requesterUserName: this.auth.currentUser.value.userName,
-          requesterEmail: this.auth.currentUser.value.email,
+          requester: this.auth.userIdSubject.value,
+          requesterUserName: this.auth.userDocSubject.value.userName,
+          requesterEmail: this.auth.userDocSubject.value.email,
           declined: false,
         });
 
       this.db.collection('users')
-        .doc(this.auth.currentUser.value.id)
+        .doc(this.auth.userIdSubject.value)
         .update({
           contactRequests: firebase.firestore.FieldValue.arrayUnion({
             email,
@@ -135,7 +136,7 @@ export class ContactService {
     const batch = this.db.firestore.batch();
 
     batch.delete(this.db.collection('contactRequests').doc(request.requestId).ref);
-    batch.update(this.db.collection('users').doc(this.auth.currentUser.value.id).ref, {
+    batch.update(this.db.collection('users').doc(this.auth.userIdSubject.value).ref, {
       contactRequests: firebase.firestore.FieldValue.arrayRemove(request),
     });
 
@@ -145,7 +146,7 @@ export class ContactService {
   getReceivedRequests() {
     return this.db
       .collection('contactRequests', ref => ref
-      .where('accepterEmail', '==', this.auth.currentUser.value.email)
+      .where('accepterEmail', '==', this.auth.userDocSubject.value.email)
       .where('declined', '==', false))
       .valueChanges({ idField: 'id' });
   }
@@ -161,7 +162,7 @@ export class ContactService {
       .collection('contactRequests')
       .doc(receivedRequest.id)
       .update({
-        accepter: this.auth.currentUser.value.id,
+        accepter: this.auth.userIdSubject.value,
       });
   }
 

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
-import { from, Observable, of, BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { switchMap, take, map } from 'rxjs/operators';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -13,15 +13,16 @@ export class AuthService {
 
   private showPageLoadingSpinner = false;
   authSub: Subscription;
-  currentUser = new BehaviorSubject(null);
-  loggedOutSubject: Subject<any> = new Subject();
+  userDocSub: Subscription;
+  userDocSubject = new BehaviorSubject<any>({ loading: true });
+  userIdSubject = new BehaviorSubject<any>({ loading: true });
 
   constructor(
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
     private router: Router
   ) {
-    this.authSub = this.getCurrentUser().subscribe();
+    this.authSub = this.authState().subscribe();
   }
 
   get loading() {
@@ -31,60 +32,55 @@ export class AuthService {
   set loading(loading: boolean) {
     this.showPageLoadingSpinner = loading;
   }
+
+  setSubjectsToLoading() {
+    this.userDocSubject.next({ loading: true });
+    this.userIdSubject.next({ loading: true });
+  }
+
+  authState() {
+    return this.afAuth.authState.pipe(tap(user => {
+      if (user) {
+        this.userIdSubject.next(user.uid);
+        return this.subToUserDoc(user.uid);
+      } else {
+        this.userIdSubject.next(false);
+        return this.unSubFromUserDoc();
+      }
+    }));
+  }
+
   /**
    * subscribe to current logged in user, find them in the users table and return
    * an observable containing the id in the database.
    */
-  getCurrentUser() {
-    return this.afAuth.authState.pipe(
-      switchMap(user => {
-        if (user) {
-          return this.db
-            .doc(`users/${user.uid}`)
-            .snapshotChanges()
-            .pipe(
-              map(doc => {
-                const data = { id: doc.payload.id, ...doc.payload.data() };
-                this.currentUser.next(data);
-                return data;
-              }));
-        } else {
-          console.log('Got no user in the auth service emitting loggedOutSubject...', user);
-          this.loggedOutSubject.next();
-          this.currentUser.next(null);
-          this.logOut();
-          this.loading = false;
-          // this.loggedOutSubject.complete(); // TODO! ticket #23
-          return of(null);
-        }
-    }));
+  subToUserDoc(userId: string) {
+    if (this.userDocSub) {
+      return;
+    }
+    this.userDocSub = this.db
+      .collection('users')
+      .doc(userId)
+      .valueChanges()
+      .subscribe(userDoc => this.userDocSubject.next({ ...userDoc, id: userId }));
   }
 
-  cleanUpSubscriptions() {
-    if (this.authSub) {
-      this.authSub.unsubscribe();
+  unSubFromUserDoc() {
+    if (this.userDocSub && this.userDocSub.unsubscribe) {
+      this.userDocSub.unsubscribe();
     }
+    this.userDocSub = null;
+    this.userDocSubject.next(false);
   }
+
   /**
-   * logs in a current user with email and password and returns the corresponding user from the users database
+   * logs in a current user with email and password
    * @param email string
    * @param password string
    */
-  logIn(email: string, password: string): Observable<any> {
-    return from(
-      this.afAuth.auth.signInWithEmailAndPassword(email, password)
-    ).pipe(
-      switchMap(data => {
-        if (data) {
-          return this.db
-            .doc(`users/${data.user.uid}`)
-            .valueChanges()
-            .pipe(take(1));
-        } else {
-          return of(null);
-        }
-      })
-    );
+  logIn(email: string, password: string) {
+    this.setSubjectsToLoading();
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
   /**
@@ -92,36 +88,20 @@ export class AuthService {
    * @param email string
    * @param password string
    */
-  signUp(email: string, password: string): Observable<any> {
+  signUp(email: string, password: string) {
+    this.setSubjectsToLoading();
     email = email.toLowerCase();
-    return from(
-      this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-    ).pipe(
-      switchMap(data => {
-        if (!data || !data.user) {
-          console.log(
-            'Something has gone wrong signing up the new user, we shouldn\'t get here'
-          );
-          return of(null);
-        }
-        return from(
-          this.db.doc(`users/${data.user.uid}`).set({
-            email,
-            role: 'USER', // TODO some way of giving users another role
-            permissions: [],
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            userName: email.substr(0, email.indexOf('@')) // TODO some way of letting users change their userName
-          })
-        ).pipe( // TODO does the set above this not return this info?
-          switchMap(() => {
-            return this.db
-              .doc(`users/${data.user.uid}`)
-              .valueChanges()
-              .pipe(take(1));
-          })
-        );
-      })
-    );
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+      .then(data =>
+        this.db.doc(`users/${data.user.uid}`).set({
+          email,
+          role: 'USER', // TODO some way of giving users another role
+          permissions: [],
+          connections: {},
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userName: email.substr(0, email.indexOf('@')) // TODO some way of letting users change their userName
+        })
+      );
   }
 
   /**
@@ -145,12 +125,13 @@ export class AuthService {
    * @param permissions array of required permissions
    */
   hasPermissions(permissions: string[]): boolean {
-    if (!this.currentUser || !this.currentUser.value.permissions) {
-      return false;
-    }
-    // filters the permissions to an array of all that the user does not have.
-    // If that array is not 0 long then deny permission.
-    return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
+    // if (!this.currentUser || !this.currentUser.value.permissions) {
+    //   return false;
+    // }
+    // // filters the permissions to an array of all that the user does not have.
+    // // If that array is not 0 long then deny permission.
+    // return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
+    return true;
   }
 
   /**
@@ -158,12 +139,12 @@ export class AuthService {
    * @param name requested name
    */
   isUserNameAvailable(name: string) {
-    return this.db.collection('users', ref => ref.where('userName', '==', name).limit(1)).valueChanges().pipe(
-      take(1),
-      map(user => {
-        return user;
-      })
-    );
+    // return this.db.collection('users', ref => ref.where('userName', '==', name).limit(1)).valueChanges().pipe(
+    //   take(1),
+    //   map(user => {
+    //     return user;
+    //   })
+    // );
   }
 
   /**
@@ -171,8 +152,8 @@ export class AuthService {
    * @param userName new userName
    */
   updateUserName(userName: string) {
-    return this.db.doc(`users/${this.currentUser.value.id}`).update({
-      userName
-    });
+    // return this.db.doc(`users/${this.currentUser.value.id}`).update({
+    //   userName
+    // });
   }
 }

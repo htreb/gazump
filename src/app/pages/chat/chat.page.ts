@@ -30,7 +30,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
 
   private chatId = '';
   public chat$: Observable<any>;
-  public currentUserId = this.auth.currentUser.value.id;
+  public currentUserId = this.auth.userIdSubject.value;
   public message = '';
   public linkedTickets = [];
   private atBottom = true;

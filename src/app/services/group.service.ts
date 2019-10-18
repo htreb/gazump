@@ -40,6 +40,14 @@ export class GroupService {
     // sometimes get need a group before any navigationEnd events (filtering tickets on chat page)
     // so set initial group here.
     updateCurrentGroupSubjectFromUrl(this.router.url);
+
+    this.auth.userIdSubject.subscribe(userId => {
+      console.log(`groupService userId subscribe ${userId}`);
+      if (userId.loading) {
+        return;
+      }
+      return userId ? this.subscribeToUsersGroups(userId) : this.unSubFromUsersGroup();
+    });
   }
 
   get currentGroupId() {
@@ -49,16 +57,16 @@ export class GroupService {
    * Gets all groups the logged in user is a member of
    * and saves them in the allGroupsSubject
    */
-  subscribeToUsersGroups() {
+  subscribeToUsersGroups(userId: string) {
+    console.log('subscribe to usersGroups', this.groupsSub);
     if (this.groupsSub) {
       return;
     }
     this.groupsSub = this.db
       .collection('groups', ref =>
-        ref.where('members', 'array-contains', this.auth.currentUser.value.id)
+        ref.where('members', 'array-contains', userId)
       )
       .valueChanges({ idField: 'id' })
-      .pipe(takeUntil(this.auth.loggedOutSubject))
       .subscribe(groups => {
         this.allGroupsSubject.next(groups);
       });
@@ -68,6 +76,7 @@ export class GroupService {
    * unsubscribes from all users groups.
    */
   unSubFromUsersGroup() {
+    console.log('logging out of users groups');
     if (this.groupsSub && this.groupsSub.unsubscribe) {
       this.groupsSub.unsubscribe();
     }
@@ -85,14 +94,11 @@ export class GroupService {
   }
 
   setCurrentGroup(id: any) {
-    // just to be sure
-    this.subscribeToUsersGroups();
     // if no id 'i.e' nav-ing back to list groups. then do not clear the currentGroupSubject
     // or it will be another db read and slow down coming back to the boards for the same group.
     // if we're not changing groups just let it be.
     if (id && id !== this.currentGroupId) {
       this.currentGroupSub = this.allGroupsSubject
-        .pipe(takeUntil(this.auth.loggedOutSubject))
         .subscribe(allGroups => {
           if (!allGroups.loading) {
             const matchingGroup =
@@ -115,7 +121,7 @@ export class GroupService {
    * @param users array of user detail objects
    */
   createGroup(title: string, users: any) {
-    const allUserIds = [...users.map(u => u.id), this.auth.currentUser.value.id ];
+    const allUserIds = [...users.map(u => u.id), this.auth.userIdSubject.value ];
     return this.db.collection('groups').add({
       title,
       members: allUserIds,
