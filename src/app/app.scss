@@ -103,4 +103,15 @@ ion-segment-button {
 ion-popover {
   --background: var(--ion-background-color);
 }
+
+.section {
+  padding: 16px;
+  border-bottom: 1px solid var(--ion-color-medium);
+
+  .title {
+    font-size: 1.2em;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////

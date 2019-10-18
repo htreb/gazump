@@ -56,11 +56,11 @@ export class ContactsPage implements OnInit {
   }
 
   async sendContactRequest() {
-    const email = this.addContactEmail.value.trim();
     if (!this.addContactEmail.valid) {
       // can be called from an enter press so check validity here
       return;
     }
+    const email = this.addContactEmail.value.trim();
 
     this.addContactEmail.setValue('');
     try {
@@ -77,7 +77,7 @@ export class ContactsPage implements OnInit {
     const alert = await this.alertCtrl.create({
       message: `Are you sure you want to cancel your contact request to:
                 <br><br>
-                <b>${request.accepterEmail}?</b>`,
+                <b>${request.email}?</b>`,
       buttons: [
         {
           text: 'Cancel'

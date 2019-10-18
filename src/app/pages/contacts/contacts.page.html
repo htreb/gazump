@@ -18,8 +18,11 @@
 <ion-content class="ion-padding">
 
   <ng-container *ngIf="receivedRequests$ | async as receivedRequests">
-    <ion-list *ngIf="receivedRequests.length">
-      <h1>Requests</h1>
+    <div
+      *ngIf="receivedRequests.length"
+      class="section"
+    >
+      <div class='title'>Requests</div>
       <ion-item *ngFor="let receivedRequest of receivedRequests">
         <ion-label class="ion-text-wrap">
           <ion-text>
@@ -38,31 +41,36 @@
           </ion-button>
         </div>
       </ion-item>
-    </ion-list>
+    </div>
   </ng-container>
 
-  <h1>Add Contacts</h1>
-  <ion-card>
-    <ion-item>
-      <ion-input
-        placeholder="Email"
-        [formControl]="addContactEmail"
-        (keyup.enter)="sendContactRequest()"
-      ></ion-input>
-      <ion-button
-        slot="end"
-        color="primary"
-        (click)="sendContactRequest()"
-        [disabled]='!addContactEmail.valid'
-      >
-        Send request
-      </ion-button>
-    </ion-item>
-  </ion-card>
+  <div class='section'>
+    <div class="title">Add Contacts</div>
+    <ion-card>
+      <ion-item>
+        <ion-input
+          placeholder="Email"
+          [formControl]="addContactEmail"
+          (keyup.enter)="sendContactRequest()"
+        ></ion-input>
+        <ion-button
+          slot="end"
+          color="primary"
+          (click)="sendContactRequest()"
+          [disabled]='!addContactEmail.valid'
+        >
+          Send request
+        </ion-button>
+      </ion-item>
+    </ion-card>
+  </div>
 
   <ng-container *ngIf="sentRequests$ | async as sentRequests">
-    <ion-list *ngIf="sentRequests.length">
-      <ion-list-header>Sent requests</ion-list-header>
+    <div
+      *ngIf="sentRequests.length"
+      class="section"
+    >
+      <div class="title">Sent requests</div>
       <ion-item *ngFor="let sentRequest of sentRequests">
         <ion-label class="ion-text-wrap">
           <ion-text>
@@ -75,11 +83,11 @@
           </ion-button>
         </div>
       </ion-item>
-    </ion-list>
+    </div>
   </ng-container>
 
-  <ion-list>
-    <h1>All Contacts</h1>
+  <div class="section">
+    <div class="title">All Contacts</div>
     <ng-container *ngIf="allContacts$ | async as contacts">
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
         <ion-list *ngIf="contacts.length; else noContacts">
@@ -96,6 +104,6 @@
         </ion-list>
       </ng-container>
     </ng-container>
-  </ion-list>
+  </div>
 
 </ion-content>

@@ -104,7 +104,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       ]);
 
       if (!environment.production) {
-        // TODO delete this!
         this.settingsOptions.push({
           title: `Dummy tickets for "${currentBoard.title}"`,
           icon: 'construct',

@@ -16,9 +16,7 @@
 
 <ion-content>
   <div class="section">
-    <ion-item class="ion-text-center" lines="none">
-      <ion-label>Title</ion-label>
-    </ion-item>
+    <div class="title">Title</div>
     <ion-item>
       <ion-label position='fixed'>Title</ion-label>
       <ion-input #titleInput [(ngModel)]="title"></ion-input>
@@ -26,9 +24,7 @@
   </div>
 
   <div class="section">
-    <ion-item class="ion-text-center" lines="none">
-      <ion-label>Members</ion-label>
-    </ion-item>
+    <div class="title">Members</div>
     <app-contact-picker [selectedContacts]='contacts'></app-contact-picker>
   </div>
 
@@ -52,9 +48,7 @@
   </ion-item> -->
 
   <div class="section">
-    <ion-item class="ion-text-center" lines="none">
-      <ion-label>States</ion-label>
-    </ion-item>
+    <div class="title">States</div>
     <ion-item>
       <ion-input
         [(ngModel)]="newStateName"
@@ -63,7 +57,7 @@
       >
       </ion-input>
       <ion-button slot="end" (click)="addState()" [disabled]="!newStateName.trim()">
-        Add State
+        Add
       </ion-button>
     </ion-item>
 
@@ -79,10 +73,7 @@
   </div>
 
   <div class="section">
-    <ion-item class="ion-text-center" lines="none">
-      <ion-label>Completed by</ion-label>
-    </ion-item>
-
+    <div class="title">Completed by</div>
     <ion-item>
       <ion-input
         [(ngModel)]="newCompletedByName"
@@ -91,7 +82,7 @@
       >
       </ion-input>
       <ion-button slot="end" (click)="addCompletedBy()" [disabled]="!newCompletedByName.trim()">
-        Add completed by
+        Addx
       </ion-button>
     </ion-item>
 

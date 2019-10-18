@@ -11,15 +11,21 @@
 
 <ion-content class='ion-padding'>
 
-  <ion-item>
-    <ion-label position='fixed'>Title</ion-label>
-    <ion-input #titleInput [(ngModel)]="title"></ion-input>
-  </ion-item>
+  <div class="section">
+    <div class="title">Title</div>
+    <ion-item>
+      <ion-label position='fixed'>Title</ion-label>
+      <ion-input #titleInput [(ngModel)]="title"></ion-input>
+    </ion-item>
+  </div>
 
-  <app-contact-picker
-    [allContacts]='allContacts'
-    [selectedContacts]='selectedContacts'
-  ></app-contact-picker>
+  <div class="section">
+    <div class="title">Members</div>
+    <app-contact-picker
+      [allContacts]='allContacts'
+      [selectedContacts]='selectedContacts'
+    ></app-contact-picker>
+  </div>
 
 </ion-content>
 
