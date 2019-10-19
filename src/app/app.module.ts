@@ -17,6 +17,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { IonicStorageModule } from '@ionic/storage';
 import { SharedModule } from './shared/shared.module';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 // import { Camera } from '@ionic-native/camera/ngx';
 
@@ -32,6 +34,8 @@ import { SharedModule } from './shared/shared.module';
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFireMessagingModule,
+    AngularFireFunctionsModule,
     BrowserAnimationsModule,
     IonicStorageModule.forRoot(),
     SharedModule,
