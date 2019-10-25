@@ -40,6 +40,7 @@ export class AuthService {
 
   authState() {
     return this.afAuth.authState.pipe(tap(user => {
+      console.log('authState subscription, user is', user);
       if (user) {
         this.userId$.next(user.uid);
         return this.subToUserDoc(user.uid);
@@ -62,7 +63,13 @@ export class AuthService {
       .collection('users')
       .doc(userId)
       .valueChanges()
-      .subscribe(userDoc => this.userDoc$.next({ ...userDoc, id: userId }));
+      .subscribe(userDoc => {
+        if (userDoc) {
+          this.userDoc$.next({ ...userDoc, id: userId });
+        } else {
+          console.log('subscribed to userDoc but got no doc!', userDoc);
+        }
+      });
   }
 
   unSubFromUserDoc() {

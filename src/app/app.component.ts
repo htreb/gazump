@@ -27,7 +27,7 @@ export class AppComponent {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.fcmService.getPermission().subscribe();
-      this.fcmService.showMessages().subscribe();
+      this.fcmService.listenToMessages().subscribe();
 
     });
   }

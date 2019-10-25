@@ -1,5 +1,5 @@
 {
-  "name": "gazump",
+  "name": "gazumpd",
   "integrations": {
     "cordova": {}
   },

@@ -19,7 +19,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { SharedModule } from './shared/shared.module';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
-
+import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 // import { Camera } from '@ionic-native/camera/ngx';
 
 
@@ -43,6 +43,7 @@ import { AngularFireFunctionsModule } from '@angular/fire/functions';
   providers: [
     StatusBar,
     SplashScreen,
+    FirebaseX,
     // Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],

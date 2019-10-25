@@ -1,0 +1,8 @@
+{
+    "manifest_version": 2,
+    "short_name": "Gazumpd",
+    "name": "Gazumpd app",
+    "start_url": "/",
+
+    "gcm_sender_id": "103953800507"
+}
