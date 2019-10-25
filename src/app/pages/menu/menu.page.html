@@ -1,4 +1,4 @@
-<ion-split-pane>
+<ion-split-pane contentId="content">
   <ion-menu class="menu-container" contentId="content" swipe-gesture="false">
     <ion-header mode='md'>
       <ion-toolbar color="secondary" mode='md'>
@@ -110,7 +110,6 @@
 
   <ion-router-outlet
     id="content"
-    main
     [swipeGesture]="false"
   ></ion-router-outlet>
 </ion-split-pane>
