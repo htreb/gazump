@@ -87,7 +87,11 @@ export class FcmService {
       body = payload.notification.body;
     }
 
-    this.makeToast(body);
+    if (payload.tap === 'background' || !body) {
+      console.log('Notification tapped in background (or no body), no need to show toast', body);
+    } else {
+      this.makeToast(body);
+    }
   }
 
   sub(topic) {
