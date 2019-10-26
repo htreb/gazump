@@ -23,29 +23,28 @@ export const sendOnFirestoreCreate = functions.firestore
         const notification: admin.messaging.Notification = {
             title: 'New Contact Request!',
             body: request.requesterEmail,
-    }
+        }
 
-    const payload: admin.messaging.Message = {
-        notification,
-        webpush: {
-            notification: {
-                vibrate: [200, 100, 200],
-                // icon: 'www.someUrlHere.com',
-                // actions: [
-                //     {
-                //         action: 'like',
-                //         title: 'wooow',
-                //     },
-                //     {
-                //         action: 'dislike',
-                //         title: 'nooope',
-                //     }
-                // ]
+        const payload: admin.messaging.Message = {
+            notification,
+            webpush: {
+                notification: {
+                    vibrate: [200, 100, 200],
+                    // icon: 'www.someUrlHere.com',
+                    // actions: [
+                    //     {
+                    //         action: 'like',
+                    //         title: 'wooow',
+                    //     },
+                    //     {
+                    //         action: 'dislike',
+                    //         title: 'nooope',
+                    //     }
+                    // ]
+                },
             },
-        },
+            topic: 'contactRequests'
+        }
 
-        topic: 'contactRequests'
-    }
-
-    return admin.messaging().send(payload);
-})
+        return admin.messaging().send(payload);
+    })
