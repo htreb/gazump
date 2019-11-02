@@ -5,6 +5,9 @@ import { ToastController, Platform } from '@ionic/angular';
 import { tap } from 'rxjs/operators';
 import { from } from 'rxjs';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import * as firebase from 'firebase/app';
+import { AngularFirestore } from '@angular/fire/firestore';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +22,7 @@ export class FcmService {
     private toastCtrl: ToastController,
     private platform: Platform,
     private firebaseNative: FirebaseX,
+    private db: AngularFirestore,
   ) { }
 
   async makeToast(message) {
@@ -32,7 +36,7 @@ export class FcmService {
     toast.present();
   }
 
-  getPermission() {
+  getPermission(userId: string) {
     let token$;
     if (this.platform.is('cordova')) {
       token$ = from(this.getPermissionNative());
@@ -40,9 +44,9 @@ export class FcmService {
       token$ = this.getPermissionWeb();
     }
     return token$.pipe(
-      tap(token => {
-        console.log('token is', token);
+      tap((token: string) => {
         this.token = token;
+        this.saveToken(userId, token);
       })
     );
   }
@@ -65,9 +69,7 @@ export class FcmService {
 
   listenToMessages() {
     let messages$;
-    console.log('listen to messages');
     if (this.platform.is('cordova')) {
-      console.log('listening to messages, platform is cordova');
       messages$ = this.firebaseNative.onMessageReceived();
     } else {
       messages$ = this.afMessaging.messages;
@@ -76,12 +78,31 @@ export class FcmService {
     return messages$.pipe(tap(payload => this.showMessages(payload)));
   }
 
+  saveToken(userId: string, token: string) {
+    this.db
+      .collection('users')
+      .doc(userId)
+      .update({
+        fcmTokens: firebase.firestore.FieldValue.arrayUnion(token)
+      });
+  }
+
+  removeCurrentTokenOnSignOut(userId) {
+    if (!userId || userId.loading || !this.token) {
+      console.log(`can't remove FCM token ${this.token}, from userId`, userId);
+      return;
+    }
+    this.db
+      .collection('users')
+      .doc(userId)
+      .update({
+        fcmTokens: firebase.firestore.FieldValue.arrayRemove(this.token)
+      });
+  }
 
   showMessages(payload) {
     let body;
-    console.log('show messages');
     if (this.platform.is('android')) {
-      console.log('going to show a message platform is android', payload);
       body = payload.body;
     } else {
       body = payload.notification.body;

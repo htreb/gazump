@@ -5,6 +5,7 @@ import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { FcmService } from './fcm.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +18,14 @@ export class AuthService {
   userDoc$ = new BehaviorSubject<any>({ loading: true });
   userId$ = new BehaviorSubject<any>({ loading: true });
 
+  private fcmPermissionSub: Subscription;
+  private fcmListenSub: Subscription;
+
   constructor(
     private afAuth: AngularFireAuth,
     private db: AngularFirestore,
-    private router: Router
+    private router: Router,
+    private fcmService: FcmService,
   ) {
     this.authStateSubscription = this.authState().subscribe();
   }
@@ -33,20 +38,17 @@ export class AuthService {
     this.showPageLoadingSpinner = loading;
   }
 
-  setSubjectsToLoading() {
-    this.userDoc$.next({ loading: true });
-    this.userId$.next({ loading: true });
-  }
-
   authState() {
     return this.afAuth.authState.pipe(tap(user => {
-      console.log('authState subscription, user is', user);
       if (user) {
+        this.subToUserDoc(user.uid);
         this.userId$.next(user.uid);
-        return this.subToUserDoc(user.uid);
+        this.fcmPermissionSub = this.fcmService.getPermission(user.uid).subscribe();
+        this.fcmListenSub = this.fcmService.listenToMessages().subscribe();
       } else {
-        this.userId$.next(false);
-        return this.unSubFromUserDoc();
+        this.userId$.next({ loading: true });
+        this.unSubFromUserDoc();
+        this.unSubFromFcm();
       }
     }));
   }
@@ -60,11 +62,11 @@ export class AuthService {
       return;
     }
     this.userDocSubscription = this.db
-      .collection('users')
-      .doc(userId)
-      .valueChanges()
-      .subscribe(userDoc => {
-        if (userDoc) {
+    .collection('users')
+    .doc(userId)
+    .valueChanges()
+    .subscribe(userDoc => {
+      if (userDoc) {
           this.userDoc$.next({ ...userDoc, id: userId });
         } else {
           console.log('subscribed to userDoc but got no doc!', userDoc);
@@ -77,7 +79,16 @@ export class AuthService {
       this.userDocSubscription.unsubscribe();
     }
     this.userDocSubscription = null;
-    this.userDoc$.next(false);
+    this.userDoc$.next({ loading: true });
+  }
+
+  unSubFromFcm() {
+    if (this.fcmPermissionSub && this.fcmPermissionSub.unsubscribe) {
+      this.fcmPermissionSub.unsubscribe();
+    }
+    if (this.fcmListenSub && this.fcmListenSub.unsubscribe) {
+      this.fcmListenSub.unsubscribe();
+    }
   }
 
   /**
@@ -86,7 +97,6 @@ export class AuthService {
    * @param password string
    */
   logIn(email: string, password: string) {
-    this.setSubjectsToLoading();
     return this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
@@ -96,7 +106,6 @@ export class AuthService {
    * @param password string
    */
   signUp(email: string, password: string) {
-    this.setSubjectsToLoading();
     email = email.toLowerCase();
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
       .then(data =>
@@ -122,9 +131,12 @@ export class AuthService {
   /**
    * Signs out the currently logged in user
    */
-  logOut(): void {
+  async logOut() {
+    this.loading = true;
+    await this.fcmService.removeCurrentTokenOnSignOut(this.userId$.value);
     this.afAuth.auth.signOut();
     this.router.navigateByUrl('/login'); // TODO make this a 'root' direction?
+    this.loading = false;
   }
 
   /**
