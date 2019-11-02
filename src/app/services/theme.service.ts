@@ -162,9 +162,7 @@ export class ThemeService {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private storage: Storage
-  ) {
-    this.setInitialTheme();
-  }
+  ) {}
 
   async setInitialTheme() {
     const savedThemeName = await this.storage.get('theme');
