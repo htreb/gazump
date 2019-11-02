@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Observable, Subject } from 'rxjs';
-import { takeWhile, finalize } from 'rxjs/operators';
+import { takeWhile, finalize, delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +12,13 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     this.auth.loading = true;
-    console.log(`starting authGuard userDoc is`, this.auth.userDoc$.value);
 
     const foundUserDoc$ = new Subject<boolean>();
     this.auth.userDoc$.pipe(
+      // Need to delay because if we already have the user doc, this executes synchronously
+      // the foundUserDoc$ subject emits before the function returns.
+      // and never emits again, so the page never loads.
+      delay(0),
       takeWhile(userDoc => {
         console.log(`in auth guard takeWhile, current userDoc`, userDoc);
         return userDoc.loading;
