@@ -54,3 +54,47 @@ export const newContactRequest = functions.firestore
                 throw new Error(err);
             })
     })
+
+export const newChatMessage = functions.firestore
+    .document('chats/{chatId}')
+    .onUpdate((change: functions.Change<any>) => {
+        const beforeUpdate = change.before.data();
+        const afterUpdate = change.after.data();
+        const newMessages:any = {};
+        Object.keys(afterUpdate.messages).map(messageId => {
+            if (!beforeUpdate.messages || !beforeUpdate.messages[messageId]) {
+                newMessages[messageId] = afterUpdate.messages[messageId];
+            }
+        })
+        // Get the other chat members Ids
+        return Object.values(newMessages).map((message: any) => {
+            const otherMembers = afterUpdate.members.filter((memberId: string) => memberId !== message.from);
+            console.log('New chat message, other members ids to send notifications to', otherMembers);
+            otherMembers.map((memberId: string) => {
+                return sendNotification(memberId, 'New Message', message.message)
+            })
+        })
+    })
+
+export const sendNotification = function(userId: string, title: string, body: string) {
+    return db.collection('users')
+        .doc(userId).get()
+        .then((userDocSnapshot): any => {
+            const userDoc = userDocSnapshot.data()
+            if (!userDoc || !userDoc.fcmTokens || !userDoc.fcmTokens.length) {
+                console.log('User does not have any notification tokens stored');
+                return
+            }
+            const payload = {
+                notification: {
+                    title,
+                    body,
+                }
+            }
+            console.log(`Sending notification to ${userId} with tokens`, userDoc.fcmTokens);
+            return admin.messaging().sendToDevice(userDoc.fcmTokens, payload);
+        }, err => {
+            console.log(`Couldn't get the user ${userId}`);
+            throw new Error(err);
+        });
+}
