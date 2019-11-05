@@ -27,7 +27,18 @@ export class AuthService {
     private router: Router,
     private fcmService: FcmService,
   ) {
-    this.authStateSubscription = this.authState().subscribe();
+    this.authStateSubscription = this.authState().subscribe(user => {
+      if (user) {
+        this.subToUserDoc(user.uid);
+        this.userId$.next(user.uid);
+        this.fcmPermissionSub = this.fcmService.getPermission(user.uid).subscribe();
+        this.fcmListenSub = this.fcmService.listenToMessages().subscribe();
+      } else {
+        this.userId$.next({ loading: true });
+        this.unSubFromUserDoc();
+        this.unSubFromFcm();
+      }
+    });
   }
 
   get loading() {
@@ -39,18 +50,7 @@ export class AuthService {
   }
 
   authState() {
-    return this.afAuth.authState.pipe(tap(user => {
-      if (user) {
-        this.subToUserDoc(user.uid);
-        this.userId$.next(user.uid);
-        this.fcmPermissionSub = this.fcmService.getPermission(user.uid).subscribe();
-        this.fcmListenSub = this.fcmService.listenToMessages().subscribe();
-      } else {
-        this.userId$.next({ loading: true });
-        this.unSubFromUserDoc();
-        this.unSubFromFcm();
-      }
-    }));
+    return this.afAuth.authState;
   }
 
   /**
