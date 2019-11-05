@@ -16,17 +16,12 @@ export class ContactService {
     private db: AngularFirestore
   ) {}
 
-  getMe() {
-    return {
-      id: this.auth.userId$.value,
-      userName: this.auth.userDoc$.value.userName,
-      email: this.auth.userDoc$.value.email
-    };
-  }
-
   getUsersContacts() {
     return this.auth.userDoc$.pipe(
       map(userDoc => {
+        if (userDoc.loading) {
+          return [];
+        }
         const users = Object.keys(userDoc.connections).map(id => {
           return {
             id,

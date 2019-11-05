@@ -34,7 +34,7 @@ export class AuthService {
         this.fcmPermissionSub = this.fcmService.getPermission(user.uid).subscribe();
         this.fcmListenSub = this.fcmService.listenToMessages().subscribe();
       } else {
-        this.userId$.next({ loading: true });
+        this.userId$.next(false);
         this.unSubFromUserDoc();
         this.unSubFromFcm();
       }
