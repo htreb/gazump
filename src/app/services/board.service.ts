@@ -232,7 +232,7 @@ parseCompletedByArrayToObj(completedByArr) {
   }
 
   addTicketSnippet(snippet: any, stateId: string, boardId: string ) {
-    snippet = {...snippet, id: this.getId()};
+    snippet = {...snippet, id: this.db.createId()};
     return this.db
       .collection('groups')
       .doc(this.groupService.currentGroupId)
@@ -263,10 +263,6 @@ parseCompletedByArrayToObj(completedByArr) {
   }
 
 
-  getId() {
-    return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
-  }
-
   // TODO remove this!
   makeDummyTickets(boardId: string): Promise<any> {
     const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit,
@@ -293,7 +289,7 @@ parseCompletedByArrayToObj(completedByArr) {
         newTickets[`tickets.${state.id}`].push({
           title: `${j} ticket ${j}` + lorem.slice(0, Math.floor(Math.random() * 20) + 50),
           description: lorem.slice(0, Math.floor(Math.random() * 200) + 30),
-          id: this.getId(),
+          id: this.db.createId(),
           completedBy: ''
         });
       }

@@ -78,10 +78,6 @@ export class ChatService {
     );
   }
 
-  getId() {
-    return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
-  }
-
   startChat(title: string, membersWithoutMe: any) {
     const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.userId$.value ];
     return this.db.collection('chats').add({
@@ -95,7 +91,7 @@ export class ChatService {
   }
 
   addChatMessage(chatId: string, message: any, tickets: any[] = null) {
-    const messageId = this.getId();
+    const messageId = this.db.createId();
     const updateObject: any = {
       [`messages.${messageId}`]: {
         from: this.auth.userId$.value,

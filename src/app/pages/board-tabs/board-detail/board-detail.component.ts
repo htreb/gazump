@@ -3,6 +3,7 @@ import { icons } from './icon-list';
 import { ToastController } from '@ionic/angular';
 import { ContactService } from 'src/app/services/contact.service';
 import { BoardService } from 'src/app/services/board.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const completedByNames = ['Buyers', 'Buyers Solicitors', 'Council', 'Estate Agents', 'Sellers', 'Sellers Solicitors'];
 @Component({
@@ -21,14 +22,14 @@ export class BoardDetailComponent implements OnInit {
   contacts = [this.contactService.getMyDetails()];
   newStateName = '';
   states = [
-    {color: 'medium', id: this.getId(), title: 'To Do'},
-    {color: 'medium', id: this.getId(), title: 'Doing'},
-    {color: 'medium', id: this.getId(), title: 'Done'},
+    {color: 'medium', id: this.db.createId(), title: 'To Do'},
+    {color: 'medium', id: this.db.createId(), title: 'Doing'},
+    {color: 'medium', id: this.db.createId(), title: 'Done'},
   ];
 
   newCompletedByName = '';
   completedBy = completedByNames.reduce((completedArr, currentName) => {
-    completedArr.push({name: currentName, color: 'medium', id: this.getId()});
+    completedArr.push({name: currentName, color: 'medium', id: this.db.createId()});
     return completedArr;
   }, []);
 
@@ -37,6 +38,7 @@ export class BoardDetailComponent implements OnInit {
     private toastCtrl: ToastController,
     private contactService: ContactService,
     private boardService: BoardService,
+    private db: AngularFirestore
   ) { }
 
   ngOnInit() {
@@ -47,10 +49,6 @@ export class BoardDetailComponent implements OnInit {
 
   ionViewDidEnter() {
     this.titleInput.setFocus();
-  }
-
-  getId() {
-    return `${(Math.random() + '').substr(2)}X${new Date().getTime()}`;
   }
 
   parseBoardDataToModel(boardData) {
@@ -79,7 +77,7 @@ export class BoardDetailComponent implements OnInit {
       return;
     }
     if (this.states.filter(s => s.title === newState).length === 0) {
-      const stateId = this.getId();
+      const stateId = this.db.createId();
       this.states.push({title: newState, color: 'medium', id: stateId});
       this.board.tickets[stateId] = [];
       this.newStateName = '';
@@ -116,7 +114,7 @@ export class BoardDetailComponent implements OnInit {
       return;
     }
     if (this.completedBy.filter(cb => cb.name === trimmedCB).length === 0) {
-      this.completedBy.push({ name: trimmedCB, color: 'medium', id: this.getId() });
+      this.completedBy.push({ name: trimmedCB, color: 'medium', id: this.db.createId() });
       this.newCompletedByName = '';
     } else {
       const toast = await this.toastCtrl.create({
