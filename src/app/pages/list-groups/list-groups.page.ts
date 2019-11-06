@@ -1,4 +1,4 @@
-import { Component, ViewChildren } from '@angular/core';
+import { Component, ViewChildren, ViewChild } from '@angular/core';
 import { GroupService } from 'src/app/services/group.service';
 import { Observable } from 'rxjs';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
@@ -13,7 +13,6 @@ import { ModalController, AlertController } from '@ionic/angular';
 })
 export class ListGroupsPage {
   @ViewChildren('groupItem') groupItems: any;
-
   public groups$: Observable<any> = this.groupService.allGroupsSubject;
   public settingsOptions: SettingsOption[] = [
     {
@@ -27,6 +26,9 @@ export class ListGroupsPage {
       func: () => this.openSlidingOptions(),
     }
   ];
+
+  private slidingItemsOpen = {};
+  private openedAllSlidingItemsFromMenu = false;
 
   constructor(
     private groupService: GroupService,
@@ -81,7 +83,12 @@ export class ListGroupsPage {
       alert = await this.alertCtrl.create({
         message: `There are other members in this group.
         By deleting it you will leave it and it will not show in your account,
-        but it will still exist for the other members.`,
+        but it will still exist for the other members.
+        <br><br>
+        Are you sure you want to delete:
+        <br><br>
+        <b>${group.title}</b>
+        <br><br>`,
         buttons: [
           {
             text: 'Cancel'
@@ -97,6 +104,10 @@ export class ListGroupsPage {
     } else {
       alert = await this.alertCtrl.create({
         message: `You are the last member of this group. If you leave, the group and all its tickets will be permanently deleted.
+                  <br><br>
+                  Are you sure you want to delete:
+                  <br><br>
+                  <b>${group.title}</b>
                   <br><br>
                   This cannot be undone.`,
         buttons: [
@@ -117,9 +128,38 @@ export class ListGroupsPage {
   }
 
   openSlidingOptions() {
+    // if one is open for some reason this closes it.
+    // make sure they are all closed before opening them all.
+    this.closeAllItems();
     this.groupItems.forEach((item) => {
       item.open();
     });
+    this.openedAllSlidingItemsFromMenu = true;
   }
 
+  groupItemDragged(ratio, id) {
+    this.slidingItemsOpen[id] = ratio === 1;
+  }
+
+  async onGroupItemClick(group) {
+    if (Object.values(this.slidingItemsOpen).filter(v => v).length) {
+      this.closeAllItems();
+    } else {
+      this.router.navigateByUrl(`/group/${group.id}`);
+    }
+  }
+
+  closeAllItems() {
+    this.groupItems.forEach((item) => {
+      item.close();
+    });
+    this.slidingItemsOpen = {};
+    this.openedAllSlidingItemsFromMenu = false;
+  }
+
+  slidingItemClicked() {
+    if (this.openedAllSlidingItemsFromMenu) {
+      this.closeAllItems();
+    }
+  }
 }
