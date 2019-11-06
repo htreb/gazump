@@ -20,6 +20,7 @@ import { SharedModule } from './shared/shared.module';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { ServiceWorkerModule } from '@angular/service-worker';
 // import { Camera } from '@ionic-native/camera/ngx';
 
 
@@ -39,6 +40,7 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
     BrowserAnimationsModule,
     IonicStorageModule.forRoot(),
     SharedModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   providers: [
     StatusBar,
