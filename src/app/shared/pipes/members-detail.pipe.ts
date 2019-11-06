@@ -26,6 +26,9 @@ export class MembersDetailPipe implements PipeTransform {
       return a.toLowerCase() < b.toLowerCase() ? -1 : 1;
     });
     if (memberNames.length < 4 || allNames) {
+      if (memberNames.length === 1 && memberNames[0] === 'You') {
+        return 'Only You';
+      }
       return `${memberNames.slice(0, memberNames.length - 1).join(', ')} and ${
         memberNames[memberNames.length - 1]
       }.`;

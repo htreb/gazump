@@ -19,15 +19,28 @@
 <ng-container *ngIf="groups$ | async as groups">
   <ng-container *ngIf="!groups.loading; else loading">
     <ion-content *ngIf="groups.length; else noGroups">
-      <ion-item
-        *ngFor="let group of groups"
-        button
-        routerDirection="root"
-        [routerLink]="['/group', group.id]"
-      >
-        <ion-text class="ion-text-wrap">{{ group.title }}</ion-text>
-        <ion-note slot='end' color='secondary'>{{ group.members | membersDetail }}</ion-note>
-      </ion-item>
+
+      <ion-item-sliding *ngFor="let group of groups" #groupItem>
+        <ion-item
+          button
+          routerDirection="root"
+          [routerLink]="['/group', group.id]"
+        >
+          <ion-text class="ion-text-wrap">{{ group.title }}</ion-text>
+          <ion-note slot='end' color='secondary'>{{ group.members | membersDetail }}</ion-note>
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option (click)="editGroup(group)" color="warning">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+          <ion-item-option (click)="deleteGroup(group)" color="danger">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+
+      </ion-item-sliding>
+
     </ion-content><!-- check that we have some groups -->
   </ng-container><!-- check we are not loading them still -->
 </ng-container><!-- fetching all groups -->

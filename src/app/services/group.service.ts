@@ -128,4 +128,18 @@ export class GroupService {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   }
+
+  deleteGroup(groupId) {
+    return this.db.collection('groups')
+      .doc(groupId)
+      .delete();
+  }
+
+  leaveGroup(groupId) {
+    return this.db.collection('groups')
+    .doc(groupId)
+    .update({
+      members: firebase.firestore.FieldValue.arrayRemove(this.auth.userId$.value)
+    });
+  }
 }
