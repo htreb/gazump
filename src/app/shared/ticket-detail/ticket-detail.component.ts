@@ -54,22 +54,12 @@ export class TicketDetailComponent implements OnInit {
     }
   }
 
-  async openChat(chatId: string, messageIds?: string[]) {
-
-    const closeAndNavToChat = ()  => {
+  async closeButWarnUnsavedChanges(callback) {
+    const close = () => {
+      if (typeof callback === 'function') {
+        callback();
+      }
       this.dismiss();
-      this.router.navigate([
-        '/',
-        'group',
-        this.groupService.currentGroupId,
-        'chats',
-        chatId
-      ],
-      { queryParams:
-        { messageIds:
-          messageIds.join(',')
-        }
-      });
     };
 
     if (this.ticketForm.dirty) {
@@ -81,14 +71,33 @@ export class TicketDetailComponent implements OnInit {
           },
           {
             text: 'Ok',
-            handler: closeAndNavToChat
+            handler: close,
           }
         ]
       });
       await alert.present();
     } else {
-      closeAndNavToChat();
+      close();
     }
+  }
+
+  async openChat(chatId: string, messageIds?: string[]) {
+    this.closeButWarnUnsavedChanges(() => {
+      this.dismiss();
+      this.router.navigate([
+        '/',
+        'group',
+        this.groupService.currentGroupId,
+        'chats',
+        chatId
+      ],
+      {
+        queryParams:
+        {
+          messageIds: messageIds.join(',')
+        }
+      });
+    });
   }
 
   async saveTicket() {
@@ -104,7 +113,6 @@ export class TicketDetailComponent implements OnInit {
         this.boardId,
       );
     }
-
     this.dismiss();
   }
 

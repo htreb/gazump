@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BoardService } from 'src/app/services/board.service';
-import { takeWhile, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Pipe({
   name: 'ticketTitle'

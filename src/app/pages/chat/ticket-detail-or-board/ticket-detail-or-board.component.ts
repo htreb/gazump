@@ -27,7 +27,8 @@ export class TicketDetailOrBoardComponent {
       componentProps: {
         ticketId: this.ticketId,
         dismiss,
-      }
+      },
+      backdropDismiss: false,
     });
 
     function dismiss() {

@@ -9,7 +9,7 @@
   <ion-header no-border>
     <ion-toolbar mode="md">
       <ion-buttons slot="start">
-        <ion-button (click)="dismiss()">
+        <ion-button (click)="closeButWarnUnsavedChanges()">
           <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -101,7 +101,7 @@
 
   <ion-footer no-border class="ion-padding footer-buttons">
     <ion-button
-      (click)="dismiss()"
+      (click)="closeButWarnUnsavedChanges()"
       class="footer-button"
       expand="block"
       fill="outline"

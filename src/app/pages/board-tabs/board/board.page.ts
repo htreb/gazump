@@ -149,7 +149,8 @@ export class BoardPage implements OnChanges {
         currentStateId,
         boardId: this.boardData.id,
         dismiss,
-      }
+      },
+      backdropDismiss: false,
     });
 
     function dismiss() {
