@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ContactService } from 'src/app/services/contact.service';
 import { combineLatest } from 'rxjs';
@@ -13,6 +13,7 @@ export class ContactPickerComponent implements OnInit {
 
   @Input() allContacts = false;
   @Input() selectedContacts: any = [];
+  membersTip: string;
   searchTerm$ = new BehaviorSubject<string>('');
   filteredContacts$;
 
@@ -21,6 +22,8 @@ export class ContactPickerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.membersTip = this.allContacts ? 'When starting a group you can pick from any of your contacts' :
+    'You can only choose from contacts who are members of this group';
     const contactSource = this.allContacts ? 'getUsersContacts' : 'getGroupContacts';
     this.filteredContacts$ = combineLatest([
       this.contactService[contactSource](),

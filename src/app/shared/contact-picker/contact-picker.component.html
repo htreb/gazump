@@ -5,6 +5,10 @@
   <app-empty-list [customMessage]="'No matching contacts'"></app-empty-list>
 </ng-template>
 
+<ion-item lines="none">
+  <app-tip [text]="membersTip" slot="end"></app-tip>
+</ion-item>
+<div class="title">Members</div>
 <div class='contact-picker'>
   <ion-searchbar
     #searchBar
