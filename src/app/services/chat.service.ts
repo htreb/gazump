@@ -90,6 +90,15 @@ export class ChatService {
     });
   }
 
+  editChat(chatId: string, title: string, members: string[]) {
+    return this.db.collection('chats')
+      .doc(chatId)
+      .update({
+        title,
+        members
+      });
+  }
+
   addChatMessage(chatId: string, message: any, tickets: any[] = null) {
     const messageId = this.db.createId();
     const updateObject: any = {

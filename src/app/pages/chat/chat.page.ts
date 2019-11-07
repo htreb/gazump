@@ -7,7 +7,7 @@ import {
   ViewChildren,
   Renderer2
 } from '@angular/core';
-import { IonContent, PopoverController } from '@ionic/angular';
+import { IonContent, PopoverController, ModalController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
@@ -16,6 +16,9 @@ import { TicketDetailOrBoardComponent } from './ticket-detail-or-board/ticket-de
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { GroupService } from 'src/app/services/group.service';
 import { ContactService } from 'src/app/services/contact.service';
+import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
+import { StartInstanceComponent } from 'src/app/shared/start-instance/start-instance.component';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-chat',
@@ -27,7 +30,13 @@ export class ChatPage implements OnInit, AfterViewChecked {
   @ViewChild(IonContent, { static: false }) content: IonContent;
   @ViewChildren('chatMessage') messageElements: any;
   @ViewChild('typeMessageArea', { static: false }) typeMessageArea: any;
-
+  public settingsOptions: SettingsOption[] = [
+    {
+      title: 'Edit Chat',
+      icon: 'create',
+      func: () => this.editChat(),
+    }
+  ];
   private chatId = '';
   public chat$: Observable<any>;
   public currentUserId = this.auth.userId$.value;
@@ -45,10 +54,10 @@ export class ChatPage implements OnInit, AfterViewChecked {
     private route: ActivatedRoute,
     private renderer: Renderer2,
     private contactService: ContactService,
+    private modalController: ModalController,
   ) {}
 
   ngOnInit() {
-
     this.route.paramMap.subscribe((params: ParamMap) => {
       this.chatId = params.get('chatId');
       this.chat$ = this.chatService.subToOneChat(this.chatId);
@@ -199,5 +208,36 @@ export class ChatPage implements OnInit, AfterViewChecked {
       detailsOrBoard.dismiss();
     }
     detailsOrBoard.present();
+  }
+
+  editChat() {
+    this.chat$.pipe(take(1)).subscribe(async (chat) => {
+      let editChatModal: HTMLIonModalElement;
+
+      const onClosed = () => {
+        if (typeof editChatModal.dismiss === 'function') {
+          editChatModal.dismiss();
+        }
+      };
+
+      const onSaved = async (title, contacts) => {
+        onClosed();
+        this.chatService.editChat(chat.id, title, contacts);
+      };
+
+      editChatModal = await this.modalController.create({
+        component: StartInstanceComponent,
+        componentProps: {
+          onSaved,
+          onClosed,
+          header: 'Edit chat',
+          ctaText: 'Save Changes',
+          selectedContacts: chat.members,
+          title: chat.title,
+        }
+      });
+
+      return await editChatModal.present();
+    });
   }
 }

@@ -19,7 +19,7 @@
         </ion-buttons>
         <ion-title>{{ chat.title }}</ion-title>
         <ion-label class="ion-padding-horizontal">{{ chat.members | membersDetail: true }}</ion-label>
-        <app-settings-icon slot="end"></app-settings-icon>
+        <app-settings-icon slot="end" [settingsOptions]="settingsOptions"></app-settings-icon>
       </ion-toolbar>
     </ion-header>
 
