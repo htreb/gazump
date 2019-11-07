@@ -66,15 +66,42 @@ export class ListGroupsPage {
         onSaved,
         onClosed,
         header: 'New group',
+        ctaText: 'Start',
         allContacts: true,
       }
     });
 
-    return await startGroupModal.present();
+    await startGroupModal.present();
   }
 
-  editGroup(group) {
-    console.log('editGroup', group);
+  async editGroup(group) {
+    let editGroupModal: HTMLIonModalElement;
+
+    const onClosed = () => {
+      if (typeof editGroupModal.dismiss === 'function') {
+        editGroupModal.dismiss();
+      }
+    };
+
+    const onSaved = async (title, contacts) => {
+      onClosed();
+      this.groupService.editGroup(group.id, title, contacts);
+    };
+
+    editGroupModal = await this.modalController.create({
+      component: StartInstanceComponent,
+      componentProps: {
+        onSaved,
+        onClosed,
+        header: 'Edit group',
+        selectedContacts: group.members,
+        title: group.title,
+        ctaText: 'Save Changes',
+        allContacts: true,
+      }
+    });
+    await editGroupModal.present();
+    this.closeAllSlidingItems();
   }
 
   async deleteGroup(group) {
@@ -130,7 +157,7 @@ export class ListGroupsPage {
   openSlidingOptions() {
     // if one is open for some reason this closes it.
     // make sure they are all closed before opening them all.
-    this.closeAllItems();
+    this.closeAllSlidingItems();
     this.groupItems.forEach((item) => {
       item.open();
     });
@@ -143,13 +170,13 @@ export class ListGroupsPage {
 
   async onGroupItemClick(group) {
     if (Object.values(this.slidingItemsOpen).filter(v => v).length) {
-      this.closeAllItems();
+      this.closeAllSlidingItems();
     } else {
       this.router.navigateByUrl(`/group/${group.id}`);
     }
   }
 
-  closeAllItems() {
+  closeAllSlidingItems() {
     this.groupItems.forEach((item) => {
       item.close();
     });
@@ -159,7 +186,7 @@ export class ListGroupsPage {
 
   slidingItemClicked() {
     if (this.openedAllSlidingItemsFromMenu) {
-      this.closeAllItems();
+      this.closeAllSlidingItems();
     }
   }
 }

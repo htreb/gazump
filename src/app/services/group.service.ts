@@ -129,6 +129,15 @@ export class GroupService {
     });
   }
 
+  editGroup(groupId: string, title: string, members: string[]) {
+    return this.db.collection('groups')
+      .doc(groupId)
+      .update({
+        title,
+        members
+      });
+  }
+
   deleteGroup(groupId) {
     return this.db.collection('groups')
       .doc(groupId)

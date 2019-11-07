@@ -13,6 +13,7 @@ export class StartInstanceComponent {
   @Input() title = '';
   @Input() onSaved;
   @Input() onClosed;
+  @Input() ctaText;
 
   constructor() {}
 

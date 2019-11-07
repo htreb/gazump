@@ -49,6 +49,7 @@ export class ListChatsPage {
         onSaved,
         onClosed,
         header: 'New chat',
+        ctaText: 'Start',
       }
     });
 
