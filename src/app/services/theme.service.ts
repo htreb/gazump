@@ -41,16 +41,6 @@ const themes = [
     light: '#FFD89B',
   },
   {
-    name: 'Basketball',
-    icon: 'basketball',
-    primary: '#2A1A5E',
-    secondary: '#f45905',
-    tertiary: '#fb9224',
-    light: '#fbe555',
-    medium: '#FFEA66',
-    dark: '#F9ED9A',
-  },
-  {
     name: 'Default',
     icon: defaults.icon,
     // colors auto filled inside CSSTextGenerator
