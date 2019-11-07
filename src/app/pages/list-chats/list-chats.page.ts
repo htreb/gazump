@@ -31,24 +31,24 @@ export class ListChatsPage {
   async startChat() {
     let startChatModal: HTMLIonModalElement;
 
-    const closeInstance = () => {
+    const onClosed = () => {
       if (typeof startChatModal.dismiss === 'function') {
         startChatModal.dismiss();
       }
     };
 
-    const startInstance = async (title, contacts) => {
+    const onSaved = async (title, contacts) => {
       const newChat = await this.chatService.startChat(title, contacts);
       await this.router.navigate([newChat.id], { relativeTo: this.route });
-      closeInstance();
+      onClosed();
     };
 
     startChatModal = await this.modalController.create({
       component: StartInstanceComponent,
       componentProps: {
-        startInstance,
-        closeInstance,
-        instanceName: 'Chat',
+        onSaved,
+        onClosed,
+        header: 'New chat',
       }
     });
 

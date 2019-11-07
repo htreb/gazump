@@ -48,24 +48,24 @@ export class ListGroupsPage {
   async startGroup() {
     let startGroupModal: HTMLIonModalElement;
 
-    const closeInstance = () => {
+    const onClosed = () => {
       if (typeof startGroupModal.dismiss === 'function') {
         startGroupModal.dismiss();
       }
     };
 
-    const startInstance = async (title, contacts) => {
+    const onSaved = async (title, contacts) => {
       const newGroup = await this.groupService.createGroup(title, contacts);
       await this.router.navigateByUrl(`/group/${newGroup.id}`);
-      closeInstance();
+      onClosed();
     };
 
     startGroupModal = await this.modalController.create({
       component: StartInstanceComponent,
       componentProps: {
-        startInstance,
-        closeInstance,
-        instanceName: 'Group',
+        onSaved,
+        onClosed,
+        header: 'New group',
         allContacts: true,
       }
     });

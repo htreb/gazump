@@ -6,14 +6,13 @@ import { Component, Input, ViewChild } from '@angular/core';
   styleUrls: ['./start-instance.component.scss']
 })
 export class StartInstanceComponent {
-  @Input() instanceName = '';
-  @Input() allContacts;
-  public selectedContacts = [];
-  public title = '';
   @ViewChild('titleInput', { static: false }) titleInput: any;
-
-  @Input() startInstance;
-  @Input() closeInstance;
+  @Input() header = '';
+  @Input() allContacts;
+  @Input() selectedContacts = [];
+  @Input() title = '';
+  @Input() onSaved;
+  @Input() onClosed;
 
   constructor() {}
 
@@ -21,9 +20,9 @@ export class StartInstanceComponent {
     this.titleInput.setFocus();
   }
 
-  async close(startInstance = false) {
-    return startInstance
-      ? this.startInstance(this.title, this.selectedContacts)
-      : this.closeInstance();
+  async close(saved = false) {
+    return saved
+      ? this.onSaved(this.title, this.selectedContacts)
+      : this.onClosed();
   }
 }
