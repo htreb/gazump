@@ -50,22 +50,12 @@ export class ContactPickerComponent implements OnInit {
     });
   }
 
-  contactSelected(ev, contact) {
-    const idx = this.findContact(contact);
-    if (ev.detail.checked && idx === -1) {
-      this.selectedContacts.push(contact);
-    } else if (!ev.detail.checked && idx > -1) {
+  contactSelected(selected, contactId) {
+    const idx = this.selectedContacts.indexOf(contactId);
+    if (selected && idx === -1) {
+      this.selectedContacts.push(contactId);
+    } else if (!selected && idx > -1) {
       this.selectedContacts.splice(idx, 1);
     }
-  }
-
-  findContact(contact) {
-    let idx = -1;
-    this.selectedContacts.forEach((c, i) => {
-      if (c.id === contact.id) {
-        idx = i;
-      }
-    });
-    return idx;
   }
 }

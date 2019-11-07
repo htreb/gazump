@@ -13,6 +13,9 @@ export class MembersDetailPipe implements PipeTransform {
    * @param allNames whether to print out all names or truncate after first two with ...and X more
    */
   transform(memberIds: any, allNames = false): any {
+    if (!memberIds || memberIds.length === 0) {
+      return '';
+    }
     const memberNames = memberIds.map(
       id => this.contactService.getDetailsFromId(id).userName
     );

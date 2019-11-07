@@ -32,7 +32,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       func: this.openBoardDetail
     }
   ];
-  public displayingBoardTitle: string;
+  public displayingBoard: {title: '', members: []};
   public scrollToTicketDetails: any;
 
   private allBoardsSub: Subscription;
@@ -76,7 +76,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         func: () => this.openBoardDetail()
       }
     ];
-    this.displayingBoardTitle = '';
+    this.displayingBoard = {title: '', members: []};
     let currentBoard =
       this.displayingBoardId &&
       !this.allBoards.loading &&
@@ -89,7 +89,10 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       }
     }
     if (currentBoard) {
-      this.displayingBoardTitle = currentBoard.title;
+      this.displayingBoard = {
+        title: currentBoard.title,
+        members: currentBoard.members
+      };
       this.settingsOptions = this.settingsOptions.concat([
         {
           title: `Edit "${currentBoard.title}"`,

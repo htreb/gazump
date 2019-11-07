@@ -19,14 +19,14 @@
               <ion-text>
                 <h2>{{ contact.userName }}</h2>
               </ion-text>
-              <ion-text color="medium">
+              <ion-text color="secondary">
                 <p>{{ contact.email }}</p>
               </ion-text>
             </ion-label>
             <ion-checkbox
               slot="end"
-              (ionChange)="contactSelected($event, contact)"
-              [checked]="findContact(contact) > -1"
+              (ionChange)="contactSelected($event.detail.checked, contact.id)"
+              [checked]="selectedContacts.indexOf(contact.id) > -1"
             >
             </ion-checkbox>
           </ion-item>
