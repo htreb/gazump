@@ -152,6 +152,7 @@ export class ListGroupsPage {
     }
 
     await alert.present();
+    this.closeAllSlidingItems();
   }
 
   openSlidingOptions() {
