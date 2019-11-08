@@ -25,7 +25,9 @@ export class SettingsIconComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     // update the setting list if settings options have changed.
-    this.newSettingsOptions.emit(changes.settingsOptions.currentValue);
+    if (changes.settingsOptions && changes.settingsOptions.currentValue) {
+      this.newSettingsOptions.emit(changes.settingsOptions.currentValue);
+    }
   }
 
   async showSettings(ev: any) {
