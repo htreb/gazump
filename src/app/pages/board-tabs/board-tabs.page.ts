@@ -29,7 +29,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     {
       title: 'New Board',
       icon: 'add',
-      func: this.openBoardDetail
+      func: () => this.openBoardDetail()
     }
   ];
   public displayingBoard: {title: '', members: []};

@@ -16,6 +16,7 @@ import { MembersDetailPipe } from './pipes/members-detail.pipe';
 import { ContactPickerComponent } from './contact-picker/contact-picker.component';
 import { TicketTitlePipe } from './pipes/ticket-title.pipe';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
+import { SlidingListComponent } from './sliding-list/sliding-list.component';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
     ContactPickerComponent,
     TicketTitlePipe,
     TicketDetailComponent,
+    SlidingListComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +56,7 @@ import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
     AutosizeModule,
     TicketTitlePipe,
     TicketDetailComponent,
+    SlidingListComponent,
   ],
   entryComponents: [
     SettingsListComponent,

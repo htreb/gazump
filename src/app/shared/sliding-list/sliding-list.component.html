@@ -1,0 +1,26 @@
+<ion-item-sliding
+  #slidingItem
+  *ngFor="let item of items"
+  class='sliding-item'
+  (ionDrag)="slidingItemDragged($event.detail.ratio, item.id)"
+  (click)="slidingItemClicked()"
+>
+
+  <ion-item
+    button
+    (click)='onItemClick(item)'
+  >
+    <ion-text class="ion-text-wrap">{{ item.title }}</ion-text>
+    <ion-note slot='end' color='secondary'>{{ item.members | membersDetail }}</ion-note>
+  </ion-item>
+
+  <ion-item-options side="end">
+    <ion-item-option (click)="onEdit(item)" color="warning">
+      <ion-icon slot="icon-only" name="create"></ion-icon>
+    </ion-item-option>
+    <ion-item-option (click)="onDelete(item)" color="danger">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+    </ion-item-option>
+  </ion-item-options>
+
+</ion-item-sliding>

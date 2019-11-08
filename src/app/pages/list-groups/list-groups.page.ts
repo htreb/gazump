@@ -1,4 +1,4 @@
-import { Component, ViewChildren, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { GroupService } from 'src/app/services/group.service';
 import { Observable } from 'rxjs';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
@@ -12,23 +12,15 @@ import { ModalController, AlertController } from '@ionic/angular';
   styleUrls: ['./list-groups.page.scss'],
 })
 export class ListGroupsPage {
-  @ViewChildren('groupItem') groupItems: any;
   public groups$: Observable<any> = this.groupService.allGroupsSubject;
   public settingsOptions: SettingsOption[] = [
     {
       title: 'New Group',
       icon: 'add',
       func: () => this.startGroup(),
-    },
-    {
-      title: 'Edit Groups',
-      icon: 'create',
-      func: () => this.openSlidingOptions(),
     }
   ];
-
-  private slidingItemsOpen = {};
-  private openedAllSlidingItemsFromMenu = false;
+  private closeAllSlidingItems = () => {};
 
   constructor(
     private groupService: GroupService,
@@ -74,7 +66,11 @@ export class ListGroupsPage {
     await startGroupModal.present();
   }
 
-  async editGroup(group) {
+  onGroupItemClick = (group) => {
+    this.router.navigateByUrl(`/group/${group.id}`);
+  }
+
+  editGroup = async (group) => {
     let editGroupModal: HTMLIonModalElement;
 
     const onClosed = () => {
@@ -83,7 +79,7 @@ export class ListGroupsPage {
       }
     };
 
-    const onSaved = async (title, contacts) => {
+    const onSaved = (title, contacts) => {
       onClosed();
       this.groupService.editGroup(group.id, title, contacts);
     };
@@ -104,7 +100,7 @@ export class ListGroupsPage {
     this.closeAllSlidingItems();
   }
 
-  async deleteGroup(group) {
+  deleteGroup = async (group) => {
     let alert;
     if (group.members.length > 1) {
       alert = await this.alertCtrl.create({
@@ -155,39 +151,21 @@ export class ListGroupsPage {
     this.closeAllSlidingItems();
   }
 
-  openSlidingOptions() {
-    // if one is open for some reason this closes it.
-    // make sure they are all closed before opening them all.
-    this.closeAllSlidingItems();
-    this.groupItems.forEach((item) => {
-      item.open();
-    });
-    this.openedAllSlidingItemsFromMenu = true;
-  }
-
-  groupItemDragged(ratio, id) {
-    this.slidingItemsOpen[id] = ratio === 1;
-  }
-
-  async onGroupItemClick(group) {
-    if (Object.values(this.slidingItemsOpen).filter(v => v).length) {
-      this.closeAllSlidingItems();
-    } else {
-      this.router.navigateByUrl(`/group/${group.id}`);
+  slidingListChanged(details) {
+    this.settingsOptions = [
+      {
+        title: 'New Group',
+        icon: 'add',
+        func: () => this.startGroup(),
+      }
+    ];
+    if (details.items) {
+      this.settingsOptions.push({
+          title: 'Edit Groups',
+          icon: 'create',
+          func: details.openAll,
+        });
     }
-  }
-
-  closeAllSlidingItems() {
-    this.groupItems.forEach((item) => {
-      item.close();
-    });
-    this.slidingItemsOpen = {};
-    this.openedAllSlidingItemsFromMenu = false;
-  }
-
-  slidingItemClicked() {
-    if (this.openedAllSlidingItemsFromMenu) {
-      this.closeAllSlidingItems();
-    }
+    this.closeAllSlidingItems = details.closeAll;
   }
 }

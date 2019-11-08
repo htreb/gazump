@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
 import * as firebase from 'firebase/app';
 import isEqual from 'lodash.isequal';
