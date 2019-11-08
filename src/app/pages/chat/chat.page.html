@@ -31,7 +31,7 @@
       >
         <ion-grid
           *ngIf="getMessages(chat) as messages; else noMessages"
-          class="message-area ion-no-padding"
+          class="message-area"
         >
           <ng-container
             *ngFor="let message of messages; let i = index; trackBy: messageTrackBy"
