@@ -99,6 +99,20 @@ export class ChatService {
       });
   }
 
+  leaveChat(chatId) {
+    return this.db.collection('chats')
+    .doc(chatId)
+    .update({
+      members: firebase.firestore.FieldValue.arrayRemove(this.auth.userId$.value)
+    });
+  }
+
+  deleteChat(chatId) {
+    return this.db.collection('chats')
+      .doc(chatId)
+      .delete();
+  }
+
   addChatMessage(chatId: string, message: any, tickets: any[] = null) {
     const messageId = this.db.createId();
     const updateObject: any = {

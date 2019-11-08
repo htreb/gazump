@@ -89,7 +89,7 @@ export class ListGroupsPage {
       componentProps: {
         onSaved,
         onClosed,
-        header: 'Edit group',
+        header: 'Edit Group',
         selectedContacts: group.members,
         title: group.title,
         ctaText: 'Save Changes',

@@ -19,15 +19,16 @@
 <ng-container *ngIf="chats$ | async as chats">
   <ng-container *ngIf="!chats.loading; else loading">
     <ion-content *ngIf="chats.length; else noChats">
-      <ion-item
-        *ngFor="let chat of chats"
-        [routerLink]="[chat.id]"
-        routerDirection="forward"
-        button
+
+      <app-sliding-list
+        [items]="chats"
+        [onClick]="onChatItemClick"
+        [onEdit]="editChat"
+        [onDelete]="deleteChat"
+        (listChanged)="slidingListChanged($event)"
       >
-        <ion-text class="ion-text-wrap">{{ chat.title }}</ion-text>
-        <ion-note slot='end' color='secondary'>{{ chat.members | membersDetail }}</ion-note>
-      </ion-item>
+      </app-sliding-list>
+
     </ion-content>
   </ng-container><!-- check that we have some chats -->
 </ng-container><!-- fetching all chats -->
