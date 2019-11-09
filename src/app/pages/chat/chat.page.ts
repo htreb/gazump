@@ -7,7 +7,7 @@ import {
   ViewChildren,
   Renderer2
 } from '@angular/core';
-import { IonContent, PopoverController, ModalController } from '@ionic/angular';
+import { IonContent, PopoverController, ModalController, AlertController } from '@ionic/angular';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Observable } from 'rxjs';
@@ -19,6 +19,7 @@ import { ContactService } from 'src/app/services/contact.service';
 import { SettingsOption } from 'src/app/shared/settings-list/settings-list.component';
 import { StartInstanceComponent } from 'src/app/shared/start-instance/start-instance.component';
 import { take } from 'rxjs/operators';
+import { BoardService } from 'src/app/services/board.service';
 
 @Component({
   selector: 'app-chat',
@@ -55,6 +56,8 @@ export class ChatPage implements OnInit, AfterViewChecked {
     private renderer: Renderer2,
     private contactService: ContactService,
     private modalController: ModalController,
+    private boardService: BoardService,
+    private alertCtrl: AlertController,
   ) {}
 
   ngOnInit() {
@@ -194,6 +197,20 @@ export class ChatPage implements OnInit, AfterViewChecked {
   }
 
   async onLinkedTicketClick(ev, ticketId) {
+
+    const {
+      currentBoardId,
+      ticketSnippet
+    } = this.boardService.findTicketPositionDetails(ticketId);
+
+    if (!currentBoardId || !ticketSnippet) {
+      const alert = await this.alertCtrl.create({
+        message: 'Ticket has been deleted.',
+        buttons: ['OK']
+      });
+      return alert.present();
+    }
+
     const detailsOrBoard = await this.popoverController.create({
       component: TicketDetailOrBoardComponent,
       componentProps: {
