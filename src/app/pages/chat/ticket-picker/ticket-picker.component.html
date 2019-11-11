@@ -10,6 +10,7 @@
   <ion-searchbar
     #searchBar
     (ionChange)="updateSearchTerm(searchBar.value)"
+    color="secondary"
   ></ion-searchbar>
 
   <ng-container *ngIf="filteredBoards$ | async as filteredBoards">

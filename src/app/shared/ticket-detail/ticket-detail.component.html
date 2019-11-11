@@ -64,7 +64,7 @@
         <ion-chip
           *ngFor="let personId of this.ticketForm.get('completedBy').value"
           (click)="completedBySelect.open()"
-          [color]="completedByObj[personId] && completedByObj[personId]['color'] || 'danger'"
+          [color]="completedByObj[personId] && completedByObj[personId]['color'] || 'primary'"
         >
           <ion-label>{{ completedByObj[personId] && completedByObj[personId]['name'] || 'Deleted' }}</ion-label>
         </ion-chip>

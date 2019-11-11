@@ -17,7 +17,7 @@
 <ion-content>
   <div class="section">
     <div class="title">Title</div>
-    <ion-item color="secondary">
+    <ion-item color="secondary" class="input">
       <ion-input #titleInput [(ngModel)]="title" placeholder="Title" class="ion-text-center"></ion-input>
     </ion-item>
   </div>
@@ -47,7 +47,7 @@
 
   <div class="section">
     <div class="title">States</div>
-    <ion-item color="secondary">
+    <ion-item color="secondary" class="input">
       <ion-input
         [(ngModel)]="newStateName"
         (keyup.enter)="addState()"
@@ -72,7 +72,7 @@
 
   <div class="section">
     <div class="title">Completed by</div>
-    <ion-item color="secondary">
+    <ion-item color="secondary" class="input">
       <ion-input
         [(ngModel)]="newCompletedByName"
         (keyup.enter)="addCompletedBy()"

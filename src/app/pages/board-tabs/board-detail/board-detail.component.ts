@@ -22,14 +22,14 @@ export class BoardDetailComponent implements OnInit {
   contacts = [this.contactService.getMyDetails()];
   newStateName = '';
   states = [
-    {color: 'medium', id: this.db.createId(), title: 'To Do'},
-    {color: 'medium', id: this.db.createId(), title: 'Doing'},
-    {color: 'medium', id: this.db.createId(), title: 'Done'},
+    {color: 'primary', id: this.db.createId(), title: 'To Do'},
+    {color: 'primary', id: this.db.createId(), title: 'Doing'},
+    {color: 'primary', id: this.db.createId(), title: 'Done'},
   ];
 
   newCompletedByName = '';
   completedBy = completedByNames.reduce((completedArr, currentName) => {
-    completedArr.push({name: currentName, color: 'medium', id: this.db.createId()});
+    completedArr.push({name: currentName, color: 'primary', id: this.db.createId()});
     return completedArr;
   }, []);
 
@@ -78,7 +78,7 @@ export class BoardDetailComponent implements OnInit {
     }
     if (this.states.filter(s => s.title === newState).length === 0) {
       const stateId = this.db.createId();
-      this.states.push({title: newState, color: 'medium', id: stateId});
+      this.states.push({title: newState, color: 'primary', id: stateId});
       this.board.tickets[stateId] = [];
       this.newStateName = '';
     } else {
@@ -114,7 +114,7 @@ export class BoardDetailComponent implements OnInit {
       return;
     }
     if (this.completedBy.filter(cb => cb.name === trimmedCB).length === 0) {
-      this.completedBy.push({ name: trimmedCB, color: 'medium', id: this.db.createId() });
+      this.completedBy.push({ name: trimmedCB, color: 'primary', id: this.db.createId() });
       this.newCompletedByName = '';
     } else {
       const toast = await this.toastCtrl.create({

@@ -33,6 +33,7 @@ $splitPaneMenuWidth: 200px;
 .input {
   background: var(--ion-color-secondary);
   color: var(--ion-color-secondary-contrast);
+  border-radius: 4px;
 }
 
 .split-pane-visible >.split-pane-side {
