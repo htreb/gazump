@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="secondary">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -13,9 +13,13 @@
 
   <div class="section">
     <div class="title">Title</div>
-    <ion-item>
-      <ion-label position='fixed'>Title</ion-label>
-      <ion-input #titleInput [(ngModel)]="title"></ion-input>
+    <ion-item color="secondary">
+      <ion-input
+        #titleInput
+        [(ngModel)]="title"
+        placeholder="Title"
+        class="ion-text-center"
+      ></ion-input>
     </ion-item>
   </div>
 

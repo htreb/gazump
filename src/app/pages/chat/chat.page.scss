@@ -33,8 +33,8 @@ $textBorderRadius: 16px;
         }
     }
     .text {
-        background: var(--ion-color-tertiary);
-        color: var(--ion-color-tertiary-contrast);
+        background: var(--ion-color-primary);
+        color: var(--ion-color-primary-contrast);
         border-radius: 0px $textBorderRadius $textBorderRadius $textBorderRadius;
     }
 }
@@ -47,8 +47,8 @@ $textBorderRadius: 16px;
         }
     }
     .text {
-        background: var(--ion-color-dark);
-        color: var(--ion-color-dark-contrast);
+        background: var(--ion-color-tertiary);
+        color: var(--ion-color-tertiary-contrast);
         border-radius: $textBorderRadius 0px $textBorderRadius $textBorderRadius;
     }
 }
@@ -57,8 +57,6 @@ $textBorderRadius: 16px;
     max-height: 50vh;
     overflow: scroll;
     margin: 5px;
-    background: var(--ion-color-light-tint);
-    color: var(--ion-color-light-contrast);
 }
 
 .linked-tickets {

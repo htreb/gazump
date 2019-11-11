@@ -1,18 +1,6 @@
 $splitPaneMenuWidth: 200px;
 
 
-/////////////////////////////////////////////   Themes   /////////////////////////////////////////////
-.theme-background {
-  background: var(--ion-color-secondary);  /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary));  /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom right, var(--ion-color-secondary), var(--ion-color-tertiary)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-/////////////////////////////////////////////   Themes   /////////////////////////////////////////////
-
-
-
-
-
 ///////////////////////////////////////////// Animations /////////////////////////////////////////////
 .shake {
     /* Start the shake animation and make the animation last for 0.7 seconds */
@@ -42,6 +30,11 @@ $splitPaneMenuWidth: 200px;
 
 
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
+.input {
+  background: var(--ion-color-secondary);
+  color: var(--ion-color-secondary-contrast);
+}
+
 .split-pane-visible >.split-pane-side {
   min-width: $splitPaneMenuWidth !important;
   max-width: $splitPaneMenuWidth !important;
@@ -58,12 +51,6 @@ ion-popover.picker {
   --max-height: 650px;
 }
 
-.title { // title for ticket details modal
-  textarea {
-    --padding-top: 0;
-    --padding-bottom: 0;
-  }
-}
 
 .footer-buttons {
   display: flex;

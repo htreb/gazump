@@ -2,14 +2,12 @@
     display: none;
 }
 
-.title {
-    // padding-bottom: 0px;
-    font-size: 1.3em;
+.title, .description {
+    width: auto;
 }
 
-.description {
-    margin: 0px;
-    padding-top: 0px;
+.title {
+    font-size: 1.3em;
 }
 
 .completed-by {

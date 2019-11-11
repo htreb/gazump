@@ -1,7 +1,7 @@
 <ion-split-pane contentId="content">
   <ion-menu class="menu-container" contentId="content" swipe-gesture="false">
     <ion-header mode='md'>
-      <ion-toolbar color="secondary" mode='md'>
+      <ion-toolbar color="primary" mode='md'>
         <ion-buttons slot="end">
           <ion-button (click)="themeService.toggleThemes()">
             <ion-icon slot="icon-only" [name]="(themeService.nextThemeIcon$ | async)"></ion-icon>
@@ -10,7 +10,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content forceOverscroll="false" color='tertiary'>
+    <ion-content forceOverscroll="false" color='light'>
       <div class="menu">
 
         <ion-menu-toggle autoHide="false" class='all-groups-item'>
@@ -22,7 +22,7 @@
             routerLinkActive
             [routerLinkActiveOptions]="{ exact: true }"
             #allGroupsRLA="routerLinkActive"
-            [color]="allGroupsRLA.isActive ? 'primary' : 'tertiary'"
+            [color]="allGroupsRLA.isActive ? 'primary' : 'light'"
           >
             <ion-icon *ngIf="!allGroupsRLA.isActive" slot="start" name="arrow-back" class='back-icon'></ion-icon>
             <ion-label>All groups</ion-label>
@@ -34,8 +34,8 @@
             *ngIf="!currentGroup.loading && groupService.showGroupMenuItems"
           >
             <ion-header mode='md'>
-              <ion-toolbar class="group-title important-no-padding" color="secondary">
-                <ion-item class="ion-text-wrap ion-text-center" lines="none" color="secondary">{{
+              <ion-toolbar class="group-title important-no-padding" color="primary">
+                <ion-item class="ion-text-wrap ion-text-center" lines="none" color="primary">{{
                   currentGroup.title
                 }}</ion-item>
               </ion-toolbar>
@@ -51,7 +51,7 @@
                   [routerDirection]="page.routerDirection"
                   routerLinkActive
                   #rla="routerLinkActive"
-                  [color]="rla.isActive ? 'primary' : 'tertiary'"
+                  [color]="rla.isActive ? 'primary' : 'light'"
                 >
                   <ion-icon
                     slot="start"
@@ -71,7 +71,7 @@
               [routerLink]="['/', 'contacts']"
               routerLinkActive
               #contactsRLA="routerLinkActive"
-              [color]="contactsRLA.isActive ? 'primary' : 'tertiary'"
+              [color]="contactsRLA.isActive ? 'primary' : 'light'"
               lines="full"
               detail="false"
             >
@@ -85,7 +85,7 @@
               (click)="showSettings()"
               lines="full"
               detail="false"
-              color="tertiary"
+              color="light"
             >
               <ion-label>Settings</ion-label>
               <ion-icon slot="end" name="settings"></ion-icon>
@@ -97,7 +97,7 @@
               (click)="logOut()"
               lines="none"
               detail="false"
-              color="tertiary"
+              color="light"
             >
               <ion-label>Logout</ion-label>
               <ion-icon slot="end" name="log-out"></ion-icon>

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="secondary">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-button (click)="closePage()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
@@ -17,9 +17,8 @@
 <ion-content>
   <div class="section">
     <div class="title">Title</div>
-    <ion-item>
-      <ion-label position='fixed'>Title</ion-label>
-      <ion-input #titleInput [(ngModel)]="title"></ion-input>
+    <ion-item color="secondary">
+      <ion-input #titleInput [(ngModel)]="title" placeholder="Title" class="ion-text-center"></ion-input>
     </ion-item>
   </div>
 
@@ -48,7 +47,7 @@
 
   <div class="section">
     <div class="title">States</div>
-    <ion-item>
+    <ion-item color="secondary">
       <ion-input
         [(ngModel)]="newStateName"
         (keyup.enter)="addState()"
@@ -73,7 +72,7 @@
 
   <div class="section">
     <div class="title">Completed by</div>
-    <ion-item>
+    <ion-item color="secondary">
       <ion-input
         [(ngModel)]="newCompletedByName"
         (keyup.enter)="addCompletedBy()"
@@ -81,7 +80,7 @@
       >
       </ion-input>
       <ion-button slot="end" (click)="addCompletedBy()" [disabled]="!newCompletedByName.trim()">
-        Addx
+        Add
       </ion-button>
     </ion-item>
 

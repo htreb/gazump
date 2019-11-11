@@ -6,7 +6,7 @@
 </ng-template>
 
 <ion-header>
-  <ion-toolbar color="secondary">
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -17,12 +17,31 @@
 
 <ion-content class="ion-padding">
 
+  <div class='section'>
+    <div class="title">Add Contacts</div>
+    <ion-item color="secondary">
+      <ion-input
+        placeholder="Email"
+        [formControl]="addContactEmail"
+        (keyup.enter)="sendContactRequest()"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        color="primary"
+        (click)="sendContactRequest()"
+        [disabled]='!addContactEmail.valid'
+      >
+        Send request
+      </ion-button>
+    </ion-item>
+  </div>
+
   <ng-container *ngIf="receivedRequests$ | async as receivedRequests">
     <div
       *ngIf="receivedRequests.length"
       class="section"
     >
-      <div class='title'>Requests</div>
+      <div class='title'>Received requests</div>
       <ion-item *ngFor="let receivedRequest of receivedRequests">
         <ion-label class="ion-text-wrap">
           <ion-text>
@@ -44,27 +63,6 @@
     </div>
   </ng-container>
 
-  <div class='section'>
-    <div class="title">Add Contacts</div>
-    <ion-card>
-      <ion-item>
-        <ion-input
-          placeholder="Email"
-          [formControl]="addContactEmail"
-          (keyup.enter)="sendContactRequest()"
-        ></ion-input>
-        <ion-button
-          slot="end"
-          color="primary"
-          (click)="sendContactRequest()"
-          [disabled]='!addContactEmail.valid'
-        >
-          Send request
-        </ion-button>
-      </ion-item>
-    </ion-card>
-  </div>
-
   <ng-container *ngIf="sentRequests$ | async as sentRequests">
     <div
       *ngIf="sentRequests.length"
@@ -78,7 +76,7 @@
           </ion-text>
         </ion-label>
         <div slot="end" class="ion-margin button-container">
-          <ion-button color="dark" (click)="cancelSentRequest(sentRequest)">
+          <ion-button color="danger" (click)="cancelSentRequest(sentRequest)">
             Cancel
           </ion-button>
         </div>

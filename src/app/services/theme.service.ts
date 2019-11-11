@@ -24,8 +24,8 @@ const themes = [
     name: 'Night',
     icon: 'moon',
     primary: '#F78154',
-    secondary: '#2A2A7F',
-    tertiary: '#202060',
+    secondary: '#EFEFEF',
+    tertiary: '#2A2A7F',
     light: '#202040',
     medium: '#343451',
     dark: '#484862',
@@ -34,11 +34,28 @@ const themes = [
     name: 'Light',
     icon: 'leaf',
     primary: '#4C3819',
-    secondary: '#D1A153',
-    tertiary: '#FFC971',
+    secondary: '#EFEFEF',
     dark: '#FCDCBA',
     medium: '#FCD0A2',
     light: '#FFD89B',
+  },
+  {
+    name: 'Other',
+    icon: 'leaf',
+    primary: '#E4FDE1',
+    secondary: '#EFEFEF',
+    light: '#6684A4',
+    medium: '#55769A',
+    dark: '#456990',
+  },
+  {
+    name: 'Black',
+    icon: 'leaf',
+    primary: '#111',
+    secondary: '#EFEFEF',
+    light: '#eee',
+    medium: '#ccc',
+    dark: '#eee',
   },
   {
     name: 'Default',
@@ -136,7 +153,7 @@ function CSSTextGenerator(themeName, fromStorage = false) {
     --ion-color-light-tint: ${Color(light).lighten(tintRatio).hex()};`;
 }
 
-function contrast(color, ratio = 5) {
+function contrast(color, ratio = 10) {
   color = Color(color);
   return color.isDark() ? color.lighten(ratio) : color.darken(ratio);
 }
