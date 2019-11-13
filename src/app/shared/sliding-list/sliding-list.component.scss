@@ -1,3 +1,8 @@
+.list {
+    background: var(--ion-color-medium);
+    min-height: 100%;
+}
+
 @media (min-width: 992px) {
     // split-pane kicks in at 992px
     // menu is 200px so content is 992 - 200 = 792px
