@@ -56,8 +56,8 @@
 
             <ion-row class="ion-padding-horizontal" [id]="message.id" #chatMessage>
               <ion-col
-                size="9"
-                size-md="6"
+                size="10"
+                size-md="8"
                 *ngIf="message.from !== currentUserId"
                 class="message other-message"
               >
@@ -86,10 +86,10 @@
               </ion-col>
 
               <ion-col
-                offset="3"
-                offset-md="6"
-                size="9"
-                size-md="6"
+                offset="2"
+                offset-md="4"
+                size="10"
+                size-md="8"
                 *ngIf="message.from === currentUserId"
                 class="message my-message"
               >

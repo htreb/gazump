@@ -23,7 +23,7 @@ export class ContactPickerComponent implements OnInit {
 
   ngOnInit() {
     this.membersTip = this.allContacts ? 'When starting a group you can pick from any of your contacts' :
-    'You can only choose from contacts who are members of this group';
+    'You can only choose from your contacts who are also members of this group';
     const contactSource = this.allContacts ? 'getUsersContacts' : 'getGroupContacts';
     this.filteredContacts$ = combineLatest([
       this.contactService[contactSource](),
