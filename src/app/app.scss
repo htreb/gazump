@@ -39,6 +39,7 @@ $splitPaneMenuWidth: 200px;
 .split-pane-visible >.split-pane-side {
   min-width: $splitPaneMenuWidth !important;
   max-width: $splitPaneMenuWidth !important;
+  border: none !important;
 }
 
 ion-popover.tip-popover {
@@ -110,5 +111,16 @@ ion-popover {
 
 .description textarea {
   min-height: 30vh;
+}
+
+
+.header-ios ion-toolbar:last-child {
+  --border-width: 0;
+}
+.footer-ios ion-toolbar:first-child {
+  --border-width: 0;
+}
+.item-options-ios.item-options-end {
+  border-bottom-width: 0;
 }
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
