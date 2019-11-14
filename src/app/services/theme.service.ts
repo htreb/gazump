@@ -17,16 +17,16 @@ const transition = 'background-color 0ms';
 // dark => top most layer => tickets on top of columns
 
 const defaults = {
-    icon: 'partly-sunny',
-    primary: '#3880ff',
-    secondary: '#EEEEEE',
-    tertiary: '#AAAAAA',
+    icon: 'planet',
+    primary: '#a16eff',
+    secondary: '#262654',
+    tertiary: '#2B2B84',
+    light: '#1B1B53',
+    medium: '#2F2F62',
+    dark: '#444472',
     success: '#10dc60',
     warning: '#FFD632',
     danger: '#b00020',
-    light: '#D1D1D1',
-    medium: '#DBDBDB',
-    dark: '#EFEFEF'
   };
 
 const themes = [
@@ -51,23 +51,25 @@ const themes = [
     dark: '#192038',
   },
   {
-    name: 'Black&White',
+    name: 'Black & White',
     icon: 'contrast',
     primary: '#111',
     secondary: '#eee',
+    tertiary: '#AAAAAA',
     light: '#ddd',
     medium: '#ccc',
     dark: '#ddd',
   },
   {
-    name: 'Cosmic',
-    icon: 'planet',
-    primary: '#a16eff',
-    secondary: '#262654',
-    tertiary: '#2B2B84',
-    light: '#1B1B53',
-    medium: '#2F2F62',
-    dark: '#444472',
+    name: 'Corporate',
+    icon: 'partly-sunny',
+    primary: '#3880ff',
+    secondary: '#EEEEEE',
+    tertiary: '#AAAAAA',
+    light: '#D1D1D1',
+    medium: '#DBDBDB',
+    dark: '#EFEFEF',
+
   },
   {
     name: 'Default',
@@ -176,7 +178,7 @@ function contrast(color, ratio = 10) {
 export class ThemeService {
 
   public nextThemeIcon$ = new BehaviorSubject<any>('');
-  private currentTheme = 'default';
+  private currentTheme = 'Default';
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
