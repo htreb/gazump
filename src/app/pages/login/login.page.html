@@ -7,14 +7,14 @@
     <ion-item
       mode="md"
       lines="none"
-      color="dark"
+      color="medium"
       (click)="autoFillCredentials()"
       (dblclick)="autoFillCredentials(true)"
     >
       <ion-icon class="logo" name="md-analytics"></ion-icon>
     </ion-item>
 
-    <ion-item mode="md" lines="none" color="dark">
+    <ion-item mode="md" lines="none" color="medium">
       <ion-button
         strong
         fill="clear"
@@ -42,7 +42,7 @@
       }"
     ></div>
 
-    <ion-item mode="md" lines="none">
+    <ion-item mode="md" lines="none" color="secondary">
       <ion-input
         formControlName="email"
         placeholder="Email"
@@ -65,6 +65,7 @@
         mode="md"
         lines="none"
         class="enter-password"
+        color="secondary"
         [ngClass]="{ show: !showResetPasswordEmailWarning }"
       >
         <ion-input
@@ -91,6 +92,7 @@
         mode="md"
         lines="none"
         class="confirm-password"
+        color="secondary"
         [ngClass]="{ show: !returningMember }"
       >
         <ion-input
@@ -116,7 +118,7 @@
     <ion-item
       mode="md"
       lines="none"
-      color="dark"
+      color="medium"
       class="enter-email-for-reset ion-text-center"
       [ngClass]="{ show: showResetPasswordEmailWarning }"
     >
@@ -128,7 +130,7 @@
     <ion-item
       mode="md"
       lines="none"
-      color="dark"
+      color="medium"
       class="remember-me"
       [ngClass]="{ show: !showResetPasswordEmailWarning }"
     >
@@ -166,7 +168,7 @@
     <ion-item
       mode="md"
       lines="none"
-      color="dark"
+      color="medium"
       class="forgot-password"
       [ngClass]="{ show: returningMember }"
       [disabled]="showResetPasswordEmailWarning"

@@ -1,22 +1,12 @@
 @font-face {
-  font-family: 'Crossten';
+  font-family: 'MavenPro';
   font-style: normal;
   font-weight: normal;
-  src: url('../assets/fonts/crossten/crossten-extralight.otf');
-}
-
-@font-face {
-  font-family: 'Crossten bold';
-  font-style: italic;
-  font-weight: bold;
-  src: url('../assets/fonts/crossten/crossten-extrabolditalic.otf');
+  src: url('../assets/fonts/MavenPro/MavenPro-Regular.ttf');
 }
 
 :root {
-  --ion-font-family: 'Crossten';
-  --ion-font-color: var(--ion-color-dark);
-  --ion-display-font: 'Crossten bold';
-  --ion-display-font-color: var(--ion-color-dark);
+  --ion-font-family: 'MavenPro';
 
   --ion-color-primary: #99f2c8;
   --ion-color-primary-rgb: 153,242,200;

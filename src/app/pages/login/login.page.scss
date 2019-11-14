@@ -16,7 +16,7 @@ $warningMargin: 16px;
     max-width: 400px;
     min-width: 300px;
     overflow: hidden;
-    background: var(--ion-color-dark);
+    background: var(--ion-color-medium);
 
     .logo {
       margin: auto;
@@ -28,7 +28,7 @@ $warningMargin: 16px;
       height: 0;
       border-left: $arrowWidth solid transparent;
       border-right: $arrowWidth solid transparent;
-      border-bottom: $arrowWidth solid var(--ion-color-light);
+      border-bottom: $arrowWidth solid var(--ion-color-secondary);
       margin-left: $arrowMargin;
       margin-bottom: -1px;
       transition: $duration;
