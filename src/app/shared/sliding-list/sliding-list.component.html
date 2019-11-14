@@ -11,6 +11,7 @@
     <ion-item
       button
       (click)='onItemClick(item)'
+      mode="md"
     >
       <ion-text class="ion-text-wrap">{{ item.title }}</ion-text>
       <ion-note slot='end' color='primary'>{{ item.members | membersDetail }}</ion-note>

@@ -24,7 +24,7 @@
             <ion-label class="board-title">{{ board.title }}</ion-label>
           </ion-item-divider>
           <ion-list *ngFor="let state of board.states">
-            <ion-item-divider>
+            <ion-item-divider color="medium">
               <ion-label>{{ state.title }}</ion-label>
             </ion-item-divider>
             <ion-item *ngFor="let ticket of board.tickets[state.id]">

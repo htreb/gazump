@@ -34,6 +34,7 @@ export class SettingsIconComponent implements OnChanges {
     this.popover = await this.popoverController.create({
       component: SettingsListComponent,
       event: ev,
+      mode: 'md',
       componentProps: {
         closePopover: this.closeSettings,
         settingsOptions: this.settingsOptions,

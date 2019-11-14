@@ -7,17 +7,19 @@
 </ng-template>
 
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="primary" mode="md">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ displayingBoard.title }}</ion-title>
-    <ion-label
-      *ngIf="displayingBoard.members.length > 0"
-      class="ion-padding-horizontal"
-    >
-      {{ displayingBoard.members | membersDetail: true }}
-    </ion-label>
+    <ion-title>
+      {{ displayingBoard.title }}
+      <ion-title
+        size="small"
+        class="ion-no-padding"
+      >
+        {{ displayingBoard.members | membersDetail: true }}
+      </ion-title>
+    </ion-title>
     <app-settings-icon slot="end" [settingsOptions]="settingsOptions"></app-settings-icon>
   </ion-toolbar>
 </ion-header>

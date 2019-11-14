@@ -4,7 +4,8 @@
     (click)="onSettingClicked(setting)"
     tappable
     detail='false'
-    lines='full'
+    lines='none'
+    class='settings-item'
   >
     {{ setting.title }}
     <ion-icon [name]="setting.icon" slot="end"></ion-icon>

@@ -186,6 +186,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
       },
       event: ev,
       cssClass: 'picker',
+      mode: 'md',
     });
     await popover.present();
     const { data } = await popover.onWillDismiss();
