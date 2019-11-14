@@ -13,7 +13,7 @@ import { BoardService } from 'src/app/services/board.service';
 })
 export class TicketDetailComponent implements OnInit {
   public ticketForm: FormGroup;
-  public linkedChatsTip = `These are the chats which mention this ticket. Only chats you are a member of will appear here.`;
+  public linkedChatsTip = `These are the chats which link to this ticket. Only chats you are a member of will appear here.`;
   public linkedChats$;
   public currentTicketSnippet;
   public completedBy;

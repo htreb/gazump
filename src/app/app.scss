@@ -102,4 +102,13 @@ ion-popover {
     margin-bottom: 32px;
   }
 }
+
+// text areas on ticket details page
+.title textarea {
+  min-height: 10vh;
+}
+
+.description textarea {
+  min-height: 30vh;
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////
