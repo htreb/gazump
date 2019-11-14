@@ -6,6 +6,16 @@ import { BehaviorSubject } from 'rxjs';
 
 const transition = 'background-color 0ms';
 
+// primary => bright contrasts everything 'brand' color header, highlighted tab, primary button, secondary button,
+//             headers, toolbars, tab bar at bottom, used on spinner dots
+
+// secondary => "input color" for text input
+// tertiary => used on spinner dots, "my messages" in chat
+
+// light => app background
+// medium => layer on top of background, columns on board, tab bar, footer on chat
+// dark => top most layer => tickets on top of columns
+
 const defaults = {
     icon: 'partly-sunny',
     primary: '#3880ff',
