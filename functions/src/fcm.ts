@@ -28,6 +28,7 @@ export const newContactRequest = functions.firestore
         // get their userDoc and the messaging tokens on it
         const accepterRef = db.collection('users')
             .where('email', '==', request.accepterEmail).limit(1)
+        console.log('accepterRef is', accepterRef);
 
         accepterRef.get()
             .then((query): any => {
@@ -36,6 +37,8 @@ export const newContactRequest = functions.firestore
                     return;
                 }
                 const accepterDoc = query.docs[0].data();
+                console.log('accepterDoc is', accepterDoc);
+
                 if (!accepterDoc.fcmTokens || !accepterDoc.fcmTokens.length) {
                     console.log('user does not have any notification tokens stored');
                     return
@@ -50,7 +53,7 @@ export const newContactRequest = functions.firestore
 
                 return admin.messaging().sendToDevice(accepterDoc.fcmTokens, payload)
             }, err => {
-                console.log(`Couldn't get execute the search for the user ${request.accepterEmail}`);
+                console.log(`Couldn't execute the search for the user ${request.accepterEmail}`);
                 throw new Error(err);
             })
     })
@@ -67,16 +70,16 @@ export const newChatMessage = functions.firestore
             }
         })
         // Get the other chat members Ids
-        return Object.values(newMessages).map((message: any) => {
-            const otherMembers = afterUpdate.members.filter((memberId: string) => memberId !== message.from);
+        return Object.values(newMessages).map((newMsg: any) => {
+            const otherMembers = afterUpdate.members.filter((memberId: string) => memberId !== newMsg.from);
             console.log('New chat message, other members ids to send notifications to', otherMembers);
             otherMembers.map((memberId: string) => {
-                return sendNotification(memberId, 'New Message', message.message)
+                return sendNotification('notifyChatMessage', memberId, 'New Message', newMsg.message)
             })
         })
     })
 
-export const sendNotification = function(userId: string, title: string, body: string) {
+export const sendNotification = function(notificationType: string, userId: string, title: string, body: string) {
     return db.collection('users')
         .doc(userId).get()
         .then((userDocSnapshot): any => {
@@ -84,6 +87,10 @@ export const sendNotification = function(userId: string, title: string, body: st
             if (!userDoc || !userDoc.fcmTokens || !userDoc.fcmTokens.length) {
                 console.log('User does not have any notification tokens stored');
                 return
+            }
+            if (!userDoc[notificationType]) {
+                console.log(`User has ${notificationType} notifications turned off`);
+                return;
             }
             const payload = {
                 notification: {
