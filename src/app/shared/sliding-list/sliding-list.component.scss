@@ -1,21 +1,16 @@
-.list {
-    background: var(--ion-color-light);
-    min-height: 100%;
+$slidingOptionsWidth: 130px;
+
+.limit-width-page {
+    max-width: calc(1000px + #{$slidingOptionsWidth});
 }
 
 @media (min-width: 992px) {
-    // split-pane kicks in at 992px
-    // menu is 200px so content is 992 - 200 = 792px
-    // sliding options are approx 130px in total
-    // 792 - 130 = 662px to keep centered;
-    // 130 / 792 = 17%
-    // padding on left so item can be seen after sliding that way
-    // margin on right to prevent sliding options overflowing item
+    .sliding-element {
+        max-width: calc(100% - #{$slidingOptionsWidth});
+    }
 
     .sliding-item {
-        min-width: 662px;
-        max-width: 1000px;
-        padding-left: 17%;
-        width: 83%;
+        margin-left: auto;
+        max-width: calc(100% - #{$slidingOptionsWidth});
     }
 }

@@ -1,9 +1,9 @@
-<ion-list class="ion-no-padding list">
+<ion-list class="ion-no-padding limit-width-page">
 
   <ion-item-sliding
     #slidingItem
     *ngFor="let item of items"
-    class='sliding-item'
+    class='sliding-element'
     (ionDrag)="slidingItemDragged($event.detail.ratio, item.id)"
     (click)="slidingItemClicked()"
   >
@@ -13,6 +13,7 @@
       (click)='onItemClick(item)'
       mode="md"
       color="medium"
+      class='sliding-item'
     >
       <ion-text class="ion-text-wrap">{{ item.title }}</ion-text>
       <ion-note slot='end' color='primary'>{{ item.members | membersDetail }}</ion-note>
