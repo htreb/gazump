@@ -69,6 +69,7 @@
           <ion-menu-toggle autoHide="false">
             <ion-item
               [routerLink]="['/', 'contacts']"
+              routerDirection="root"
               routerLinkActive
               #contactsRLA="routerLinkActive"
               [color]="contactsRLA.isActive ? 'primary' : 'light'"
@@ -81,11 +82,13 @@
           </ion-menu-toggle>
           <ion-menu-toggle autoHide="false">
             <ion-item
-              tappable
-              (click)="showSettings()"
+              [routerLink]="['/', 'settings']"
+              routerDirection="root"
+              routerLinkActive
+              #settingsRLA="routerLinkActive"
+              [color]="settingsRLA.isActive ? 'primary' : 'light'"
               lines="full"
               detail="false"
-              color="light"
             >
               <ion-label>Settings</ion-label>
               <ion-icon slot="end" name="settings"></ion-icon>

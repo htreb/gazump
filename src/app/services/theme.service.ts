@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class ThemeService {
 
   public nextThemeIcon$ = new BehaviorSubject<any>('');
-  private currentTheme = 'Default';
+  public currentTheme = 'Default';
 
   private transition = 'background-color 0ms';
 

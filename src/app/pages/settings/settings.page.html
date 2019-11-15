@@ -1,0 +1,83 @@
+<ng-template #loading>
+  <app-loading></app-loading>
+</ng-template>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ng-container *ngIf="auth.userDoc$ | async as user">
+  <ion-content
+    *ngIf="!user.loading; else loading"
+    class='ion-padding'
+  >
+    <div class="settings-page">
+      <div class="section">
+        <ion-item lines="none">
+          <app-tip [text]="usernameTip" slot="end"></app-tip>
+        </ion-item>
+        <div class="title">Username</div>
+        <ion-item color="secondary" class="input">
+          <ion-input
+            #usernameInput
+            placeholder="Username"
+            [value]="user.userName"
+          ></ion-input>
+          <ion-button
+            [disabled]='!usernameInput.value.trim()'
+            (click)="setUserName(usernameInput.value)"
+          >Save</ion-button>
+        </ion-item>
+      </div>
+
+      <div class="section">
+        <div class="title">Theme</div>
+        <ion-radio-group>
+          <ion-item *ngFor="let theme of themeService.themes">
+            <ion-icon  slot="start" [name]="theme.icon"></ion-icon>
+            <ion-label>{{theme.name}}</ion-label>
+            <ion-radio
+              slot="end"
+              (ionSelect)="themeSelected(theme.name)"
+              [checked]="theme.name === themeService.currentTheme"
+            ></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </div>
+
+      <div class="section">
+        <div class="title">Notifications</div>
+        <ion-item>
+          <ion-label>Contact Requests</ion-label>
+          <ion-checkbox
+            (ionChange)="onNotificationsContact($event.detail.checked)"
+            [checked]="user.notifyContactRequest"
+            slot="end"
+          ></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Chat Messages</ion-label>
+          <ion-checkbox
+            (ionChange)="onNotificationsMessages($event.detail.checked)"
+            [checked]="user.notifyChatMessage"
+            slot="end"
+          ></ion-checkbox>
+        </ion-item>
+        <ion-item>
+          <ion-label>Board updates</ion-label>
+          <ion-checkbox
+            (ionChange)="onNotificationsBoard($event.detail.checked)"
+            [checked]="user.notifyBoardChanges"
+            slot="end"
+          ></ion-checkbox>
+        </ion-item>
+      </div>
+
+    </div>
+  </ion-content>
+</ng-container>

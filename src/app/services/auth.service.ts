@@ -111,11 +111,13 @@ export class AuthService {
       .then(data =>
         this.db.doc(`users/${data.user.uid}`).set({
           email,
-          role: 'USER', // TODO some way of giving users another role
           permissions: [],
           connections: {},
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          userName: email.substr(0, email.indexOf('@')) // TODO some way of letting users change their userName
+          userName: email.substr(0, email.indexOf('@')),
+          notifyContactRequest: true,
+          notifyChatMessage: true,
+          notifyBoardChanges: true,
         })
       );
   }
@@ -137,6 +139,47 @@ export class AuthService {
     this.afAuth.auth.signOut();
     this.router.navigateByUrl('/login'); // TODO make this a 'root' direction?
     this.loading = false;
+  }
+
+  notifyContactRequest(shouldNotify) {
+    return this.db
+      .collection('users')
+      .doc(this.userId$.value)
+      .update({
+        notifyContactRequest: shouldNotify
+      });
+  }
+
+  notifyChatMessage(shouldNotify) {
+    return this.db
+    .collection('users')
+    .doc(this.userId$.value)
+    .update({
+      notifyChatMessage: shouldNotify
+    });
+  }
+
+  notifyBoardChanges(shouldNotify) {
+    return this.db
+    .collection('users')
+    .doc(this.userId$.value)
+    .update({
+      notifyBoardChanges: shouldNotify
+    });
+  }
+
+  /**
+   * changes the currently logged in users userName
+   * @param userName new userName
+   */
+  updateUserName(userName: string) {
+    // TODO cloud function to sync other users contact details with this change
+    return this.db
+    .collection('users')
+    .doc(this.userId$.value)
+    .update({
+      userName
+    });
   }
 
   /**
@@ -166,13 +209,4 @@ export class AuthService {
     // );
   }
 
-  /**
-   * changes the currently logged in users userName
-   * @param userName new userName
-   */
-  updateUserName(userName: string) {
-    // return this.db.doc(`users/${this.currentUser.value.id}`).update({
-    //   userName
-    // });
-  }
 }
