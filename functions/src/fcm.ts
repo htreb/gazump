@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
+import { DocumentReference } from '@google-cloud/firestore';
 
 const db = admin.firestore();
 
@@ -21,37 +22,21 @@ export const newContactRequest = functions.firestore
     .document('contactRequests/{requestId}')
     .onCreate(async snapshot => {
         const request = snapshot.data() || {};
+        console.log("the accepter email is", request.accepterEmail);
 
-        // find the user who matches the accepterEmail
-        console.log("the accepter is", request.accepterEmail);
-
-        // get their userDoc and the messaging tokens on it
-        const accepterRef = db.collection('users')
+        // query the users to find who need to accept this request
+        const queryRef = db.collection('users')
             .where('email', '==', request.accepterEmail).limit(1)
-        console.log('accepterRef is', accepterRef);
 
-        accepterRef.get()
+        queryRef.get()
             .then((query): any => {
                 if (!query.docs[0]){
                     console.log(`No matching user docs for email ${request.accepterEmail}`);
                     return;
                 }
-                const accepterDoc = query.docs[0].data();
-                console.log('accepterDoc is', accepterDoc);
-
-                if (!accepterDoc.fcmTokens || !accepterDoc.fcmTokens.length) {
-                    console.log('user does not have any notification tokens stored');
-                    return
-                }
-                // direct the message at them
-                const payload = {
-                    notification: {
-                        title: 'New Contact Request',
-                        body: `${request.requesterUserName} (${request.requesterEmail}) wants to connect with you`,
-                    }
-                }
-
-                return admin.messaging().sendToDevice(accepterDoc.fcmTokens, payload)
+                const accepterRef = query.docs[0].ref;
+                const notificationBody = `${request.requesterUserName} wants to connect with you`;
+                return sendNotification('notifyContactRequest', accepterRef, 'New Contact Request', notificationBody);
             }, err => {
                 console.log(`Couldn't execute the search for the user ${request.accepterEmail}`);
                 throw new Error(err);
@@ -74,14 +59,14 @@ export const newChatMessage = functions.firestore
             const otherMembers = afterUpdate.members.filter((memberId: string) => memberId !== newMsg.from);
             console.log('New chat message, other members ids to send notifications to', otherMembers);
             otherMembers.map((memberId: string) => {
-                return sendNotification('notifyChatMessage', memberId, 'New Message', newMsg.message)
+                const memberRef = db.collection('users').doc(memberId)
+                return sendNotification('notifyChatMessage', memberRef, 'New Message', newMsg.message)
             })
         })
     })
 
-export const sendNotification = function(notificationType: string, userId: string, title: string, body: string) {
-    return db.collection('users')
-        .doc(userId).get()
+export const sendNotification = function(notificationType: string, userRef: DocumentReference, title: string, body: string) {
+    return userRef.get()
         .then((userDocSnapshot): any => {
             const userDoc = userDocSnapshot.data()
             if (!userDoc || !userDoc.fcmTokens || !userDoc.fcmTokens.length) {
@@ -98,10 +83,10 @@ export const sendNotification = function(notificationType: string, userId: strin
                     body,
                 }
             }
-            console.log(`Sending notification to ${userId} with tokens`, userDoc.fcmTokens);
+            console.log(`Sending notification to ${userDoc.email} with tokens`, userDoc.fcmTokens);
             return admin.messaging().sendToDevice(userDoc.fcmTokens, payload);
         }, err => {
-            console.log(`Couldn't get the user ${userId}`);
+            console.log(`Couldn't get the user`);
             throw new Error(err);
         });
 }
