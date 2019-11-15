@@ -54,7 +54,7 @@ export class TicketDetailComponent implements OnInit {
     }
   }
 
-  async closeButWarnUnsavedChanges(callback) {
+  async closeButWarnUnsavedChanges(callback?) {
     const close = () => {
       if (typeof callback === 'function') {
         callback();
