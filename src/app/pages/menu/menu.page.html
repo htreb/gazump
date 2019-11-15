@@ -10,7 +10,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content forceOverscroll="false" color='light'>
+    <ion-content forceOverscroll="false" color='medium'>
       <div class="menu">
 
         <ion-menu-toggle autoHide="false" class='all-groups-item'>
@@ -22,7 +22,7 @@
             routerLinkActive
             [routerLinkActiveOptions]="{ exact: true }"
             #allGroupsRLA="routerLinkActive"
-            [color]="allGroupsRLA.isActive ? 'primary' : 'light'"
+            [color]="allGroupsRLA.isActive ? 'primary' : 'medium'"
           >
             <ion-icon *ngIf="!allGroupsRLA.isActive" slot="start" name="arrow-back" class='back-icon'></ion-icon>
             <ion-label>All groups</ion-label>
@@ -51,7 +51,7 @@
                   [routerDirection]="page.routerDirection"
                   routerLinkActive
                   #rla="routerLinkActive"
-                  [color]="rla.isActive ? 'primary' : 'light'"
+                  [color]="rla.isActive ? 'primary' : 'medium'"
                 >
                   <ion-icon
                     slot="start"
@@ -72,7 +72,7 @@
               routerDirection="root"
               routerLinkActive
               #contactsRLA="routerLinkActive"
-              [color]="contactsRLA.isActive ? 'primary' : 'light'"
+              [color]="contactsRLA.isActive ? 'primary' : 'medium'"
               lines="full"
               detail="false"
             >
@@ -86,7 +86,7 @@
               routerDirection="root"
               routerLinkActive
               #settingsRLA="routerLinkActive"
-              [color]="settingsRLA.isActive ? 'primary' : 'light'"
+              [color]="settingsRLA.isActive ? 'primary' : 'medium'"
               lines="full"
               detail="false"
             >
@@ -100,7 +100,7 @@
               (click)="logOut()"
               lines="none"
               detail="false"
-              color="light"
+              color="medium"
             >
               <ion-label>Logout</ion-label>
               <ion-icon slot="end" name="log-out"></ion-icon>

@@ -1,5 +1,5 @@
 .list {
-    background: var(--ion-color-medium);
+    background: var(--ion-color-light);
     min-height: 100%;
 }
 
@@ -15,7 +15,7 @@
     .sliding-item {
         min-width: 662px;
         max-width: 1000px;
-        margin-right: 17%;
         padding-left: 17%;
+        width: 83%;
     }
 }
