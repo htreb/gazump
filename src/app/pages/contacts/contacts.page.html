@@ -16,92 +16,94 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <div class="limit-width-page">
 
-  <div class='section'>
-    <div class="title">Add Contacts</div>
-    <ion-item color="secondary" class="input">
-      <ion-input
-        placeholder="Email"
-        [formControl]="addContactEmail"
-        (keyup.enter)="sendContactRequest()"
-      ></ion-input>
-      <ion-button
-        slot="end"
-        color="primary"
-        (click)="sendContactRequest()"
-        [disabled]='!addContactEmail.valid'
+    <div class='section'>
+      <div class="title">Add Contacts</div>
+      <ion-item color="secondary" class="input">
+        <ion-input
+          placeholder="Email"
+          [formControl]="addContactEmail"
+          (keyup.enter)="sendContactRequest()"
+        ></ion-input>
+        <ion-button
+          slot="end"
+          color="primary"
+          (click)="sendContactRequest()"
+          [disabled]='!addContactEmail.valid'
+        >
+          Send request
+        </ion-button>
+      </ion-item>
+    </div>
+
+    <ng-container *ngIf="receivedRequests$ | async as receivedRequests">
+      <div
+        *ngIf="receivedRequests.length"
+        class="section"
       >
-        Send request
-      </ion-button>
-    </ion-item>
-  </div>
-
-  <ng-container *ngIf="receivedRequests$ | async as receivedRequests">
-    <div
-      *ngIf="receivedRequests.length"
-      class="section"
-    >
-      <div class='title'>Received requests</div>
-      <ion-item *ngFor="let receivedRequest of receivedRequests">
-        <ion-label class="ion-text-wrap">
-          <ion-text>
-            <h2>{{ receivedRequest.requesterUserName }}</h2>
-          </ion-text>
-          <ion-text>
-            <p>{{ receivedRequest.requesterEmail }}</p>
-          </ion-text>
-        </ion-label>
-        <div slot="end" class="ion-margin button-container">
-          <ion-button color="success" (click)="acceptContactRequest(receivedRequest)">
-            Accept
-          </ion-button>
-          <ion-button color="danger" fill="clear" (click)="declineContactRequest(receivedRequest)">
-            Decline
-          </ion-button>
-        </div>
-      </ion-item>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="sentRequests$ | async as sentRequests">
-    <div
-      *ngIf="sentRequests.length"
-      class="section"
-    >
-      <div class="title">Sent requests</div>
-      <ion-item *ngFor="let sentRequest of sentRequests">
-        <ion-label class="ion-text-wrap">
-          <ion-text>
-            <p>{{ sentRequest.email }}</p>
-          </ion-text>
-        </ion-label>
-        <div slot="end" class="ion-margin button-container">
-          <ion-button color="danger" (click)="cancelSentRequest(sentRequest)">
-            Cancel
-          </ion-button>
-        </div>
-      </ion-item>
-    </div>
-  </ng-container>
-
-  <div class="section">
-    <div class="title">All Contacts</div>
-    <ng-container *ngIf="allContacts$ | async as contacts">
-      <ng-container *ngIf="!contacts.loading; else loadingContacts">
-        <ion-list *ngIf="contacts.length; else noContacts">
-          <ion-item *ngFor="let contact of contacts">
-            <ion-label class="ion-text-wrap">
-              <ion-text>
-                <h2>{{ contact.userName }}</h2>
-              </ion-text>
-              <ion-text>
-                <p>{{ contact.email }}</p>
-              </ion-text>
-            </ion-label>
-          </ion-item>
-        </ion-list>
-      </ng-container>
+        <div class='title'>Received requests</div>
+        <ion-item *ngFor="let receivedRequest of receivedRequests">
+          <ion-label class="ion-text-wrap">
+            <ion-text>
+              <h2>{{ receivedRequest.requesterUserName }}</h2>
+            </ion-text>
+            <ion-text>
+              <p>{{ receivedRequest.requesterEmail }}</p>
+            </ion-text>
+          </ion-label>
+          <div slot="end" class="ion-margin button-container">
+            <ion-button color="success" (click)="acceptContactRequest(receivedRequest)">
+              Accept
+            </ion-button>
+            <ion-button color="danger" fill="clear" (click)="declineContactRequest(receivedRequest)">
+              Decline
+            </ion-button>
+          </div>
+        </ion-item>
+      </div>
     </ng-container>
-  </div>
 
+    <ng-container *ngIf="sentRequests$ | async as sentRequests">
+      <div
+        *ngIf="sentRequests.length"
+        class="section"
+      >
+        <div class="title">Sent requests</div>
+        <ion-item *ngFor="let sentRequest of sentRequests">
+          <ion-label class="ion-text-wrap">
+            <ion-text>
+              <p>{{ sentRequest.email }}</p>
+            </ion-text>
+          </ion-label>
+          <div slot="end" class="ion-margin button-container">
+            <ion-button color="danger" (click)="cancelSentRequest(sentRequest)">
+              Cancel
+            </ion-button>
+          </div>
+        </ion-item>
+      </div>
+    </ng-container>
+
+    <div class="section">
+      <div class="title">All Contacts</div>
+      <ng-container *ngIf="allContacts$ | async as contacts">
+        <ng-container *ngIf="!contacts.loading; else loadingContacts">
+          <ion-list *ngIf="contacts.length; else noContacts">
+            <ion-item *ngFor="let contact of contacts">
+              <ion-label class="ion-text-wrap">
+                <ion-text>
+                  <h2>{{ contact.userName }}</h2>
+                </ion-text>
+                <ion-text>
+                  <p>{{ contact.email }}</p>
+                </ion-text>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ng-container>
+      </ng-container>
+    </div>
+
+  </div>
 </ion-content>
