@@ -4,7 +4,7 @@ $slidingOptionsWidth: 130px;
     max-width: calc(1000px + #{$slidingOptionsWidth});
 }
 
-@media (min-width: 992px) {
+@media (min-width: 800px) {
     .sliding-element {
         width: calc(100% - #{$slidingOptionsWidth});
     }
