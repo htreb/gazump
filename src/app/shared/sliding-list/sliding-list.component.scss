@@ -6,11 +6,11 @@ $slidingOptionsWidth: 130px;
 
 @media (min-width: 992px) {
     .sliding-element {
-        max-width: calc(100% - #{$slidingOptionsWidth});
+        width: calc(100% - #{$slidingOptionsWidth});
     }
 
     .sliding-item {
+        width: calc(100% - #{$slidingOptionsWidth});
         margin-left: auto;
-        max-width: calc(100% - #{$slidingOptionsWidth});
     }
 }
