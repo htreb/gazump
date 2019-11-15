@@ -142,6 +142,7 @@ export class AuthService {
   }
 
   notifyContactRequest(shouldNotify) {
+    // TODO update cloud func to check this value before notifying
     return this.db
       .collection('users')
       .doc(this.userId$.value)
@@ -151,6 +152,7 @@ export class AuthService {
   }
 
   notifyChatMessage(shouldNotify) {
+    // TODO update cloud func to check this value before notifying
     return this.db
     .collection('users')
     .doc(this.userId$.value)
@@ -160,6 +162,7 @@ export class AuthService {
   }
 
   notifyBoardChanges(shouldNotify) {
+    // TODO cloud function notify on board changes
     return this.db
     .collection('users')
     .doc(this.userId$.value)
