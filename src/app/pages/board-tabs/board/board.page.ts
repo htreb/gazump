@@ -90,6 +90,7 @@ export class BoardPage implements OnChanges {
   async updateDb(newDbValue: any) {
     try {
       await this.boardService.updateBoard(this.boardData.id, newDbValue);
+      return true;
     } catch (err) {
       const alert = await this.alertCtrl.create({
         header: 'Error',
@@ -97,6 +98,7 @@ export class BoardPage implements OnChanges {
         buttons: ['OK']
       });
       alert.present();
+      return false;
     }
   }
 
@@ -113,9 +115,10 @@ export class BoardPage implements OnChanges {
     this.updateDb({ states: event.container.data });
   }
 
-  ticketDrop(event: CdkDragDrop<any>) {
+  async ticketDrop(event: CdkDragDrop<any>) {
     this.clearScrollTimeout();
     const updatedTickets = {};
+    let ticketMovedState;
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) {
         return;
@@ -132,13 +135,17 @@ export class BoardPage implements OnChanges {
         event.previousIndex,
         event.currentIndex
       );
-      updatedTickets[`tickets.${event.previousContainer.data.stateId}`] =
+      updatedTickets[`tickets.${event.previousContainer.data.state.id}`] =
         event.previousContainer.data.tickets;
+      ticketMovedState = event.container.data.tickets[event.currentIndex];
     }
-    updatedTickets[`tickets.${event.container.data.stateId}`] =
+    updatedTickets[`tickets.${event.container.data.state.id}`] =
       event.container.data.tickets;
 
-    this.updateDb(updatedTickets);
+    const succeeded = await this.updateDb(updatedTickets);
+    if (succeeded && ticketMovedState) {
+      console.log(`${ticketMovedState.title} ••••• MOVED TO ••••• ${event.container.data.state.title}`);
+    }
   }
 
   async openTicketDetail(ticketId?: string, currentStateId?: string) {

@@ -172,7 +172,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       } else {
         this.boardService.createBoard(data).then(resp => {
           this.displayingBoardId = resp.id;
-          // find the matching tab and scrolls it into view
+          // find the matching tab and scroll it into view
           this.tabButtons.forEach(tab => {
             if (tab.value === resp.id) {
               tab.el.scrollIntoView({ behavior: 'smooth' });

@@ -116,9 +116,9 @@ parseCompletedByArrayToObj(completedByArr) {
    * }
    */
   updateBoard(boardId: string, data: any): Promise<any> {
-    if (!Object.keys(data).length || !boardId) {
+    if (!boardId || !data || !Object.keys(data).length) {
       // no unnecessary db writes
-      return Promise.resolve();
+      throw new Error('Cannot update board, missing data');
     }
     return this.db
       .collection('groups')
@@ -207,7 +207,7 @@ parseCompletedByArrayToObj(completedByArr) {
       }
     });
 
-    // new object to store required format for firebase {tickets.stateId: [ ...]...
+    // new object to store required format for firebase {tickets.stateId: [ ...], ...
     const updatedTickets = {};
 
     // if new state is same as current state then replace ticket with new snippet

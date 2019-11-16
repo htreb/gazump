@@ -32,7 +32,7 @@
       cdkDropList
       id="{{ boardData.id }}{{ column.id }}"
       [cdkDropListConnectedTo]="getColumnIds()"
-      [cdkDropListData]="{ stateId: column.id, tickets: ticketsForState }"
+      [cdkDropListData]="{ state: column, tickets: ticketsForState }"
       (cdkDropListDropped)="ticketDrop($event)"
       class="ticket-drop-zone"
     >
