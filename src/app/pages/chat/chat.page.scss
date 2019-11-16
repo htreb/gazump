@@ -33,7 +33,7 @@ $textBorderRadius: 16px;
         }
     }
     .text {
-        background: var(--ion-color-primary);
+        background: var(--ion-color-primary-tint);
         color: var(--ion-color-primary-contrast);
         border-radius: 0px $textBorderRadius $textBorderRadius $textBorderRadius;
     }
