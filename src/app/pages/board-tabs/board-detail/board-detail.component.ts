@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { icons } from './icon-list';
 import { ToastController } from '@ionic/angular';
-import { ContactService } from 'src/app/services/contact.service';
 import { BoardService } from 'src/app/services/board.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { AuthService } from 'src/app/services/auth.service';
 
 const completedByNames = ['Buyers', 'Buyers Solicitors', 'Council', 'Estate Agents', 'Sellers', 'Sellers Solicitors'];
 @Component({
@@ -19,7 +19,7 @@ export class BoardDetailComponent implements OnInit {
   @Input() deleteBoard: () => {};
   title = '';
   icons = icons;
-  contacts = [this.contactService.getMyDetails()];
+  contacts = [this.auth.userId$.value];
   newStateName = '';
   states = [
     {color: 'primary', id: this.db.createId(), title: 'To Do'},
@@ -33,10 +33,9 @@ export class BoardDetailComponent implements OnInit {
     return completedArr;
   }, []);
 
-
   constructor(
     private toastCtrl: ToastController,
-    private contactService: ContactService,
+    private auth: AuthService,
     private boardService: BoardService,
     private db: AngularFirestore
   ) { }
