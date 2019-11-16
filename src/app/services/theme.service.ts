@@ -11,7 +11,7 @@ import { BehaviorSubject } from 'rxjs';
 export class ThemeService {
 
   public nextThemeIcon$ = new BehaviorSubject<any>('');
-  public currentTheme = 'Default';
+  public currentTheme;
 
   private transition = 'background-color 0ms';
 
@@ -25,7 +25,7 @@ export class ThemeService {
   // medium => layer on top of background, columns on board, tab bar, footer on chat
   // dark => top most layer => tickets on top of columns
 
-  public defaults = {
+  public defaultTheme = {
     name: 'Default',
     icon: 'partly-sunny',
     primary: '#3880ff',
@@ -42,7 +42,7 @@ export class ThemeService {
   public themes = [
     {
       name: 'Default',
-      icon: this.defaults.icon,
+      icon: this.defaultTheme.icon,
       // colors auto filled inside CSSTextGenerator
     },
     {
@@ -100,9 +100,10 @@ export class ThemeService {
 
   // Override all global variables with a new theme
   async setTheme(themeName, fromStorage = false) {
-    const cssText = this.CSSTextGenerator(themeName, fromStorage);
+    const matchingTheme = this.themes.find(t => t.name === themeName) || this.defaultTheme;
+    this.currentTheme = matchingTheme.name;
+    const cssText = this.CSSTextGenerator(matchingTheme, fromStorage);
     this.document.documentElement.style.cssText = cssText;
-    this.currentTheme = themeName;
     if (!fromStorage) {
       // if not setting from storage (on app start)
       // then save it for next time
@@ -124,9 +125,8 @@ export class ThemeService {
     this.setTheme(nextTheme.name);
   }
 
-  CSSTextGenerator(themeName, fromStorage = false) {
-    const matchingTheme = this.themes.find(t => t.name === themeName);
-    const  colors = { ...this.defaults, ...matchingTheme };
+  CSSTextGenerator(theme, fromStorage = false) {
+    const colors = { ...this.defaultTheme, ...theme };
 
     const {
       primary,
