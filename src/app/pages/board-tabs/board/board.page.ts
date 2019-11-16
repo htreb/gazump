@@ -17,6 +17,8 @@ import {
 } from '@angular/animations';
 import * as scroll from 'scroll';
 import { DOCUMENT } from '@angular/common';
+import { FcmService } from 'src/app/services/fcm.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 const distanceFromBoardEdgeToSnapScroll = 30;
 const snapScrollIntervalDuration = 600;
@@ -50,6 +52,8 @@ export class BoardPage implements OnChanges {
     private alertCtrl: AlertController,
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
+    private fcm: FcmService,
+    private auth: AuthService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -144,7 +148,9 @@ export class BoardPage implements OnChanges {
 
     const succeeded = await this.updateDb(updatedTickets);
     if (succeeded && ticketMovedState) {
-      console.log(`${ticketMovedState.title} ••••• MOVED TO ••••• ${event.container.data.state.title}`);
+      const members = this.boardData.members.filter(memberId => memberId !== this.auth.userId$.value);
+      const body = `${ticketMovedState.title} moved to ${event.container.data.state.title}`;
+      this.fcm.notifyMembers('notifyBoardChanges', members, 'Ticket Moved', body);
     }
   }
 

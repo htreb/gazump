@@ -14,6 +14,8 @@ import { SettingsIconComponent } from 'src/app/shared/settings-icon/settings-ico
 import { ActivatedRoute } from '@angular/router';
 import { takeWhile, finalize } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { FcmService } from 'src/app/services/fcm.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-board-tabs',
@@ -41,7 +43,9 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     private boardService: BoardService,
     private modalController: ModalController,
     private alertCtrl: AlertController,
-    private router: ActivatedRoute
+    private router: ActivatedRoute,
+    private fcm: FcmService,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -168,16 +172,23 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     const { data } = await modal.onWillDismiss();
     if (data) {
       if (board && board.id) {
-        this.boardService.updateBoard(board.id, data);
+        // updating an existing board
+        await this.boardService.updateBoard(board.id, data);
+        const newMembers = data.members.filter(memberId =>
+          !board.members.includes(memberId) && memberId !== this.auth.userId$.value);
+        this.fcm.notifyMembers('notifyBoardChanges', newMembers, 'New Board', `You have been added to ${data.title}`);
       } else {
-        this.boardService.createBoard(data).then(resp => {
-          this.displayingBoardId = resp.id;
-          // find the matching tab and scroll it into view
-          this.tabButtons.forEach(tab => {
-            if (tab.value === resp.id) {
-              tab.el.scrollIntoView({ behavior: 'smooth' });
-            }
-          });
+        // creating a new board
+        const resp = await this.boardService.createBoard(data);
+        this.displayingBoardId = resp.id;
+        const members = data.members.filter(memberId => memberId !== this.auth.userId$.value);
+        this.fcm.notifyMembers('notifyBoardChanges', members, 'New Board', `You have been added to ${data.title}`);
+
+        // find the matching tab and scroll it into view
+        this.tabButtons.forEach(tab => {
+          if (tab.value === resp.id) {
+            tab.el.scrollIntoView({ behavior: 'smooth' });
+          }
         });
       }
     }

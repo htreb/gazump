@@ -118,6 +118,7 @@ export class AuthService {
           notifyContactRequest: true,
           notifyChatMessage: true,
           notifyBoardChanges: true,
+          importantAlert: true,
         })
       );
   }

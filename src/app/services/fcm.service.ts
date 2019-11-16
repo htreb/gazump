@@ -8,7 +8,6 @@ import { FirebaseX } from '@ionic-native/firebase-x/ngx';
 import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -127,5 +126,11 @@ export class FcmService {
     .httpsCallable('unsubscribeFromTopic')({ topic, token: this.token}).pipe(
       tap( _ => this.makeToast(`Unsubscribed from ${topic}`)))
       .subscribe();
+  }
+
+  notifyMembers(messageType: string, members: string[], title: string, body: string) {
+    if ((members && members.length && title && body)) {
+      this.fun.httpsCallable('notifyMembers')({ messageType, members, title, body });
+    }
   }
 }
