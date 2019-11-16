@@ -41,6 +41,11 @@ export class ThemeService {
 
   public themes = [
     {
+      name: 'Default',
+      icon: this.defaults.icon,
+      // colors auto filled inside CSSTextGenerator
+    },
+    {
       name: 'Autumn',
       icon: 'leaf',
       primary: '#4C3819',
@@ -79,11 +84,6 @@ export class ThemeService {
       light: '#1B1B53',
       medium: '#2F2F62',
       dark: '#444472',
-    },
-    {
-      name: 'Default',
-      icon: this.defaults.icon,
-      // colors auto filled inside CSSTextGenerator
     },
   ];
 
