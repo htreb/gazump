@@ -18,10 +18,6 @@ $boardPadding: 8px;
     min-width: 300px;
     max-width: 65vw;
 
-    .card-title {
-        font-size: 1em;
-    }
-
     .ticket-drop-zone {
         flex: 1;
         overflow: scroll;
@@ -45,14 +41,18 @@ $boardPadding: 8px;
         margin-left: auto;
     }
 
-    .title, .description {
-        margin-top: 0;
+    .ticket-title, .description {
         white-space: pre-wrap;
     }
 
     .description {
+        margin-top: 0;
         font-size: 0.8em;
     }
+}
+
+ion-item.ticket-header {
+    --inner-padding-end: 0
 }
 
 /////// drag drop styles ///////
@@ -83,4 +83,10 @@ $boardPadding: 8px;
     &:active{
         cursor: grabbing;
     }
+}
+
+.ticket-drag-handle {
+    padding: 10px;
+    margin: 0;
+    align-self: flex-start;
 }

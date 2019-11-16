@@ -19,7 +19,7 @@
   >
     <ion-header mode="md">
       <ion-toolbar color="medium" class="important-no-padding">
-        <ion-title class="card-title">{{ column.title }}</ion-title>
+        <ion-title size="small">{{ column.title }}</ion-title>
         <ion-buttons cdkDragHandle slot="end" class="drag-handle">
           <ion-button disabled fill="clear">
             <ion-icon slot="icon-only" src="/assets/icons/drag.svg"></ion-icon>
@@ -50,10 +50,10 @@
         (cdkDragReleased)="onDragEnd()"
       >
 
-        <div cdkDragHandle class="ion-margin ticket-drag-handle">
-          <ion-icon src="/assets/icons/drag.svg" class="ticket-drag-handle"></ion-icon>
-        </div>
-        <div class="ion-margin title ion-text-center">{{ ticket.title }}</div>
+        <ion-item color="dark" lines="none" class="ticket-header">
+          <ion-label class="ion-text-center ticket-title">{{ ticket.title }}</ion-label>
+          <ion-icon cdkDragHandle src="/assets/icons/drag.svg" slot="end" class="ticket-drag-handle"></ion-icon>
+        </ion-item>
         <div class="ion-margin description">{{ ticket.description }}</div>
 
       </ion-card>
