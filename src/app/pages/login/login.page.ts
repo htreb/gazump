@@ -218,7 +218,7 @@ export class LoginPage implements OnInit {
     this.auth.loading = true;
     this.auth.signUp(this.email, this.password).then(
       () => {
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/settings');
       },
       async err => {
         this.auth.loading = false;
