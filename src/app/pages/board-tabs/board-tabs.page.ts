@@ -15,7 +15,6 @@ import { ActivatedRoute } from '@angular/router';
 import { takeWhile, finalize } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { FcmService } from 'src/app/services/fcm.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-board-tabs',
@@ -45,7 +44,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private router: ActivatedRoute,
     private fcm: FcmService,
-    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -174,15 +172,13 @@ export class BoardTabsPage implements OnInit, OnDestroy {
       if (board && board.id) {
         // updating an existing board
         await this.boardService.updateBoard(board.id, data);
-        const newMembers = data.members.filter(memberId =>
-          !board.members.includes(memberId) && memberId !== this.auth.userId$.value);
+        const newMembers = data.members.filter(memberId => !board.members.includes(memberId));
         this.fcm.notifyMembers('notifyBoardChanges', newMembers, 'New Board', `You have been added to ${data.title}`);
       } else {
         // creating a new board
         const resp = await this.boardService.createBoard(data);
         this.displayingBoardId = resp.id;
-        const members = data.members.filter(memberId => memberId !== this.auth.userId$.value);
-        this.fcm.notifyMembers('notifyBoardChanges', members, 'New Board', `You have been added to ${data.title}`);
+        this.fcm.notifyMembers('notifyBoardChanges', data.members, 'New Board', `You have been added to ${data.title}`);
 
         // find the matching tab and scroll it into view
         this.tabButtons.forEach(tab => {

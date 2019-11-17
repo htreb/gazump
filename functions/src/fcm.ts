@@ -19,13 +19,20 @@ export const unsubscribeFromTopic = functions.https.onCall(
 )
 
 export const notifyMembers = functions.https.onCall(
-    async (data) => {
+    async (data, context) => {
         if (data && data.members && data.messageType && data.title && data.body) {
-            data.members.map((memberId: string) => {
-                console.log('Sending notification to :', memberId);
-                const memberRef = db.collection('users').doc(memberId)
-                return sendNotification(data.messageType, memberRef, data.title, data.body)
-            })
+            const uid = context && context.auth && context.auth.uid;
+            const members = data.members.filter((memberId: string) => memberId !== uid);
+            if (!members.length) {
+                console.log('No members left after removing myself', members)
+            }
+            else {
+                members.map((memberId: string) => {
+                    console.log('Sending notification to :', memberId);
+                    const memberRef = db.collection('users').doc(memberId)
+                    return sendNotification(data.messageType, memberRef, data.title, data.body)
+                })
+            }
         } else {
             console.log('Missing properties', data);
         }

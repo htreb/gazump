@@ -129,7 +129,7 @@ export class FcmService {
   }
 
   notifyMembers(messageType: string, members: string[], title: string, body: string) {
-    if ((members && members.length && title && body)) {
+    if ((messageType && members && members.length && title && body)) {
       this.fun.httpsCallable('notifyMembers')({ messageType, members, title, body });
     }
   }
