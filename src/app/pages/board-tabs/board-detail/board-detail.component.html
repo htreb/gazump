@@ -5,7 +5,7 @@
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>{{ board ? 'Edit' : 'New'}} Board</ion-title>
+    <ion-title class="display-font">{{ board ? 'Edit' : 'New'}} Board</ion-title>
     <ion-buttons slot="end" *ngIf="board">
       <ion-button (click)="deleteBoard()">
         <ion-icon slot="icon-only" name="trash"></ion-icon>

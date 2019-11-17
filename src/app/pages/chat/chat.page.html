@@ -17,7 +17,7 @@
         <ion-buttons slot="start">
             <ion-back-button defaultHref="/group/{{groupService.currentGroupId}}/chats"></ion-back-button>
         </ion-buttons>
-        <ion-title size="large">
+        <ion-title class="display-font">
           {{ chat.title }}
           <ion-title size="small" class="ion-no-padding">{{ chat.members | membersDetail: true }}</ion-title>
         </ion-title>
