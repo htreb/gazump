@@ -88,7 +88,7 @@ export class FcmService {
 
   removeCurrentTokenOnSignOut(userId) {
     if (!userId || userId.loading || !this.token) {
-      console.log(`can't remove FCM token ${this.token}, from userId`, userId);
+      //  can't remove FCM token from user;
       return;
     }
     this.db
@@ -108,7 +108,7 @@ export class FcmService {
     }
 
     if (payload.tap === 'background' || !body) {
-      console.log('Notification tapped in background (or no body), no need to show toast', body);
+      // Notification tapped in background (or no body), no need to show toast
     } else {
       this.makeToast(body);
     }

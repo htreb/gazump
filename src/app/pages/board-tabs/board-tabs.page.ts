@@ -197,7 +197,6 @@ export class BoardTabsPage implements OnInit, OnDestroy {
         takeWhile(boards => boards.loading),
         finalize(() => {
           // subscription complete. allBoards have loaded now
-          console.log('board-tabs boards loaded, setting scroll details now');
           const ticketDetails = this.boardService.findTicketPositionDetails(ticketId);
           this.displayingBoardId = ticketDetails.currentBoardId;
           this.scrollToTicketDetails = {

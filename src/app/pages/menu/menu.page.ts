@@ -40,10 +40,6 @@ export class MenuPage {
     public groupService: GroupService,
     ) {}
 
-  showSettings() {
-    console.log('show settings');
-  }
-
   logOut() {
     this.auth.logOut();
   }

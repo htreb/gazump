@@ -19,7 +19,6 @@ export class ChatService {
     private groupService: GroupService
   ) {
     this.auth.userId$.subscribe(userId => {
-      console.log(`boardService userId subscribe ${userId}`);
       if (userId.loading) {
         return;
       }
@@ -28,7 +27,6 @@ export class ChatService {
   }
 
   subscribeToChats(userId) {
-    console.log(`subToChats, ${this.chatsSub}`);
     if (this.chatsSub) {
       return;
     }
@@ -45,7 +43,6 @@ export class ChatService {
   }
 
   unSubFromChats() {
-    console.log('logging out of users chats');
     if (this.chatsSub && this.chatsSub.unsubscribe) {
       this.chatsSub.unsubscribe();
     }

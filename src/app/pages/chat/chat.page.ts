@@ -170,7 +170,6 @@ export class ChatPage implements OnInit, AfterViewChecked {
     try {
       await this.chatService.addChatMessage(this.chatId, msg, tickets);
     } catch (err) {
-      console.log('failed to send chat message', err);
       this.message = msg;
       this.linkedTickets = tickets;
     }

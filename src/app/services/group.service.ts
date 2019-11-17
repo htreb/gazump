@@ -42,7 +42,6 @@ export class GroupService {
     updateCurrentGroupSubjectFromUrl(this.router.url);
 
     this.auth.userId$.subscribe(userId => {
-      console.log(`groupService userId subscribe ${userId}`);
       if (userId.loading) {
         return;
       }
@@ -58,7 +57,6 @@ export class GroupService {
    * and saves them in the allGroupsSubject
    */
   subscribeToUsersGroups(userId: string) {
-    console.log('subscribe to usersGroups', this.groupsSub);
     if (this.groupsSub) {
       return;
     }
@@ -76,7 +74,6 @@ export class GroupService {
    * unsubscribes from all users groups.
    */
   unSubFromUsersGroup() {
-    console.log('logging out of users groups');
     if (this.groupsSub && this.groupsSub.unsubscribe) {
       this.groupsSub.unsubscribe();
     }

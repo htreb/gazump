@@ -20,7 +20,6 @@ export class BoardService {
     private auth: AuthService,
   ) {
     this.auth.userId$.subscribe(userId => {
-      console.log(`boardService userId subscribe ${userId}`);
       if (userId.loading) {
         return;
       }
@@ -32,7 +31,6 @@ export class BoardService {
    * subscribes to all the boards the user is member of under the current group
    */
   subToGroupBoards(userId) {
-    console.log(`subToGroupBoards, ${this.boardsSub}`);
     if (this.boardsSub) {
       return;
     }
@@ -62,7 +60,6 @@ export class BoardService {
   }
 
   unSubFromGroupBoards() {
-    console.log('logging out of users boards');
     if (this.boardsSub && this.boardsSub.unsubscribe) {
       this.boardsSub.unsubscribe();
     }
@@ -195,8 +192,7 @@ parseCompletedByArrayToObj(completedByArr) {
     } = this.findTicketPositionDetails(snippet.id);
 
     if (currentStateId === undefined || currentIndex === -1) {
-      console.log(`can't find the ticket with id ${snippet.id}`);
-      return Promise.reject();
+      return Promise.reject(`can't find the ticket with id ${snippet.id}`);
     }
 
     // Find matching board and copy all tickets in all states

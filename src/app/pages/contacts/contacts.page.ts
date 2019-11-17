@@ -98,7 +98,6 @@ export class ContactsPage implements OnInit {
   }
 
   async declineContactRequest(request: any) {
-    console.log('decline Request', request);
     const alert = await this.alertCtrl.create({
       message: `Are you sure you want to decline the contact request from:
                 <br><br>

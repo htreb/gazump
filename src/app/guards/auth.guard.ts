@@ -28,12 +28,10 @@ export class AuthGuard implements CanActivate {
       // and never emits again, so the page never loads.
       delay(0),
       takeWhile(userDoc => {
-        console.log(`in auth guard takeWhile, current userDoc`, userDoc);
         return userDoc.loading;
       }),
       finalize(() => {
         const docExists = !!this.auth.userDoc$.value;
-        console.log(`finalize in authGuard userDoc val is ${docExists}`);
         if (!docExists) {
           this.auth.logOut();
         }
