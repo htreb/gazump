@@ -27,9 +27,10 @@
             #usernameInput
             placeholder="Username"
             [value]="user.userName"
+            [disabled]="updatingUserNameInProgress"
           ></ion-input>
           <ion-button
-            [disabled]='!usernameInput.value.trim()'
+            [disabled]='!usernameInput.value.trim() || updatingUserNameInProgress'
             (click)="setUserName(usernameInput.value)"
           >Save</ion-button>
         </ion-item>

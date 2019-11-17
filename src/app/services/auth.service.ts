@@ -3,9 +3,9 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { FcmService } from './fcm.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,7 @@ export class AuthService {
     private db: AngularFirestore,
     private router: Router,
     private fcmService: FcmService,
+    private fun: AngularFireFunctions,
   ) {
     this.authStateSubscription = this.authState().subscribe(user => {
       if (user) {
@@ -173,16 +174,16 @@ export class AuthService {
   }
 
   /**
-   * changes the currently logged in users userName
+   * Calls the cloud function to change the currently logged in users userName
+   * and the name on all their contacts docs.
    * @param userName new userName
    */
-  updateUserName(userName: string) {
-    // TODO cloud function to sync other users contact details with this change
-    return this.db
-    .collection('users')
-    .doc(this.userId$.value)
-    .update({
-      userName
+  updateUserName(userName: string, callBack?: any) {
+    return this.fun.httpsCallable('updateUserName')({ userName })
+    .subscribe(resp => {
+      if (typeof callBack === 'function') {
+        callBack(resp);
+      }
     });
   }
 

@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class SettingsPage {
 
   public usernameTip = `This is the name other contacts will see next to your activity`;
+  public updatingUserNameInProgress = false;
 
   constructor(
     public auth: AuthService,
@@ -17,7 +18,9 @@ export class SettingsPage {
     ) { }
 
   setUserName(username) {
-    this.auth.updateUserName(username);
+    this.updatingUserNameInProgress = true;
+    const cb = (response) => { this.updatingUserNameInProgress = false; };
+    this.auth.updateUserName(username, cb);
   }
 
   themeSelected(theme) {

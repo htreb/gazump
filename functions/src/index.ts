@@ -6,8 +6,8 @@ admin.initializeApp({
     databaseURL: "https://gazump-46a24.firebaseio.com"
 });
 
-// export { userNameChanged } from './user-name-changed';
 export { completeContactRequest } from './contact-request';
+export { updateUserName } from './update-user-name';
 export {
     subscribeToTopic,
     unsubscribeFromTopic,
