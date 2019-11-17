@@ -8,6 +8,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { BoardPage } from './board/board.page';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardDetailComponent } from './board-detail/board-detail.component';
+import { IconPickerComponent } from './icon-picker/icon-picker.component';
 
 const routes: Routes = [
   {
@@ -29,11 +30,13 @@ const routes: Routes = [
   declarations: [
     BoardTabsPage,
     BoardPage,
-    BoardDetailComponent
+    BoardDetailComponent,
+    IconPickerComponent
   ],
   entryComponents: [
     // since these are loaded dynamically without the router they need to be here too
-    BoardDetailComponent
+    BoardDetailComponent,
+    IconPickerComponent
   ]
 
 })

@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { icons } from './icon-list';
-import { ToastController } from '@ionic/angular';
+import { ToastController, PopoverController } from '@ionic/angular';
 import { BoardService } from 'src/app/services/board.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from 'src/app/services/auth.service';
+import { IconPickerComponent } from '../icon-picker/icon-picker.component';
 
 const completedByNames = ['Buyers', 'Buyers Solicitors', 'Council', 'Estate Agents', 'Sellers', 'Sellers Solicitors'];
 @Component({
@@ -18,7 +18,7 @@ export class BoardDetailComponent implements OnInit {
   @Input() closeBoardDetail;
   @Input() deleteBoard: () => {};
   title = '';
-  icons = icons;
+  icon = 'clipboard';
   contacts = [this.auth.userId$.value];
   newStateName = '';
   states = [
@@ -26,7 +26,6 @@ export class BoardDetailComponent implements OnInit {
     {color: 'primary', id: this.db.createId(), title: 'Doing'},
     {color: 'primary', id: this.db.createId(), title: 'Done'},
   ];
-
   newCompletedByName = '';
   completedBy = completedByNames.reduce((completedArr, currentName) => {
     completedArr.push({name: currentName, color: 'primary', id: this.db.createId()});
@@ -37,7 +36,8 @@ export class BoardDetailComponent implements OnInit {
     private toastCtrl: ToastController,
     private auth: AuthService,
     private boardService: BoardService,
-    private db: AngularFirestore
+    private db: AngularFirestore,
+    private popoverController: PopoverController,
   ) { }
 
   ngOnInit() {
@@ -51,16 +51,18 @@ export class BoardDetailComponent implements OnInit {
   }
 
   parseBoardDataToModel(boardData) {
-    this.title = JSON.parse(JSON.stringify(boardData.title));
-    this.contacts = JSON.parse(JSON.stringify(boardData.members));
-    this.states = JSON.parse(JSON.stringify(boardData.states));
+    this.title = JSON.parse(JSON.stringify(boardData.title || ''));
+    this.icon = JSON.parse(JSON.stringify(boardData.icon || ''));
+    this.contacts = JSON.parse(JSON.stringify(boardData.members || []));
+    this.states = JSON.parse(JSON.stringify(boardData.states || []));
     this.completedBy = this.boardService.getCompletedBy(boardData.id, true);
   }
 
   parseModelToBoardData() {
     return {
-      members: this.contacts,
       title: this.title,
+      icon: this.icon,
+      members: this.contacts,
       states: this.states,
       completedBy: this.boardService.parseCompletedByArrayToObj(this.completedBy),
     };
@@ -68,6 +70,25 @@ export class BoardDetailComponent implements OnInit {
 
   async closePage(save = false) {
     this.closeBoardDetail(save && this.parseModelToBoardData());
+  }
+
+  async selectIcon(ev) {
+    let popover;
+    const callback = (icon) => {
+      this.icon = icon;
+      popover.dismiss();
+    };
+
+    popover = await this.popoverController.create({
+      component: IconPickerComponent,
+      componentProps: {
+        currentIcon: this.icon,
+        callback
+      },
+      event: ev,
+      mode: 'md',
+    });
+    await popover.present();
   }
 
   async addState() {

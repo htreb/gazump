@@ -1,0 +1,8 @@
+<ion-button
+  *ngFor="let icon of icons"
+  [fill]="icon === currentIcon ? 'solid' : 'clear'"
+  class='icon-button'
+  (click)="iconPicked(icon)"
+>
+  <ion-icon [name]="icon" slot="icon-only"></ion-icon>
+</ion-button>

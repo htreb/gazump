@@ -23,27 +23,16 @@
   </div>
 
   <div class="section">
-    <app-contact-picker [selectedContacts]='contacts'></app-contact-picker>
+    <div class="title">Icon</div>
+    <ion-item button (click)="selectIcon($event)">
+      <ion-label>Board Icon:</ion-label>
+      <ion-icon slot="end" [name]="icon"></ion-icon>
+    </ion-item>
   </div>
 
-  <!-- <ion-item lines="none">
-    <ion-label>Icon</ion-label>
-    <ion-select
-      selectedText=" "
-      formControlName="icon"
-      interface="popover"
-    >
-      <ion-select-option
-        *ngFor="let icon of icons"
-        [value]="icon"
-      >
-        <ion-item>
-          <ion-label>{{icon}}</ion-label>
-        </ion-item>
-      </ion-select-option
-      >
-    </ion-select>
-  </ion-item> -->
+  <div class="section">
+    <app-contact-picker [selectedContacts]='contacts'></app-contact-picker>
+  </div>
 
   <div class="section">
     <div class="title">States</div>
