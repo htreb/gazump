@@ -69,7 +69,7 @@ export class AuthService {
       if (userDoc) {
           this.userDoc$.next({ ...userDoc, id: userId });
         } else {
-          console.log('subscribed to userDoc but got no doc!', userDoc);
+          // subscribed to userDoc but got no doc!
         }
       });
   }
