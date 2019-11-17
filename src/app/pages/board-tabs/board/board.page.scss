@@ -33,26 +33,30 @@ $boardPadding: 8px;
     transition: none; // ios adds an ugly bounce if this isn't here
     max-height: 40vh;
     cursor: pointer;
-    padding-bottom: 20px;
 
-    .ticket-drag-handle {
-        height: 20px;
-        width: 20px;
-        margin-left: auto;
+    .ticket-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        .ticket-drag-handle {
+            height: 20px;
+            width: 20px;
+        }
     }
 
     .ticket-title, .description {
         white-space: pre-wrap;
     }
 
+    .ticket-title {
+        flex: 1;
+    }
+
     .description {
         margin-top: 0;
         font-size: 0.8em;
     }
-}
-
-ion-item.ticket-header {
-    --inner-padding-end: 0
 }
 
 /////// drag drop styles ///////
@@ -83,10 +87,4 @@ ion-item.ticket-header {
     &:active{
         cursor: grabbing;
     }
-}
-
-.ticket-drag-handle {
-    padding: 10px;
-    margin: 0;
-    align-self: flex-start;
 }

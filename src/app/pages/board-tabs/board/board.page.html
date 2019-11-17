@@ -50,11 +50,15 @@
         (cdkDragReleased)="onDragEnd()"
       >
 
-        <ion-item color="dark" lines="none" class="ticket-header">
-          <ion-label class="ion-text-center ticket-title">{{ ticket.title }}</ion-label>
-          <ion-icon cdkDragHandle src="/assets/icons/drag.svg" slot="end" class="ticket-drag-handle"></ion-icon>
-        </ion-item>
+        <!-- it trying to change this to ion specific items make sure the drag (vertically) still plays nice -->
+        <div class="ion-padding ticket-header">
+          <div class="ion-text-center ticket-title">{{ ticket.title }}</div>
+          <div cdkDragHandle class="ticket-drag-handle">
+            <ion-icon src="/assets/icons/drag.svg" class="ticket-drag-handle"></ion-icon>
+          </div>
+        </div>
         <div class="ion-margin description">{{ ticket.description }}</div>
+
 
       </ion-card>
     </div>
