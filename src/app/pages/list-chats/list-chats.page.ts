@@ -15,7 +15,7 @@ export class ListChatsPage {
   public chats$: Observable<any> = this.chatService.allChatsUnderCurrentGroup();
   public settingsOptions: SettingsOption[] = [
     {
-      title: 'Start Chat',
+      title: 'New Chat',
       icon: 'add',
       func: () => this.startChat(),
     }
@@ -145,7 +145,7 @@ export class ListChatsPage {
   slidingListChanged(details) {
     this.settingsOptions = [
       {
-        title: 'New Group',
+        title: 'New Chat',
         icon: 'add',
         func: () => this.startChat(),
       }
