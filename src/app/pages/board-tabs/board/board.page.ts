@@ -89,11 +89,16 @@ export class BoardPage implements OnChanges {
     return [];
   }
 
-  async updateDb(newDbValue: any) {
+  async updateDb(newDbValue: any, revert: () => void) {
     try {
       await this.boardService.updateBoard(this.boardData.id, newDbValue);
       return true;
     } catch (err) {
+
+      if (typeof revert === 'function') {
+        revert();
+      }
+
       const alert = await this.alertCtrl.create({
         header: 'Error',
         message: err.message, // TODO more human readable error messages?
@@ -114,12 +119,19 @@ export class BoardPage implements OnChanges {
       event.currentIndex
     );
 
-    this.updateDb({ states: event.container.data });
+    this.updateDb({ states: event.container.data }, () => {
+      moveItemInArray(
+        event.container.data,
+        event.currentIndex,
+        event.previousIndex,
+      );
+    });
   }
 
   async ticketDrop(event: CdkDragDrop<any>) {
     this.clearScrollTimeout();
     const updatedTickets = {};
+    let revert;
     let ticketMovedState;
     if (event.previousContainer === event.container) {
       if (event.previousIndex === event.currentIndex) {
@@ -130,6 +142,13 @@ export class BoardPage implements OnChanges {
         event.previousIndex,
         event.currentIndex
       );
+      revert = () => {
+        moveItemInArray(
+          event.container.data.tickets,
+          event.currentIndex,
+          event.previousIndex,
+        );
+      };
     } else {
       transferArrayItem(
         event.previousContainer.data.tickets,
@@ -137,6 +156,14 @@ export class BoardPage implements OnChanges {
         event.previousIndex,
         event.currentIndex
       );
+      revert = () => {
+        transferArrayItem(
+          event.container.data.tickets,
+          event.previousContainer.data.tickets,
+          event.currentIndex,
+          event.previousIndex,
+        );
+      };
       updatedTickets[`tickets.${event.previousContainer.data.state.id}`] =
         event.previousContainer.data.tickets;
       ticketMovedState = event.container.data.tickets[event.currentIndex];
@@ -144,7 +171,7 @@ export class BoardPage implements OnChanges {
     updatedTickets[`tickets.${event.container.data.state.id}`] =
       event.container.data.tickets;
 
-    const succeeded = await this.updateDb(updatedTickets);
+    const succeeded = await this.updateDb(updatedTickets, revert);
     if (succeeded && ticketMovedState) {
       const body = `${ticketMovedState.title} moved to ${event.container.data.state.title}`;
       this.fcm.notifyMembers('notifyBoardChanges', this.boardData.members, 'Ticket Moved', body);
