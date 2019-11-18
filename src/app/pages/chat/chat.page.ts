@@ -251,6 +251,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
           ctaText: 'Save Changes',
           selectedContacts: chat.members,
           title: chat.title,
+          disabled: !(chat.admins && chat.admins.includes(this.auth.userId$.value)),
         }
       });
 
