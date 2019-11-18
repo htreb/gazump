@@ -84,6 +84,7 @@ export class ChatService {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       linkedTickets: {},
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+      admins: [ this.auth.userId$.value ],
     });
   }
 

@@ -123,6 +123,7 @@ export class GroupService {
       title,
       members: allUserIds,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      admins: [ this.auth.userId$.value ]
     });
   }
 
