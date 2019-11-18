@@ -6,6 +6,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { FcmService } from './fcm.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { callbackify } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -179,6 +180,12 @@ export class AuthService {
    * @param userName new userName
    */
   updateUserName(userName: string, callBack?: any) {
+    if (userName === this.userDoc$.value.userName) {
+      if (typeof callBack === 'function') {
+        callBack();
+      }
+      return;
+    }
     return this.fun.httpsCallable('updateUserName')({ userName })
     .subscribe(resp => {
       if (typeof callBack === 'function') {
