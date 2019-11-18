@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SettingsPage {
 
+  @ViewChild('usernameInput', { static: false }) usernameInput: any;
   public usernameTip = `This is the name other contacts will see next to your activity`;
   public updatingUserNameInProgress = false;
 
@@ -16,6 +17,12 @@ export class SettingsPage {
     public auth: AuthService,
     public themeService: ThemeService
     ) { }
+
+  ionViewDidEnter() {
+    if (this.usernameInput) {
+      this.usernameInput.setFocus();
+    }
+  }
 
   setUserName(username) {
     this.updatingUserNameInProgress = true;
