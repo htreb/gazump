@@ -82,12 +82,12 @@
         <ng-container *ngIf="!linkedChats.loading; else loadingLinkedChats">
           <ng-container *ngIf="linkedChats.length; else noLinkedChats">
             <ion-list *ngFor="let chat of linkedChats">
-              <ion-item-divider sticky='true'>
-                <ion-label>{{ chat.title }}</ion-label>
+              <ion-item-divider sticky='true' color="medium">
+                <ion-label class="chats-divider">{{ chat.title }}</ion-label>
               </ion-item-divider>
               <ion-item
                 *ngFor="let message of chat.linkedTickets[currentTicketSnippet.id]"
-                tappable
+                button
                 (click)="openChat(chat.id, [message.messageId])"
               >
                 {{ message.message }}
