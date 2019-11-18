@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-start-instance',
@@ -14,11 +15,19 @@ export class StartInstanceComponent {
   @Input() onSaved;
   @Input() onClosed;
   @Input() ctaText;
+  @Input() disabled;
 
-  constructor() {}
+  constructor(private alertCtrl: AlertController) {}
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
     this.titleInput.setFocus();
+    if (this.disabled) {
+      const alert = await this.alertCtrl.create({
+        message: 'You must be an Admin to edit.',
+        buttons: ['OK']
+      });
+      return alert.present();
+    }
   }
 
   async close(saved = false) {

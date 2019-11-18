@@ -8,6 +8,7 @@ import {
   OnChanges,
   OnDestroy
 } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-sliding-list',
@@ -22,11 +23,13 @@ export class SlidingListComponent implements OnChanges, OnDestroy {
   private slidingItemsOpen = {};
   private openedAllSlidingItemsFromMenu = false;
 
-  constructor() { }
+  constructor(
+    public auth: AuthService
+  ) { }
 
-  @Input() onClick = (item?) => {};
-  @Input() onEdit = (item?) => {};
-  @Input() onDelete = (item?) => {};
+  @Input() onClick = (item?, isAdmin?) => {};
+  @Input() onEdit = (item?, isAdmin?) => {};
+  @Input() onDelete = (item?, isAdmin?) => {};
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.items) {
@@ -68,11 +71,11 @@ export class SlidingListComponent implements OnChanges, OnDestroy {
     this.slidingItemsOpen[id] = ratio === 1;
   }
 
-  onItemClick(item) {
+  onItemClick(item, isAdmin) {
     if (Object.values(this.slidingItemsOpen).filter(v => v).length) {
       this.closeAllSlidingItems();
     } else {
-      this.onClick(item);
+      this.onClick(item, isAdmin);
     }
   }
 

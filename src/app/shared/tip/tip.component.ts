@@ -10,11 +10,15 @@ export class TipComponent {
 
   @Input() text;
   @Input() colour;
+  @Input() iconName;
+  @Input() iconColour;
   private tip: HTMLIonPopoverElement;
 
   constructor(private popoverController: PopoverController) { }
 
   async showTip(ev: any) {
+    ev.preventDefault();
+    ev.stopPropagation();
     this.tip = await this.popoverController.create({
       component: TextComponent,
       event: ev,

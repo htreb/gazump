@@ -19,6 +19,7 @@
         [(ngModel)]="title"
         placeholder="Title"
         class="ion-text-center"
+        [disabled]="disabled"
       ></ion-input>
     </ion-item>
   </div>
@@ -27,6 +28,7 @@
     <app-contact-picker
       [allContacts]='allContacts'
       [selectedContacts]='selectedContacts'
+      [disabled]='disabled'
     ></app-contact-picker>
   </div>
 
@@ -50,7 +52,7 @@
     fill="solid"
     strong="true"
     color="primary"
-    [disabled]='!title.trim()'
+    [disabled]='disabled || !title.trim()'
   >
     {{ ctaText }}
   </ion-button>

@@ -13,6 +13,7 @@ export class ContactPickerComponent implements OnInit {
 
   @Input() allContacts = false;
   @Input() selectedContacts: any = [];
+  @Input() disabled;
   membersTip: string;
   searchTerm$ = new BehaviorSubject<string>('');
   filteredContacts$;
@@ -22,8 +23,8 @@ export class ContactPickerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.membersTip = this.allContacts ? 'When starting a group you can pick from any of your contacts' :
-    'You can only choose from your contacts who are also members of this group';
+    this.membersTip = this.allContacts ? 'You can pick from any of your contacts. Members who are not your contacts will not show.' :
+    'You can only choose from your contacts who are also members of this group. Members who are not your contacts will not show.';
     const contactSource = this.allContacts ? 'getUsersContacts' : 'getGroupContacts';
     this.filteredContacts$ = combineLatest([
       this.contactService[contactSource](),

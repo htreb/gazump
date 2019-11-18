@@ -66,11 +66,11 @@ export class ListGroupsPage {
     await startGroupModal.present();
   }
 
-  onGroupItemClick = (group) => {
+  onGroupItemClick = (group, isAdmin) => {
     this.router.navigateByUrl(`/group/${group.id}`);
   }
 
-  editGroup = async (group) => {
+  editGroup = async (group, isAdmin) => {
     let editGroupModal: HTMLIonModalElement;
 
     const onClosed = () => {
@@ -94,13 +94,14 @@ export class ListGroupsPage {
         title: group.title,
         ctaText: 'Save Changes',
         allContacts: true,
+        disabled: !isAdmin,
       }
     });
     await editGroupModal.present();
     this.closeAllSlidingItems();
   }
 
-  deleteGroup = async (group) => {
+  deleteGroup = async (group, isAdmin) => {
     let alert;
     if (group.members.length > 1) {
       alert = await this.alertCtrl.create({

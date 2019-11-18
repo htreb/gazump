@@ -17,6 +17,7 @@ import { ContactPickerComponent } from './contact-picker/contact-picker.componen
 import { TicketTitlePipe } from './pipes/ticket-title.pipe';
 import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
 import { SlidingListComponent } from './sliding-list/sliding-list.component';
+import { SharedDirectivesModule } from '../directives/shared-directives.module';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { SlidingListComponent } from './sliding-list/sliding-list.component';
     FormsModule,
     AutosizeModule,
     ReactiveFormsModule,
+    SharedDirectivesModule
   ],
   exports: [
     SettingsIconComponent,

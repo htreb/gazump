@@ -1,5 +1,6 @@
 <ion-icon
   class='info-component'
-  name="information-circle"
+  [name]="iconName || 'information-circle'"
+  [color]="iconColour"
   (click)="showTip($event)"
 ></ion-icon>

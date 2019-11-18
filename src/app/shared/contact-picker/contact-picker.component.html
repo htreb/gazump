@@ -14,6 +14,7 @@
     #searchBar
     (ionChange)="updateSearchTerm(searchBar.value)"
     color="secondary"
+    [disabled]="disabled"
   >
   </ion-searchbar>
   <div class='contact-list'>
@@ -33,6 +34,7 @@
               slot="end"
               (ionChange)="contactSelected($event.detail.checked, contact.id)"
               [checked]="selectedContacts.indexOf(contact.id) > -1"
+              [disabled]="disabled"
             >
             </ion-checkbox>
           </ion-item>

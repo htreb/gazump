@@ -62,7 +62,7 @@ export class ListChatsPage {
     this.router.navigate([chat.id], { relativeTo: this.route });
   }
 
-  editChat = async (chat) => {
+  editChat = async (chat, isAdmin) => {
     let editChatModal: HTMLIonModalElement;
 
     const onClosed = () => {
@@ -85,6 +85,7 @@ export class ListChatsPage {
         selectedContacts: chat.members,
         title: chat.title,
         ctaText: 'Save Changes',
+        disabled: !isAdmin,
       }
     });
     await editChatModal.present();

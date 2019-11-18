@@ -6,24 +6,42 @@
     class='sliding-element'
     (ionDrag)="slidingItemDragged($event.detail.ratio, item.id)"
     (click)="slidingItemClicked()"
+    [appVar] = "item.admins && item.admins.includes(auth.userId$.value)"
+    #isAdmin = "appVar"
   >
 
     <ion-item
       button
-      (click)='onItemClick(item)'
       mode="md"
       color="medium"
       class='sliding-item'
+      (click)='onItemClick(item, isAdmin.val)'
     >
-      <ion-text class="ion-text-wrap">{{ item.title }}</ion-text>
-      <ion-note slot='end' color='primary'>{{ item.members | membersDetail }}</ion-note>
+      <ion-label
+        class="ion-text-wrap"
+      >
+        <ion-text>
+          <h2>{{ item.title }}</h2>
+        </ion-text>
+        <ion-text color="primary">
+          <p>{{ item.members | membersDetail }}</p>
+        </ion-text>
+      </ion-label>
+      <app-tip
+        *ngIf="isAdmin.val"
+        iconName='ribbon'
+        iconColour="primary"
+        [text]="'You are an admin'"
+        slot='end'
+      >
+      </app-tip>
     </ion-item>
 
     <ion-item-options side="end">
-      <ion-item-option (click)="onEdit(item)" color="warning">
+      <ion-item-option (click)="onEdit(item, isAdmin.val)" color="warning">
         <ion-icon slot="icon-only" name="create"></ion-icon>
       </ion-item-option>
-      <ion-item-option (click)="onDelete(item)" color="danger">
+      <ion-item-option (click)="onDelete(item, isAdmin.val)" color="danger">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-item-option>
     </ion-item-options>

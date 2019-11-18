@@ -220,7 +220,6 @@ export const icons = [
     'return-right',
     'reverse-camera',
     'rewind',
-    'ribbon',
     'rose',
     'sad',
     'school',
