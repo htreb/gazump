@@ -1,5 +1,4 @@
 import { Directive, TemplateRef, ViewContainerRef, OnInit, Input } from '@angular/core';
-import { AuthService } from '../services/auth.service';
 
 @Directive({
   selector: '[appHasPermission]'
@@ -7,8 +6,7 @@ import { AuthService } from '../services/auth.service';
 export class HasPermissionDirective implements OnInit {
 
   @Input('appHasPermission') permissions: string[];
-  constructor(private auth: AuthService,
-              private templateRef: TemplateRef<any>,
+  constructor(private templateRef: TemplateRef<any>,
               private viewCont: ViewContainerRef) { }
 
     /**
@@ -18,12 +16,12 @@ export class HasPermissionDirective implements OnInit {
      *          *appHasPermission = "['delete-ticket', 'add-ticket']"
      */
     ngOnInit() {
-      if (this.auth.hasPermissions(this.permissions)) {
+      if (false) {
+        // should show
         this.viewCont.createEmbeddedView(this.templateRef);
       } else {
+        // shouldn't show
         this.viewCont.clear();
       }
-
-      // use it
     }
 }

@@ -186,32 +186,4 @@ export class AuthService {
       }
     });
   }
-
-  /**
-   * Checks if a user matches the given permissions.
-   * @param permissions array of required permissions
-   */
-  hasPermissions(permissions: string[]): boolean {
-    // if (!this.currentUser || !this.currentUser.value.permissions) {
-    //   return false;
-    // }
-    // // filters the permissions to an array of all that the user does not have.
-    // // If that array is not 0 long then deny permission.
-    // return permissions.filter(p => this.currentUser.value.permissions.indexOf(p) === -1).length === 0;
-    return true;
-  }
-
-  /**
-   * checks firebase for a match on a given userName
-   * @param name requested name
-   */
-  isUserNameAvailable(name: string) {
-    // return this.db.collection('users', ref => ref.where('userName', '==', name).limit(1)).valueChanges().pipe(
-    //   take(1),
-    //   map(user => {
-    //     return user;
-    //   })
-    // );
-  }
-
 }
