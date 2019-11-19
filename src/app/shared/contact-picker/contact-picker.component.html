@@ -35,7 +35,7 @@
               name="ribbon"
               slot="start"
               (click)="toggleAdmin(contact.id)"
-              [color]='admins.includes(contact.id) ? "primary" : "tertiary"'
+              [color]='admins && admins.includes(contact.id) ? "primary" : "tertiary"'
             ></ion-icon>
 
             <ion-item class='inner-contact-item' lines="full">
