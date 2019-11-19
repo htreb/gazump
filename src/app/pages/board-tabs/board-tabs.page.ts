@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 import { takeWhile, finalize } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { FcmService } from 'src/app/services/fcm.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-board-tabs',
@@ -44,6 +45,7 @@ export class BoardTabsPage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private router: ActivatedRoute,
     private fcm: FcmService,
+    private auth: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -120,6 +122,15 @@ export class BoardTabsPage implements OnInit, OnDestroy {
 
   async deleteBoard(boardId: string, callBack?) {
     const board = this.boardService.getOneBoard(boardId);
+
+    if (!board.admins.includes(this.auth.userId$.value)) {
+      const notAdminAlert = await this.alertCtrl.create({
+        message: `You must be an Admin to delete <b>${board.title}</b>`,
+        buttons: ['OK']
+      });
+      return notAdminAlert.present();
+    }
+
     const alert = await this.alertCtrl.create({
       message: `Are you sure you want to delete the board and all its tickets:
                 <br><br>
