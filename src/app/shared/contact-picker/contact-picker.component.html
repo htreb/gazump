@@ -30,7 +30,12 @@
             <ion-label> = Admin</ion-label>
           </ion-item>
 
-          <ion-item *ngFor="let contact of contacts" lines="none" class="no-highlight-or-ripple">
+          <ion-item
+            *ngFor="let contact of contacts"
+            lines="none"
+            class="no-highlight-or-ripple"
+            [disabled]="disabled"
+          >
             <ion-icon
               name="ribbon"
               slot="start"
