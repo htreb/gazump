@@ -22,7 +22,7 @@
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
         <ion-list *ngIf="contacts.length; else noContacts">
 
-          <ion-item lines="none">
+          <ion-item lines="none" [disabled]="disabled">
             <ion-icon
               name="ribbon"
               color="primary"

@@ -7,7 +7,10 @@
     </ion-buttons>
     <ion-title class="display-font">{{ board ? 'Edit' : 'New'}} Board</ion-title>
     <ion-buttons slot="end" *ngIf="board">
-      <ion-button (click)="deleteBoard()">
+      <ion-button
+        (click)="deleteBoard()"
+        [disabled]="disabled"
+      >
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -18,20 +21,34 @@
   <div class="section">
     <div class="title">Title</div>
     <ion-item color="secondary" class="input">
-      <ion-input #titleInput [(ngModel)]="title" placeholder="Title" class="ion-text-center"></ion-input>
+      <ion-input
+        #titleInput
+        [(ngModel)]="title"
+        placeholder="Title"
+        class="ion-text-center"
+        [disabled]="disabled"
+      ></ion-input>
     </ion-item>
   </div>
 
   <div class="section">
     <div class="title">Icon</div>
-    <ion-item button (click)="selectIcon($event)">
+    <ion-item
+      button
+      (click)="selectIcon($event)"
+      [disabled]="disabled"
+    >
       <ion-label>Board Icon:</ion-label>
       <ion-icon slot="end" [name]="icon"></ion-icon>
     </ion-item>
   </div>
 
   <div class="section">
-    <app-contact-picker [selectedContacts]='contacts'></app-contact-picker>
+    <app-contact-picker
+      [selectedContacts]='contacts'
+      [admins]="admins"
+      [disabled]="disabled"
+    ></app-contact-picker>
   </div>
 
   <div class="section">
@@ -41,17 +58,33 @@
         [(ngModel)]="newStateName"
         (keyup.enter)="addState()"
         placeholder="State name"
+        [disabled]="disabled"
       >
       </ion-input>
-      <ion-button slot="end" (click)="addState()" [disabled]="!newStateName.trim()">
+      <ion-button
+        slot="end"
+        (click)="addState()"
+        [disabled]="disabled || !newStateName.trim()"
+      >
         Add
       </ion-button>
     </ion-item>
 
-    <ion-reorder-group (ionItemReorder)="reorderStates($event)" disabled="false">
+    <ion-reorder-group
+      (ionItemReorder)="reorderStates($event)"
+      [disabled]="disabled"
+    >
       <ion-item *ngFor="let state of states">
-        <ion-input [(ngModel)]="state.title"></ion-input>
-        <ion-button slot="end"  fill="clear" (click)="removeState(state)">
+        <ion-input
+          [(ngModel)]="state.title"
+          [disabled]="disabled"
+        ></ion-input>
+        <ion-button
+          slot="end"
+          fill="clear"
+          (click)="removeState(state)"
+          [disabled]="disabled"
+        >
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-button>
         <ion-reorder slot="end"></ion-reorder>
@@ -66,16 +99,29 @@
         [(ngModel)]="newCompletedByName"
         (keyup.enter)="addCompletedBy()"
         placeholder="Completed by name"
+        [disabled]="disabled"
       >
       </ion-input>
-      <ion-button slot="end" (click)="addCompletedBy()" [disabled]="!newCompletedByName.trim()">
+      <ion-button
+        slot="end"
+        (click)="addCompletedBy()"
+        [disabled]="disabled || !newCompletedByName.trim()"
+      >
         Add
       </ion-button>
     </ion-item>
 
     <ion-item *ngFor="let cb of completedBy">
-      <ion-input [(ngModel)]="cb.name"></ion-input>
-      <ion-button slot="end"  fill="clear" (click)="removeCompletedBy(cb)">
+      <ion-input
+        [(ngModel)]="cb.name"
+        [disabled]="disabled"
+      ></ion-input>
+      <ion-button
+        slot="end"
+        fill="clear"
+        (click)="removeCompletedBy(cb)"
+        [disabled]="disabled"
+      >
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
@@ -101,7 +147,7 @@
     fill="solid"
     strong="true"
     color="primary"
-    [disabled]='!title.trim()'
+    [disabled]='disabled || !title.trim()'
   >
     Save
   </ion-button>

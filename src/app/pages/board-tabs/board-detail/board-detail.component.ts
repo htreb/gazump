@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { ToastController, PopoverController } from '@ionic/angular';
+import { ToastController, PopoverController, AlertController } from '@ionic/angular';
 import { BoardService } from 'src/app/services/board.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from 'src/app/services/auth.service';
@@ -20,6 +20,7 @@ export class BoardDetailComponent implements OnInit {
   title = '';
   icon = 'clipboard';
   contacts = [this.auth.userId$.value];
+  admins = [this.auth.userId$.value];
   newStateName = '';
   states = [
     {color: 'primary', id: this.db.createId(), title: 'To Do'},
@@ -31,6 +32,7 @@ export class BoardDetailComponent implements OnInit {
     completedArr.push({name: currentName, color: 'primary', id: this.db.createId()});
     return completedArr;
   }, []);
+  disabled = false;
 
   constructor(
     private toastCtrl: ToastController,
@@ -38,11 +40,20 @@ export class BoardDetailComponent implements OnInit {
     private boardService: BoardService,
     private db: AngularFirestore,
     private popoverController: PopoverController,
+    private alertCtrl: AlertController,
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.board) {
       this.parseBoardDataToModel(this.board);
+      if (!this.admins.includes(this.auth.userId$.value)) {
+        this.disabled = true;
+        const alert = await this.alertCtrl.create({
+          message: 'You must be an Admin to edit.',
+          buttons: ['OK']
+        });
+        return alert.present();
+      }
     }
   }
 
@@ -54,6 +65,7 @@ export class BoardDetailComponent implements OnInit {
     this.title = JSON.parse(JSON.stringify(boardData.title || ''));
     this.icon = JSON.parse(JSON.stringify(boardData.icon || ''));
     this.contacts = JSON.parse(JSON.stringify(boardData.members || []));
+    this.admins = JSON.parse(JSON.stringify(boardData.admins || []));
     this.states = JSON.parse(JSON.stringify(boardData.states || []));
     this.completedBy = this.boardService.getCompletedBy(boardData.id, true);
   }
@@ -69,6 +81,9 @@ export class BoardDetailComponent implements OnInit {
   }
 
   async closePage(save = false) {
+    if (this.disabled && save) {
+      return;
+    }
     this.closeBoardDetail(save && this.parseModelToBoardData());
   }
 
