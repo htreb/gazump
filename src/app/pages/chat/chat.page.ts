@@ -46,6 +46,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
   private atBottom = true;
   private scrolledToHighlightedMessage = false;
   private scrollEl;
+  public enterToSend = true;
 
   constructor(
     public groupService: GroupService,
@@ -157,13 +158,18 @@ export class ChatPage implements OnInit, AfterViewChecked {
     }
   }
 
+  toggleEnterToSend() {
+    this.enterToSend = !this.enterToSend;
+    this.focusTypingArea();
+  }
+
   async sendMessage() {
     if (!this.message.trim()) {
       // if no message don't try to send it
       return;
     }
     // clear message and tickets straight away to keep app responsive
-    const msg = this.message;
+    const msg = this.message.trim();
     const tickets = JSON.parse(JSON.stringify(this.linkedTickets));
     this.message = '';
     this.linkedTickets = [];
