@@ -243,9 +243,9 @@ export class ChatPage implements OnInit, AfterViewChecked {
         }
       };
 
-      const onSaved = async (title, contacts) => {
+      const onSaved = async (title, contacts, admins) => {
         onClosed();
-        this.chatService.editChat(chat.id, title, contacts);
+        this.chatService.editChat(chat.id, title, contacts, admins);
       };
 
       editChatModal = await this.modalController.create({
@@ -258,6 +258,7 @@ export class ChatPage implements OnInit, AfterViewChecked {
           selectedContacts: chat.members,
           title: chat.title,
           disabled: !(chat.admins && chat.admins.includes(this.auth.userId$.value)),
+          admins: chat.admins,
         }
       });
 
