@@ -132,4 +132,12 @@ ion-popover {
 .display-font {
   font-weight: bold;
 }
+
+ion-item.no-highlight-or-ripple {
+  --background-activated: transparent;
+  --ripple-color: transparent;
+  --background-focused: transparent;
+  --background-hover: transparent;
+  --ion-color-tint: transparent !important;
+}
 //////////////////////////////////////////// Fiddly bits /////////////////////////////////////////////

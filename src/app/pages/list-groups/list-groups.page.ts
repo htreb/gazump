@@ -46,8 +46,8 @@ export class ListGroupsPage {
       }
     };
 
-    const onSaved = async (title, contacts) => {
-      const newGroup = await this.groupService.createGroup(title, contacts);
+    const onSaved = async (title, contacts, admins) => {
+      const newGroup = await this.groupService.createGroup(title, contacts, admins);
       await this.router.navigateByUrl(`/group/${newGroup.id}`);
       onClosed();
     };
@@ -79,9 +79,9 @@ export class ListGroupsPage {
       }
     };
 
-    const onSaved = (title, contacts) => {
+    const onSaved = (title, contacts, admins) => {
       onClosed();
-      this.groupService.editGroup(group.id, title, contacts);
+      this.groupService.editGroup(group.id, title, contacts, admins);
     };
 
     editGroupModal = await this.modalController.create({
@@ -94,6 +94,7 @@ export class ListGroupsPage {
         title: group.title,
         ctaText: 'Save Changes',
         allContacts: true,
+        admins: group.admins,
         disabled: !isAdmin,
       }
     });

@@ -39,8 +39,8 @@ export class ListChatsPage {
       }
     };
 
-    const onSaved = async (title, contacts) => {
-      const newChat = await this.chatService.startChat(title, contacts);
+    const onSaved = async (title, contacts, admins) => {
+      const newChat = await this.chatService.startChat(title, contacts, admins);
       await this.router.navigate([newChat.id], { relativeTo: this.route });
       onClosed();
     };
@@ -71,9 +71,9 @@ export class ListChatsPage {
       }
     };
 
-    const onSaved = (title, contacts) => {
+    const onSaved = (title, contacts, admins) => {
       onClosed();
-      this.chatService.editChat(chat.id, title, contacts);
+      this.chatService.editChat(chat.id, title, contacts, admins);
     };
 
     editChatModal = await this.modalController.create({
@@ -86,6 +86,7 @@ export class ListChatsPage {
         title: chat.title,
         ctaText: 'Save Changes',
         disabled: !isAdmin,
+        admins: chat.admins,
       }
     });
     await editChatModal.present();

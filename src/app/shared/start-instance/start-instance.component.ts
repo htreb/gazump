@@ -11,6 +11,7 @@ export class StartInstanceComponent {
   @Input() header = '';
   @Input() allContacts;
   @Input() selectedContacts = [];
+  @Input() admins = [];
   @Input() title = '';
   @Input() onSaved;
   @Input() onClosed;
@@ -31,8 +32,11 @@ export class StartInstanceComponent {
   }
 
   async close(saved = false) {
+    if (this.disabled && saved) {
+      return;
+    }
     return saved
-      ? this.onSaved(this.title, this.selectedContacts)
+      ? this.onSaved(this.title, this.selectedContacts, this.admins)
       : this.onClosed();
   }
 }

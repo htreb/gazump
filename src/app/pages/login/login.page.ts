@@ -74,7 +74,7 @@ export class LoginPage implements OnInit {
           validators: this.passwordValidator()
         }
       ),
-      rememberMe: ['']
+      rememberMe: [false]
     });
 
     this.signInForm.valueChanges.subscribe(val => {

@@ -13,6 +13,7 @@ export class ContactPickerComponent implements OnInit {
 
   @Input() allContacts = false;
   @Input() selectedContacts: any = [];
+  @Input() admins: any = [];
   @Input() disabled;
   membersTip: string;
   searchTerm$ = new BehaviorSubject<string>('');
@@ -51,15 +52,33 @@ export class ContactPickerComponent implements OnInit {
         contact.userName.toLowerCase().indexOf(searchTerm) > -1 ||
         contact.email.toLowerCase().indexOf(searchTerm) > -1
       );
-    });
+    })/* .sort((a, b) => selectedContacts.includes(a.id) ? -1 : 1 ) */;
   }
 
   contactSelected(selected, contactId) {
+    if (this.disabled) {
+      return;
+    }
     const idx = this.selectedContacts.indexOf(contactId);
     if (selected && idx === -1) {
       this.selectedContacts.push(contactId);
     } else if (!selected && idx > -1) {
       this.selectedContacts.splice(idx, 1);
+      this.toggleAdmin(contactId, false);
+    }
+  }
+
+  toggleAdmin(contactId, force?) {
+    if (this.disabled) {
+      return;
+    }
+    const idx = this.admins.indexOf(contactId);
+    const shouldSelect = force === undefined ? idx === -1 : force;
+    if (shouldSelect && idx === -1) {
+      this.admins.push(contactId);
+      this.contactSelected(true, contactId);
+    } else if (!shouldSelect && idx > -1) {
+      this.admins.splice(idx, 1);
     }
   }
 }

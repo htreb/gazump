@@ -21,22 +21,43 @@
     <ng-container *ngIf="filteredContacts$ | async as contacts">
       <ng-container *ngIf="!contacts.loading; else loadingContacts">
         <ion-list *ngIf="contacts.length; else noContacts">
-          <ion-item *ngFor="let contact of contacts">
-            <ion-label class="ion-text-wrap">
-              <ion-text>
-                <h2>{{ contact.userName }}</h2>
-              </ion-text>
-              <ion-text color="primary">
-                <p>{{ contact.email }}</p>
-              </ion-text>
-            </ion-label>
-            <ion-checkbox
-              slot="end"
-              (ionChange)="contactSelected($event.detail.checked, contact.id)"
-              [checked]="selectedContacts.indexOf(contact.id) > -1"
-              [disabled]="disabled"
-            >
-            </ion-checkbox>
+
+          <ion-item lines="none">
+            <ion-icon
+              name="ribbon"
+              color="primary"
+            ></ion-icon>
+            <ion-label> = Admin</ion-label>
+          </ion-item>
+
+          <ion-item *ngFor="let contact of contacts" lines="none" class="no-highlight-or-ripple">
+            <ion-icon
+              name="ribbon"
+              slot="start"
+              (click)="toggleAdmin(contact.id)"
+              [color]='admins.includes(contact.id) ? "primary" : "tertiary"'
+            ></ion-icon>
+
+            <ion-item class='inner-contact-item' lines="full">
+
+              <ion-label class="ion-text-wrap">
+                <ion-text>
+                  <h2>{{ contact.userName }}</h2>
+                </ion-text>
+                <ion-text color="primary">
+                  <p>{{ contact.email }}</p>
+                </ion-text>
+              </ion-label>
+              <ion-checkbox
+                slot="end"
+                (ionChange)="contactSelected($event.detail.checked, contact.id)"
+                [checked]="selectedContacts.includes(contact.id)"
+                [disabled]="disabled"
+              >
+              </ion-checkbox>
+
+            </ion-item>
+
           </ion-item>
         </ion-list>
       </ng-container>

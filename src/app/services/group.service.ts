@@ -117,22 +117,22 @@ export class GroupService {
    * @param title group name
    * @param users array of user detail objects
    */
-  createGroup(title: string, users: any) {
-    const allUserIds = [...users.map(u => u.id), this.auth.userId$.value ];
+  createGroup(title: string, users: string[], admins: string[]) {
     return this.db.collection('groups').add({
       title,
-      members: allUserIds,
+      members: [ this.auth.userId$.value, ...users ],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      admins: [ this.auth.userId$.value ]
+      admins: [ this.auth.userId$.value, ...admins ]
     });
   }
 
-  editGroup(groupId: string, title: string, members: string[]) {
+  editGroup(groupId: string, title: string, members: string[], admins: string[]) {
     return this.db.collection('groups')
       .doc(groupId)
       .update({
         title,
-        members
+        members,
+        admins
       });
   }
 

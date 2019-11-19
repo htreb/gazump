@@ -2,6 +2,10 @@
     display: flex;
     flex-direction: column;
 
+    .inner-contact-item {
+        width: 100%;
+    }
+
     .contact-list {
         overflow: scroll;
         flex: 1;

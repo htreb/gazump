@@ -75,25 +75,25 @@ export class ChatService {
     );
   }
 
-  startChat(title: string, membersWithoutMe: any) {
-    const allMemberIds = [...membersWithoutMe.map(u => u.id), this.auth.userId$.value ];
+  startChat(title: string, membersWithoutMe: string[], admins: string[]) {
     return this.db.collection('chats').add({
       title,
       groupId: this.groupService.currentGroupId,
-      members: allMemberIds,
+      members: [ this.auth.userId$.value, ...membersWithoutMe ],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       linkedTickets: {},
       lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-      admins: [ this.auth.userId$.value ],
+      admins: [ this.auth.userId$.value, ...admins ],
     });
   }
 
-  editChat(chatId: string, title: string, members: string[]) {
+  editChat(chatId: string, title: string, members: string[], admins: string[]) {
     return this.db.collection('chats')
       .doc(chatId)
       .update({
         title,
-        members
+        members,
+        admins
       });
   }
 
