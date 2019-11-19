@@ -75,6 +75,7 @@ export class BoardDetailComponent implements OnInit {
       title: this.title,
       icon: this.icon,
       members: this.contacts,
+      admins: this.admins,
       states: this.states,
       completedBy: this.boardService.parseCompletedByArrayToObj(this.completedBy),
     };
