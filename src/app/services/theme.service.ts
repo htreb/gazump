@@ -19,7 +19,7 @@ export class ThemeService {
   //             headers, toolbars, tab bar at bottom, used on spinner dots
 
   // secondary => "input color" for text input
-  // tertiary => used on spinner dots, "my messages" in chat
+  // tertiary => used on spinner dots, "my messages" in chat, inactive buttons
 
   // light => app background
   // medium => layer on top of background, columns on board, tab bar, footer on chat
@@ -60,7 +60,7 @@ export class ThemeService {
       icon: 'moon',
       primary: '#F78154',
       secondary: '#1C2030',
-      tertiary: '#1E2544',
+      tertiary: '#3D4568',
       light: '#151a30',
       medium: '#222b45',
       dark: '#192038',
@@ -80,7 +80,7 @@ export class ThemeService {
       icon: 'planet',
       primary: '#a16eff',
       secondary: '#262654',
-      tertiary: '#2B2B84',
+      tertiary: '#414175',
       light: '#1B1B53',
       medium: '#2F2F62',
       dark: '#444472',
