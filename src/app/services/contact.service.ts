@@ -86,7 +86,6 @@ export class ContactService {
    * @param email address of user they want to invite
    */
   async sendRequest(email) {
-    // TODO Cloud function will pick up a change here and submit request to user if they exist
     if (email === this.auth.userDoc$.value.email) {
       throw new Error(`You can't add yourself`);
     }
@@ -132,9 +131,7 @@ export class ContactService {
   }
 
   async cancelSentRequest(request) {
-    // TODO Cloud function will pick up a change here and remove request from user if they exist
     const batch = this.db.firestore.batch();
-
     batch.delete(this.db.collection('contactRequests').doc(request.requestId).ref);
     batch.update(this.db.collection('users').doc(this.auth.userId$.value).ref, {
       contactRequests: firebase.firestore.FieldValue.arrayRemove(request),
@@ -157,7 +154,6 @@ export class ContactService {
    * @param receivedRequest the request doc to accept
    */
   acceptContactRequest(receivedRequest) {
-    // TODO some cloud function needed here?
     return this.db
       .collection('contactRequests')
       .doc(receivedRequest.id)
