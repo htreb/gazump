@@ -27,17 +27,17 @@ export const completeContactRequest = functions.firestore
                 [`connections.${requesterSnapshot.id}`]: {
                         email: requesterData.email,
                         userName: requesterData.userName,
-                    },
-                contactRequests: admin.firestore.FieldValue.arrayRemove({
-                    email: accepterData.email,
-                    requestId: context.params.requestId,
-                })
+                    }
             })
             batch.update(requesterRef, {
                 [`connections.${accepterSnapshot.id}`]: {
                     email: accepterData.email,
                     userName: accepterData.userName,
-                }
+                },
+                contactRequests: admin.firestore.FieldValue.arrayRemove({
+                    email: accepterData.email,
+                    requestId: context.params.requestId,
+                })
             })
             batch.delete(db.doc(`contactRequests/${context.params.requestId}`));
             await batch.commit();
