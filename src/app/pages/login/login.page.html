@@ -4,15 +4,14 @@
     class="ion-padding login-container"
     [formGroup]="signInForm"
   >
-    <ion-item
-      mode="md"
-      lines="none"
-      color="medium"
+    <div
       (click)="autoFillCredentials()"
       (dblclick)="autoFillCredentials(true)"
+      class="logo-container"
     >
-      <ion-icon class="logo" name="md-analytics"></ion-icon>
-    </ion-item>
+      <ion-icon class="logo" src="/assets/icons/logo.svg" color="primary"></ion-icon>
+      Gazumpd
+    </div>
 
     <ion-item mode="md" lines="none" color="medium">
       <ion-button
