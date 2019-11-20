@@ -113,7 +113,7 @@ export class ContactService {
           requester: this.auth.userId$.value,
           requesterUserName: this.auth.userDoc$.value.userName,
           requesterEmail: this.auth.userDoc$.value.email,
-          declined: false,
+          hidden: false,
         });
       batch.update(
         this.db.collection('users')
@@ -144,7 +144,7 @@ export class ContactService {
     return this.db
       .collection('contactRequests', ref => ref
       .where('accepterEmail', '==', this.auth.userDoc$.value.email)
-      .where('declined', '==', false))
+      .where('hidden', '==', false))
       .valueChanges({ idField: 'id' });
   }
 
@@ -159,21 +159,21 @@ export class ContactService {
       .doc(receivedRequest.id)
       .update({
         accepter: this.auth.userId$.value,
+        hidden: true,
       });
   }
 
   /**
-   * By setting declined to true will hide the request from future contactRequest queries
+   * By setting hidden to true will hide the request from future contactRequest queries
    * doesn't inform requester they were declined.
    * @param receivedRequest the request doc to decline
    */
   declineContactRequest(receivedRequest) {
-    // I can do this silently, no need to tell the other user they were declined
     return this.db
     .collection('contactRequests')
     .doc(receivedRequest.id)
     .update({
-      declined: true,
+      hidden: true,
     });
   }
 }
