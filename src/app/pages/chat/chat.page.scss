@@ -53,7 +53,8 @@ $textBorderRadius: 16px;
     }
 }
 
-.type-message-area {
+ion-textarea.type-message-area {
+    --padding-start: 8px;
     max-height: 50vh;
     overflow: scroll;
     margin: 5px;
