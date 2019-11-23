@@ -103,6 +103,7 @@ export const sendNotification = function(notificationType: string, userRef: Docu
                 notification: {
                     title,
                     body,
+                    "click_action":"https://gazumpd.com"
                 }
             }
             console.log(`Sending notification to ${userDoc.email} with tokens`, userDoc.fcmTokens);
