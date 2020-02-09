@@ -19,36 +19,37 @@ import { IonicStorageModule } from '@ionic/storage';
 import { SharedModule } from './shared/shared.module';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
-import { FirebaseX } from '@ionic-native/firebase-x/ngx';
+import { FirebaseX } from '@ionic-native/firebase-x';
 import { ServiceWorkerModule } from '@angular/service-worker';
 // import { Camera } from '@ionic-native/camera/ngx';
 
-
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(),
-    AppRoutingModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
-    AngularFireAuthModule,
-    AngularFireStorageModule,
-    AngularFireMessagingModule,
-    AngularFireFunctionsModule,
-    BrowserAnimationsModule,
-    IonicStorageModule.forRoot(),
-    SharedModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    FirebaseX,
-    // Camera,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-  ],
-  bootstrap: [AppComponent]
+	declarations: [AppComponent],
+	entryComponents: [],
+	imports: [
+		BrowserModule,
+		IonicModule.forRoot(),
+		AppRoutingModule,
+		AngularFireModule.initializeApp(environment.firebase),
+		AngularFirestoreModule,
+		AngularFireAuthModule,
+		AngularFireStorageModule,
+		AngularFireMessagingModule,
+		AngularFireFunctionsModule,
+		BrowserAnimationsModule,
+		IonicStorageModule.forRoot(),
+		SharedModule,
+		ServiceWorkerModule.register('ngsw-worker.js', {
+			enabled: environment.production,
+		}),
+	],
+	providers: [
+		StatusBar,
+		SplashScreen,
+		FirebaseX,
+		// Camera,
+		{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+	],
+	bootstrap: [AppComponent],
 })
 export class AppModule {}
