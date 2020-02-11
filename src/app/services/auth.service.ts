@@ -67,7 +67,7 @@ export class AuthService {
 			.collection('users')
 			.doc(userId)
 			.valueChanges()
-			.subscribe(userDoc => {
+			.subscribe((userDoc: {}) => {
 				if (userDoc) {
 					this.userDoc$.next({ ...userDoc, id: userId });
 				} else {
